@@ -3,6 +3,7 @@ import Home from './Homepage/HomePage';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import './App.css';
 
 // function Home() {
@@ -43,6 +44,7 @@ function App() {
   return (
     
     <Router>
+      
       <Switch>
         <Route path='/' exact={true} component={Home}/>
       </Switch>

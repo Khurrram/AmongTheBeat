@@ -6,7 +6,6 @@ function Sidebar() {
 
     return (
         <div className="sidebar">
-            <img></img>
             <ul>
                 <li>
                     Browse

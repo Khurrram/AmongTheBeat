@@ -1,5 +1,37 @@
 .homepage {
     background-color: blue;
-    height: 100vh;
+    height: 100vmin;
     display: flex;
+    align-items: stretch;
+}
+
+#center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: blueviolet; */
+}
+
+#placeholder {
+    margin: 1em;
+    width: 95%;
+    height: 100px;
+    background-color:grey;
+}
+
+#fontsize {
+    font-size: larger;
+    color: white;
+}
+
+#fontlarge {
+    font-size: large;
+    color: white;
+}
+#fontlarger {
+    font-size: larger;
+    color: white;
+}
+#fontmedium{
+    font-size: medium;
 }
