@@ -1,6 +1,8 @@
 import React from 'react';
 import M from "materialize-css";
 import './LandingBox.css';
+import 'materialize-css/dist/css/materialize.min.css';
+import {Email, AccountCircle, Lock, CheckCircle} from '@material-ui/icons';
 
 function RegisterBox(props) {
     const button = props.button;
@@ -8,38 +10,39 @@ function RegisterBox(props) {
         <div class="card box-dim hoverable">
             <div class="overlay input-dim">
             <div class="row">
-                <div class="input-field col s6 offset-s3 center-align">
-                <i class="large material-icons prefix">email</i>
+            <div class="input-field input-size">
+                {/* <i class="large material-icons prefix">{Email}</i> */}
+                <Email className="prefix"/>
                 <input id="email" type="email" class="validate" required="" aria-required="true"/>
                 <label htmlFor="email">Email</label>
                 <span class="helper-text" data-error="Enter a valid email." ></span>
             </div>
             </div>
             <div class="row">
-                <div class="input-field col s6 offset-s3 center-align">
-                <i class="large material-icons prefix">account_circle</i>
+                <div class="input-field input-size">
+                <AccountCircle className="prefix"/>
                 <input id="username" type="text" class="validate" />
                 <label htmlFor="username">Username</label>
                 <span class="helper-text" data-error="Enter a valid username." ></span>
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s6 offset-s3 center-align">
-                <i class="large material-icons prefix">lock</i>
+                <div class="input-field input-size">
+                <Lock className="prefix"/>
                 <input id="password" type="password" class="validate" />
                 <label htmlFor="password">Password</label>
-                <span class="helper-text" data-error="Enter a valid email." ></span>
+                <span class="helper-text" data-error="Enter a valid password." ></span>
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s6 offset-s3 center-align">
-                <i class="large material-icons prefix">check_circle</i>
+                <div class="input-field input-size">
+                <CheckCircle className="prefix"/>
                 <input id="confirm_password" type="password" class="validate" onChange={confirm_password_handler} />
                 <label id="confirm_password_label" htmlFor="confirm_password">Confirm Password</label>
                 <span class="helper-text" data-error="Passwords do not match." ></span>
                 </div>
             </div>
-            <div class="input-field col s12 center-align">
+            <div class="input-field input-size center-align">
             <button class="btn waves-effect waves-light btn-color pulse" type="submit" name="action">Register</button>
                 {button}
             </div>
@@ -66,15 +69,15 @@ function LoginBox(props) {
         <div class="card box-dim hoverable">
             <div class="overlay input-dim">
             <div class="row">
-                <div class="input-field col s6 offset-s3 center-align">
-                <i class="large material-icons prefix">account_circle</i>
+                <div class="input-field center-align input-size">
+                <AccountCircle className="prefix"/>
                 <input id="username" type="text" class="validate" />
                 <label htmlFor="username">Username</label>
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s6 offset-s3 center-align">
-                <i class="large material-icons prefix">lock</i>
+                <div class="input-field center-align input-size">
+                <Lock className="prefix"/>
                 <input id="password" type="password" class="validate" />
                 <label htmlFor="password">Password</label>
                 </div>

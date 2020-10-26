@@ -1,6 +1,7 @@
 .box-dim {
     height : 70vh;
     width : 55vh;
+    border-radius:15px !important;
 }
 
 .head-text {
@@ -8,7 +9,12 @@
 }
 
 .input-dim {
-    padding-top: 25%;
+    padding-top: 25% !important;
+}
+
+.input-size {
+  width: 50% !important;
+  margin-left: 25% !important;
 }
 
 .img-size {
@@ -93,11 +99,12 @@
   }
 
   .btn-color{
-    background-color: #133E7C ;
+    background-color: #133E7C !important;
   }
 
-  .btn-color.active {
-    background-color:#0ABDC6 ;
+  .btn-color:hover {
+    background-color:#0ABDC6 !important;
+    color: white;
   }
 
   .btn-pad {
