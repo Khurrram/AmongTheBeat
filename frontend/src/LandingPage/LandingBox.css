@@ -1,0 +1,105 @@
+.box-dim {
+    height : 70vh;
+    width : 55vh;
+}
+
+.head-text {
+  margin-top: 30px;
+}
+
+.input-dim {
+    padding-top: 25%;
+}
+
+.img-size {
+    width: 10%;
+    height: auto;
+}
+
+  /* label color */
+  .input-field label {
+    color: #133E7C;
+  }
+  /* label focus color */
+  .input-field input[type=email]:focus + label {
+    color:  #0ABDC6;
+  }
+
+  .input-field input[type=email].invalid + label {
+    color:  #FF040E;
+  }
+
+  /* label underline focus color */
+  .input-field input[type=email]:focus {
+    border-bottom: 1px solid  #0ABDC6 !important;
+    box-shadow: 0 1px 0 0  #0ABDC6 !important;
+  }
+  /* valid color */
+  .input-field input[type=email] {
+    border-bottom: 1px solid #133E7C !important;
+    box-shadow: 0 1px 0 0 #133E7C !important;
+  }
+
+  .input-field input[type=text]:focus {
+    border-bottom: 1px solid  #0ABDC6 !important;
+    box-shadow: 0 1px 0 0  #0ABDC6 !important;
+  }
+  /* valid color */
+  .input-field input[type=text] {
+    border-bottom: 1px solid #133E7C !important;
+    box-shadow: 0 1px 0 0 #133E7C !important;
+  }
+  
+  .input-field input[type=password]:focus {
+    border-bottom: 1px solid  #0ABDC6 !important;
+    box-shadow: 0 1px 0 0  #0ABDC6 !important;
+  }
+  /* valid color */
+  .input-field input[type=password] {
+    border-bottom: 1px solid #133E7C !important;
+    box-shadow: 0 1px 0 0 #133E7C !important;
+  }
+
+.input-field input[type=email].invalid {
+    border-bottom: 1px solid     #FF040E !important;
+    box-shadow: 0 1px 0 0     #FF040E !important;
+}
+
+.input-field input[type=email].valid {
+    border-bottom: 1px solid     #6DFC01 !important;
+    box-shadow: 0 1px 0 0    #6DFC01 !important;
+}
+.input-field input[type=submit]:focus {
+  border-bottom: 1px solid  #0ABDC6 !important;
+  box-shadow: 0 1px 0 0  #0ABDC6 !important;
+}
+/* valid color */
+.input-field input[type=submit] {
+  border-bottom: 1px solid #133E7C !important;
+  box-shadow: 0 1px 0 0 #133E7C !important;
+}
+  /* invalid color */
+  /* .input-field input[type=email].invalid {
+    border-bottom: 1px solid rgb(255, 0, 0) !important;
+    box-shadow: 0 1px 0 0 rgb(255, 0, 0) !important;
+  } */
+  /* icon prefix focus color */
+  .input-field .prefix {
+    color:     #133E7C;
+  }
+
+  .input-field .prefix.active {
+    color:     #0ABDC6 !important;
+  }
+
+  .btn-color{
+    background-color: #133E7C ;
+  }
+
+  .btn-color.active {
+    background-color:#0ABDC6 ;
+  }
+
+  .btn-pad {
+    margin-left: 5px;
+  }
