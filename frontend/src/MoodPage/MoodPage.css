@@ -1,0 +1,50 @@
+.fullscreen-container
+{
+    background:linear-gradient(rgba(236, 113, 13, 0.5),transparent);
+    background-color:rgb(231, 219, 45);
+    height: 100vh;
+}
+
+#back
+{
+    margin-left: 2%;
+}
+
+#mood
+{
+    color: rgb(255, 255, 255);
+    font-size: 40px;
+    margin-top: 5%;
+    margin-left: 10%;
+}
+#desc
+{
+    color: rgb(255, 255, 255);
+    font-size: 15px;
+    margin-left: 11%;
+}
+
+#desccolor
+{
+    color : rgb(201, 135, 12);
+    display: inline-block;
+}
+#tonecolor
+{
+    color: yellow;
+    display: inline-block;
+}
+
+#quote
+{
+    color: white;
+    margin-top: 5%;
+    margin-left: 10%;
+    font-size: 30px;
+}
+#pic
+{
+    height: 450px;
+    width: 450px;
+    margin-left:35%;
+}

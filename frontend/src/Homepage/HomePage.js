@@ -11,6 +11,7 @@ import PlayingNow from '../components/PlayingNow'
 import './HomePage.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pro-sidebar/dist/css/styles.css';
+import { NavLink, Redirect, useHistory } from 'react-router-dom';
 
 const Button = styled.button`
     padding: .5em;
@@ -56,6 +57,14 @@ const MiddleContent = styled.div`
 
 function Home() {
 
+    const history = useHistory();
+
+    const moodChange = () => 
+    {
+        let path = '/mood';
+        history.push(path);
+    }
+
     return (
         <div className="homepage">
             <ProSidebar>
@@ -78,7 +87,9 @@ function Home() {
                     </Menu>
                 </SidebarContent>
                 <SidebarFooter id="center">
-                    <Button>Happy</Button>
+                    <Button
+                    onClick = {moodChange}
+                    >Happy</Button>
                 </SidebarFooter>
                 
             </ProSidebar>
