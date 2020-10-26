@@ -4,7 +4,7 @@
   "description": "CSE416 ",
   "main": "server.js",
   "scripts": {
-    "client-install": "npm install --prefix frontend",
+    "frontend-install": "npm install --prefix frontend",
     "start": "node server.js",
     "server": "nodemon server.js",
     "frontend": "npm start --prefix frontend",
