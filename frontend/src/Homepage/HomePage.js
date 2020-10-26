@@ -80,6 +80,7 @@ function Home() {
                     </Menu>
                     <hr width="90%" color="black"></hr>
                     <Menu>
+                        <span>playss</span>
                         <MenuItem id="fontlarge">PlayLists</MenuItem>
                         <MenuItem>Beast Mode</MenuItem>
                         <MenuItem>Good Vibes</MenuItem>
