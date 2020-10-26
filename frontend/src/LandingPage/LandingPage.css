@@ -1,0 +1,14 @@
+.full-height {
+    height: 100vh;
+    min-height: 1000px !important;
+}
+
+.atb-gif {
+    width: 98%;
+    height: 98%;
+}
+
+.gif-overlay{
+    height: 70vh;
+    padding-top: 25%;
+}

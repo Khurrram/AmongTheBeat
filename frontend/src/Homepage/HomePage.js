@@ -82,6 +82,7 @@ function Home() {
                     <hr width="90%" color="black"></hr>
                     <Menu>
                         <MenuItem id="fontlarge">Playlists</MenuItem>
+                        <MenuItem id="fontlarge">P2ts</MenuItem>
                         {test.playlists.map((playlist) => 
                         {
                             return (
