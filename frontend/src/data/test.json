@@ -1,0 +1,67 @@
+{
+   
+    "_id": "0",
+    "username": "Administrator",
+    "email": "admin@gmail.com",
+    "password": "admin",
+    "account_type": 0,
+    "playlists" : [
+        {
+            "name": "Beast Mode",
+            "songs": [
+                {
+                    "name": "The Box",
+                    "author": "Roddy Rich",
+                    "album": "Please Excuse Me For Being Antisocial",
+                    "length": "3:16"
+                },
+                {
+                    "name": "WHATS POPPIN",
+                    "author": "Jack Harlow",
+                    "album": "Sweet Action",
+                    "length": "2:19"
+                }
+            ]
+
+        },
+        {
+            "name": "Good Vibes",
+            "songs": [
+                {
+                    "name": "Wow.",
+                    "author": "Post Malone",
+                    "album": "Hollywood's Bleeding",
+                    "length": "2:29"
+                },
+                {
+                    "name": "POPSTAR (feat. Drake)",
+                    "author": "DJ Khaled, Drake",
+                    "album": "POPSTAR (feat. Drake)",
+                    "length": "3:20"
+                }
+
+            ]
+
+        },
+        {
+            "name": "WAP Caviar",
+            "songs": [
+                {
+                    "name": "WAP (feat. Megan Thee Stallion",
+                    "author": "Cardi B, Megan Thee Stallion",
+                    "album": "WAP (feat. Megan Thee Stallion",
+                    "length": "3:07"
+                },
+                {
+                    "name": "MEGATRON",
+                    "author": "Nicki Minaj",
+                    "album": "MEGATRON",
+                    "length": "3:10"
+                }
+
+            ]
+        }
+    ]
+    
+}
+    

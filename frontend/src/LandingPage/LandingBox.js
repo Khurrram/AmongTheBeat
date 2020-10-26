@@ -1,5 +1,4 @@
 import React from 'react';
-import {Button, Card, TextInput} from 'react-materialize';
 import M from "materialize-css";
 import './LandingBox.css';
 
