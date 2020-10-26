@@ -7,11 +7,12 @@ import Avatar from '@material-ui/core/Avatar';
 import SettingsIcon from '@material-ui/icons/Settings';
 import {ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent} from 'react-pro-sidebar'
 import PlayingNow from '../components/PlayingNow'
+import test from '../data/test.json';
 
 import './HomePage.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pro-sidebar/dist/css/styles.css';
-import { NavLink, Redirect, useHistory } from 'react-router-dom';
+import { NavLink, Link, Redirect, useHistory} from 'react-router-dom';
 
 const Button = styled.button`
     padding: .5em;
@@ -63,7 +64,7 @@ function Home() {
     {
         let path = '/mood';
         history.push(path);
-    }
+    };
 
     return (
         <div className="homepage">
@@ -80,10 +81,19 @@ function Home() {
                     </Menu>
                     <hr width="90%" color="black"></hr>
                     <Menu>
-                        <MenuItem id="fontlarge">PlayLists</MenuItem>
-                        <MenuItem>Beast Mode</MenuItem>
-                        <MenuItem>Good Vibes</MenuItem>
-                        <MenuItem>WAP Caviar</MenuItem>
+                        <MenuItem id="fontlarge">Playlists</MenuItem>
+                        {test.playlists.map((playlist) => 
+                        {
+                            return (
+                                <MenuItem>
+                                {<Link to = {{pathname: "/playlist",
+                                state: {data: playlist.name}
+                                }}
+                                
+                                >{playlist.name}</Link>}
+                                </MenuItem>
+                            );
+                        })}
                     </Menu>
                 </SidebarContent>
                 <SidebarFooter id="center">
