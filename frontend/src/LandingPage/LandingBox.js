@@ -1,7 +1,7 @@
 import React from 'react';
 import M from "materialize-css";
 import './LandingBox.css';
-import 'materialize-css/dist/css/materialize.min.css';
+// import 'materialize-css/dist/css/materialize.min.css';
 import {Email, AccountCircle, Lock, CheckCircle} from '@material-ui/icons';
 
 function RegisterBox(props) {

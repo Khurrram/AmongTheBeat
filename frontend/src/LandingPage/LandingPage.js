@@ -1,7 +1,7 @@
 import React from 'react';
 import LandingBox from './LandingBox';
 import './LandingPage.css';
-import 'materialize-css/dist/css/materialize.min.css'
+// import 'materialize-css/dist/css/materialize.min.css'
 import AtBtext from './LandingPage_assets/atb.gif'
 
 function LandingPage() {
