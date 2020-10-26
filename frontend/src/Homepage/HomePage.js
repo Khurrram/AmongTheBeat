@@ -111,7 +111,7 @@ function Home() {
                     
                 </Navbar>
                 <MiddleContent>
-
+                        
                 </MiddleContent>
                 <Footer>
                    123222
