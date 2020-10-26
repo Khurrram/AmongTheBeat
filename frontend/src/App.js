@@ -6,11 +6,7 @@ import LandingPage from './LandingPage/LandingPage';
 import test from './data/test.json';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 import './App.css';
-
-
 
 function App() {
   return (

@@ -3,16 +3,18 @@ import React from 'react';
 import styled from 'styled-components'
 import logo from '../assets/logo.png'
 import {Image} from 'react-bootstrap'
+import Song from './Song';
 import Avatar from '@material-ui/core/Avatar';
 import SettingsIcon from '@material-ui/icons/Settings';
 import {ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent} from 'react-pro-sidebar'
+import { NavLink, Link, Redirect, useHistory} from 'react-router-dom';
 import PlayingNow from '../components/PlayingNow'
 import test from '../data/test.json';
 
 import './HomePage.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pro-sidebar/dist/css/styles.css';
-import { NavLink, Link, Redirect, useHistory} from 'react-router-dom';
+
 
 const Button = styled.button`
     padding: .5em;
@@ -111,7 +113,7 @@ function Home() {
                     
                 </Navbar>
                 <MiddleContent>
-                        
+                    <Song></Song>
                 </MiddleContent>
                 <Footer>
                    123222
