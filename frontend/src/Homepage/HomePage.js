@@ -114,6 +114,8 @@ function Home() {
                 </Navbar>
                 <MiddleContent>
                     <Song></Song>
+                    <Song></Song>
+                    <Song></Song>
                 </MiddleContent>
                 <Footer>
                    123222
