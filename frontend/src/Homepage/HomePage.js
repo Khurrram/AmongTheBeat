@@ -81,6 +81,7 @@ function Home() {
                     </Menu>
                     <hr width="90%" color="black"></hr>
                     <Menu>
+<<<<<<< HEAD
                         <MenuItem id="fontlarge">Playlists</MenuItem>
                         {test.playlists.map((playlist) => 
                         {
@@ -94,6 +95,13 @@ function Home() {
                                 </MenuItem>
                             );
                         })}
+=======
+                        <span>playss</span>
+                        <MenuItem id="fontlarge">PlayLists</MenuItem>
+                        <MenuItem>Beast Mode</MenuItem>
+                        <MenuItem>Good Vibes</MenuItem>
+                        <MenuItem>WAP Caviar</MenuItem>
+>>>>>>> 868b376b67b5f78c54e064659eefaf2b28db1962
                     </Menu>
                 </SidebarContent>
                 <SidebarFooter id="center">
