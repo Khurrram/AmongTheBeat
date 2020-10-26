@@ -1,0 +1,137 @@
+{
+    "users":
+    [
+        {
+            "_id": "0",
+            "username": "Administrator",
+            "email": "admin@gmail.com",
+            "password": "admin",
+            "account_type": 0,
+            "playlists" : [
+                {
+                    "name": "Beast Mode",
+                    "songs": [
+                        {
+                            "name": "The Box",
+                            "author": "Roddy Rich",
+                            "album": "Please Excuse Me For Being Antisocial",
+                            "length": "3:16"
+                        },
+                        {
+                            "name": "WHATS POPPIN",
+                            "author": "Jack Harlow",
+                            "album": "Sweet Action",
+                            "length": "2:19"
+                        }
+                    ]
+
+                },
+                {
+                    "name": "Good Vibes",
+                    "songs": [
+                        {
+                            "name": "Wow.",
+                            "author": "Post Malone",
+                            "album": "Hollywood's Bleeding",
+                            "length": "2:29"
+                        },
+                        {
+                            "name": "POPSTAR (feat. Drake)",
+                            "author": "DJ Khaled, Drake",
+                            "album": "POPSTAR (feat. Drake)",
+                            "length": "3:20"
+                        }
+
+                    ]
+
+                },
+                {
+                    "name": "WAP Caviar",
+                    "songs": [
+                        {
+                            "name": "WAP (feat. Megan Thee Stallion",
+                            "author": "Cardi B, Megan Thee Stallion",
+                            "album": "WAP (feat. Megan Thee Stallion",
+                            "length": "3:07"
+                        },
+                        {
+                            "name": "MEGATRON",
+                            "author": "Nicki Minaj",
+                            "album": "MEGATRON",
+                            "length": "3:10"
+                        }
+
+                    ]
+                }
+            ]
+        },
+
+        {
+            "_id": "1",
+            "username": "User",
+            "email": "user@gmail.com",
+            "password": "user",
+            "account_type": 1,
+            "playlists":[
+                {
+                    "name": "Today's Top  Hits",
+                    "songs": [
+                        {
+                            "name": "positions",
+                            "author": "Ariana Grande",
+                            "album": "positions",
+                            "length": "2:52"
+                        },
+                        {
+                            "name": "What You Know Bout Love",
+                            "author": "Pop Smoke",
+                            "album": "Shoot For The Stars Aim For The Moon",
+                            "length": "2:40"
+                        }
+                    ]
+
+                },
+                {
+                    "name": "Mega Hit Mix",
+                    "songs": [
+                        {
+                            "name": "hot girl bummer",
+                            "author": "blackbear",
+                            "album": "hot girl bummer",
+                            "length": "3:05"
+                        },
+                        {
+                            "name": "ROXANNE",
+                            "author": "Arizona Zervas",
+                            "album": "ROXANNE",
+                            "length": "2:44"
+                        }
+
+                    ]
+
+                },
+                {
+                    "name": "BOPPERS",
+                    "songs": [
+                        {
+                            "name": "Midnight Sky",
+                            "author": "Miley Cyrus",
+                            "album": "Midnight Sky",
+                            "length": "3:43"
+                        },
+                        {
+                            "name": "Take You Dancing",
+                            "author": "Jason Derulo",
+                            "album": "Take You Dancing",
+                            "length": "3:10"
+                        }
+
+                    ]
+                }
+
+
+            ]
+
+        }
+    ]
+}
