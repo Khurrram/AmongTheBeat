@@ -4,6 +4,8 @@ import Avatar from '@material-ui/core/Avatar';
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import HeartIcon from '@material-ui/icons/Favorite';
 import TrashIcon from '@material-ui/icons/Delete';
+import './Song.css'
+
 
 const Container = styled.div`
     display:flex;
@@ -39,7 +41,7 @@ function Song(props) {
                 <Avatar variant="rounded" >
                     
                 </Avatar>
-                <span>Test data here</span>
+                <span id = "txt">{props.name}</span>
             </SongInfo>
             <SongAction>
                 <HeartIcon fontSize="large"/>
