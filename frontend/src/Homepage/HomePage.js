@@ -1,6 +1,10 @@
 import React from 'react';
 
 import styled from 'styled-components'
+import logo from '../assets/logo.png'
+import {Image} from 'react-bootstrap'
+import Avatar from '@material-ui/core/Avatar';
+import SettingsIcon from '@material-ui/icons/Settings';
 import {ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent} from 'react-pro-sidebar'
 import PlayingNow from '../components/PlayingNow'
 
@@ -19,6 +23,37 @@ const Button = styled.button`
     background-color: light-grey;
 `
 
+const ContentWindow = styled.div`
+    padding: 1.5em 0em 0em 0em;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    align-items: stretch;
+    background-color: white;
+`
+
+const Navbar = styled.div`
+    order: 0;
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 1em;
+    padding-right: 8em;
+    align-items: center;
+`
+
+const Footer = styled.div`
+    order: 2;
+    margin-top:auto;
+    padding: 1em;
+    background-color: black;
+`
+
+const MiddleContent = styled.div`
+    order: 1;
+`
+
+
 function Home() {
 
     return (
@@ -26,7 +61,7 @@ function Home() {
             <ProSidebar>
                 <SidebarHeader>
                     <div id="center">
-                        <img id="placeholder" alt="logo"></img>
+                        <Image id='img' src={logo} fluid/>
                     </div>
                 </SidebarHeader>
                 <SidebarContent >
@@ -47,9 +82,19 @@ function Home() {
                 </SidebarFooter>
                 
             </ProSidebar>
-            <div>
-                <h2>content</h2>    
-            </div>
+            <ContentWindow>
+                <Navbar>
+                    <Avatar className="AvatarIcon">J</Avatar>
+                    <SettingsIcon id="margin"/>
+                    
+                </Navbar>
+                <MiddleContent>
+
+                </MiddleContent>
+                <Footer>
+                   123222
+                </Footer>
+            </ContentWindow>
         </div>
     );
 }
