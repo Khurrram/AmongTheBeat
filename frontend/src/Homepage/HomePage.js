@@ -9,7 +9,8 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import {ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent} from 'react-pro-sidebar'
 import { NavLink, Link, Redirect, useHistory} from 'react-router-dom';
 import PlayingNow from '../components/PlayingNow'
-import PlayListView from './PlayListView'
+import PlayListView from './PlayListView';
+import BrowseView from "./BrowseView";
 import test from '../data/test.json';
 import Playlists from '../components/Playlists';
 import Browse from '../components/Browse';
@@ -37,7 +38,8 @@ const ContentWindow = styled.div`
     width: 100%;
     height: 100%;
     align-items: stretch;
-    background-color: white;
+    background:linear-gradient(rgb(46, 0, 48),transparent);
+    background-color:rgb(77, 77, 75);
 `
 
 const Navbar = styled.div`
@@ -95,6 +97,31 @@ function Home() {
         history.push(path);
     };
 
+    let typ = "browse";
+    let pname = "";
+    let psongs = "";
+
+    const changeP = (type, name , songs) =>
+    {
+        typ = type;
+        pname = name;
+        psongs = songs;
+    }
+
+    const alt = () => 
+    {
+        if(typ === "playlist")
+        {
+            return (<Playlists 
+                name = {pname}
+                songs = {psongs}
+                />);
+        }
+        else{
+            return (<Browse />);
+        }
+    }
+
     return (
         <div className="homepage">
             <ProSidebar>
@@ -139,7 +166,7 @@ function Home() {
                     
                 </Navbar>
                 <MiddleContent>
-                    <PlayListView></PlayListView>
+                    <BrowseView></BrowseView>
                 </MiddleContent>
                 <Footer>
                    123222

@@ -13,23 +13,33 @@ const Container = styled.div`
     align-items: center;
     margin-top: .5em;
     margin-bottom: .5em;
+    color: white;
+    border-radius: 5px;
     
     &:hover {
         background-color: lightgrey;
     }
+
+`
+
+const StyledAvatar = styled(Avatar)`
+    margin-left: .5em;
 `
 
 const SongInfo = styled.div`
-    display: flex;
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 1em;
     margin-right: auto;
     align-items: center;
     margin: 1.5em;
-    justify-content: space-evenly;
+    width:80%;
+    justify-content: space-evenly
+
     $:hover {
         background-color: black;
     }
 `
-
 
 const StyledHeart = styled(HeartIcon)`
     margin-right: 1rem;
@@ -40,8 +50,12 @@ const StyledHeart = styled(HeartIcon)`
     }
 `
 
+const SongArtist = styled.span`
+    grid-column-start: 2
+   
+`
 const SongName = styled.span`
-    margin-left: 1em;
+    grid-column-start: 1
 `
 
 const SongAction = styled.div`
@@ -55,11 +69,10 @@ function Song(props) {
     
     return (
         <Container >
+            <StyledAvatar variant="rounded" > L </StyledAvatar>
             <SongInfo>
-                <Avatar variant="rounded" >
-                    L
-                </Avatar>
-                <SongName>Test Data</SongName>
+               <SongName>{props.name}dd1</SongName>
+               <SongArtist>{props.artist}dd2</SongArtist>
             </SongInfo>
             <SongAction>
                 <StyledHeart></StyledHeart>

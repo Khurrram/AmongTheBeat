@@ -64,14 +64,13 @@ const StyledButton = styled(Button)`
 `
 
 
-function PlayListView(props) {
+function BrowseView(props) {
 
     return (
         <StyledDiv>
             <span>
-                <h1>PLAYLISTName </h1>
+                <h1>Browse </h1>
                 <StyledSettings></StyledSettings>
-                <StyledButton variant="contained" disableElevation >Share</StyledButton>
             </span>
             <StyledSpan>
                 <Title>Title</Title>
@@ -80,9 +79,10 @@ function PlayListView(props) {
             <span>
                 <hr/>
             </span>
+            <Song></Song>
         </StyledDiv>
-
+        
     );
 }
 
-export default PlayListView;
+export default BrowseView;
