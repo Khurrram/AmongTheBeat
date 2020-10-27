@@ -8,32 +8,37 @@ import './Song.css'
 import Icon from '@material-ui/core/Icon'
 
 const Container = styled.div`
-    & {
-        display:flex;
-        height: 3em;
-        align-items: center;
-        margin-top: .5em;
-        margin-bottom: .5em;
-    }
+    display:flex;
+    height: 3em;
+    align-items: center;
+    margin-top: .5em;
+    margin-bottom: .5em;
+    color: white;
+    border-radius: 5px;
     
     &:hover {
         background-color: lightgrey;
-        color:
     }
+
+`
+
+const StyledAvatar = styled(Avatar)`
+    margin-left: .5em;
 `
 
 const SongInfo = styled.div`
-    display: flex;
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 1em;
     margin-right: auto;
     align-items: center;
-    margin: 2em;
-    justify-content: space-evenly;
+    margin: 1.5em;
+    width:80%;
+    justify-content: space-evenly
+
     $:hover {
         background-color: black;
     }
-`
-const MarginRight = styled.span`
-    margin-right: 1em;
 `
 
 const StyledHeart = styled(HeartIcon)`
@@ -45,9 +50,12 @@ const StyledHeart = styled(HeartIcon)`
     }
 `
 
-
+const SongArtist = styled.span`
+    grid-column-start: 2
+   
+`
 const SongName = styled.span`
-    margin-left: 1em;
+    grid-column-start: 1
 `
 
 const SongAction = styled.div`
@@ -57,23 +65,14 @@ const SongAction = styled.div`
     justify-content: space-evenly;
 `
 
-const BrowseSongActions = styled.button`
-`
-
-
-
-
 function Song(props) {
     
     return (
         <Container >
+            <StyledAvatar variant="rounded" > L </StyledAvatar>
             <SongInfo>
-                <Avatar variant="rounded" >
-                    
-                </Avatar>
-
-               <SongName>{props.name}</SongName>
-
+               <SongName>{props.name}dd1</SongName>
+               <SongArtist>{props.artist}dd2</SongArtist>
             </SongInfo>
             <SongAction>
                 <StyledHeart></StyledHeart>
