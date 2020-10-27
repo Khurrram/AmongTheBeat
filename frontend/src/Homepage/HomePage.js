@@ -14,6 +14,7 @@ import BrowseView from "./BrowseView";
 import test from '../data/test.json';
 import Playlists from '../components/Playlists';
 import Browse from '../components/Browse';
+import TextField from '@material-ui/core/TextField';
 
 import './HomePage.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -72,12 +73,6 @@ function Home() {
         history.push(path);
     };
 
-    const playlistChange = (pname) =>
-    {
-        let path2 = '/playlist/' + pname;
-        history.push(path2);
-    };
-
     return (
         <div className="homepage">
             <ProSidebar>
@@ -97,12 +92,11 @@ function Home() {
                                 }
                             }}>Browse</Link>
                         </MenuItem>
-                        <MenuItem id="fontsize">Search</MenuItem>
+                        <MenuItem id="fontsize"><TextField id = "outlined-basic" label = "Search" variant = "outlined" /></MenuItem>
                     </Menu>
                     <hr width="90%" color="black"></hr>
                     <Menu>
                         <MenuItem id="fontlarge">Playlists</MenuItem>
-                        <MenuItem id="fontlarge">P2ts</MenuItem>
                         {test.playlists.map((playlist) => 
                         {
                             let path = "/playlist/" + playlist.name;

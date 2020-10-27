@@ -11,7 +11,7 @@ import { NavLink, Link, Redirect, useHistory, useLocation} from 'react-router-do
 import PlayingNow from '../components/PlayingNow'
 import test from '../data/test.json';
 import Browse from '../components/Browse';
-import PlaylistView from '../Homepage/PlayListView';
+import TextField from '@material-ui/core/TextField';
 
 import './Playlists.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -94,7 +94,7 @@ function Playlists(props) {
                             }
                         }}>Browse</Link>
                         </MenuItem>
-                        <MenuItem id="fontsize">Search</MenuItem>
+                        <MenuItem id="fontsize"><TextField id = "search" label = "Search" variant = "outlined" defaultValue = "" color = "white"/></MenuItem>
                     </Menu>
                     <hr width="90%" color="black"></hr>
                     <Menu>
@@ -126,7 +126,7 @@ function Playlists(props) {
             <ContentWindow>
                 <Navbar>
                     <Avatar className="AvatarIcon">J</Avatar>
-                    <SettingsIcon id="margin"/>
+                    <Link to = "/settings"><SettingsIcon id="margin"/></Link>
                     
                 </Navbar>
                 <MiddleContent>

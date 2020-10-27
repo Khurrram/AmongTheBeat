@@ -10,6 +10,7 @@ import {ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent
 import { NavLink, Link, Redirect, useHistory, useLocation} from 'react-router-dom';
 import PlayingNow from '../components/PlayingNow'
 import test from '../data/test.json';
+import TextField from '@material-ui/core/TextField';
 
 import './Browse.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -87,7 +88,7 @@ function Browse(props)
                         <MenuItem id="fontsize">
                             Browse
                         </MenuItem>
-                        <MenuItem id="fontsize">Search</MenuItem>
+                        <MenuItem id="fontsize"><TextField id = "search" label = "Search" variant = "outlined" defaultValue = ""/></MenuItem>
                     </Menu>
                     <hr width="90%" color="black"></hr>
                     <Menu>
@@ -119,8 +120,10 @@ function Browse(props)
             <ContentWindow>
                 <Navbar>
                     <Avatar className="AvatarIcon">J</Avatar>
-                    <SettingsIcon id="margin"/>
+                    <Link to = "/settings"><SettingsIcon id="margin"/></Link>
                     
+    
+
                 </Navbar>
                 <MiddleContent>
                 <BrowseView></BrowseView>

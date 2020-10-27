@@ -1,0 +1,73 @@
+#settings
+{
+    background:linear-gradient(rgb(46, 0, 48),transparent);
+    background-color:rgb(77, 77, 75);
+}
+
+#arr
+{
+    color:white;
+    width: 50px;
+    height: 50px;
+}
+
+#av
+{
+    width: 150px;
+    height: 150px;
+    font-size: 40px;
+    top: 15%;
+    left: 30%;
+    
+}
+
+#user
+{
+    color: white;
+    font-size: 40px;
+    margin-left: 40%;
+    margin-top: 2.5%;
+}
+
+#oldp, #newp, #cnewpc
+{
+    width: 600px;
+    height: 25px;
+    
+}
+#oldpc
+{
+    margin-left: 30%;
+    margin-top: 5%;
+}
+
+#newpc
+{
+    margin-left: 30%;
+    margin-top: 3%;
+}
+
+#cnewpc
+{
+    margin-left: 30%;
+    margin-top: 3%;
+}
+
+#confirm
+{
+    color:white;
+    font-size: 32px;
+    background-color: rgb(0, 2, 128);
+    margin-top: 7%;
+    margin-left: 25%;
+}
+
+#logout
+{
+    color: white;
+    font-size: 32px;
+    background: rgb(97, 4, 4);
+    margin-top: 7%;
+    margin-left: 25%;
+}
+
