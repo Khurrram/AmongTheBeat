@@ -7,13 +7,11 @@ import TrashIcon from '@material-ui/icons/Delete';
 import Icon from '@material-ui/core/Icon'
 
 const Container = styled.div`
-    & {
-        display:flex;
-        height: 3em;
-        align-items: center;
-        margin-top: .5em;
-        margin-bottom: .5em;
-    }
+    display:flex;
+    height: 3em;
+    align-items: center;
+    margin-top: .5em;
+    margin-bottom: .5em;
     
     &:hover {
         background-color: lightgrey;
@@ -24,15 +22,13 @@ const SongInfo = styled.div`
     display: flex;
     margin-right: auto;
     align-items: center;
-    margin: 2em;
+    margin: 1.5em;
     justify-content: space-evenly;
     $:hover {
         background-color: black;
     }
 `
-const MarginRight = styled.span`
-    margin-right: 1em;
-`
+
 
 const StyledHeart = styled(HeartIcon)`
     margin-right: 1rem;
@@ -42,7 +38,6 @@ const StyledHeart = styled(HeartIcon)`
         color: ${props => props.fav ? "red" : "grey"};
     }
 `
-
 
 const SongName = styled.span`
     margin-left: 1em;
@@ -55,21 +50,15 @@ const SongAction = styled.div`
     justify-content: space-evenly;
 `
 
-const BrowseSongActions = styled.button`
-`
-
-
-
-
 function Song(props) {
     
     return (
         <Container >
             <SongInfo>
                 <Avatar variant="rounded" >
-                    
+                    L
                 </Avatar>
-                <SongName id="test">Test Data</SongName>
+                <SongName>Test Data</SongName>
             </SongInfo>
             <SongAction>
                 <StyledHeart></StyledHeart>

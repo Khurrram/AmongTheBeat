@@ -9,6 +9,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import {ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent} from 'react-pro-sidebar'
 import { NavLink, Link, Redirect, useHistory} from 'react-router-dom';
 import PlayingNow from '../components/PlayingNow'
+import PlayListView from './PlayListView'
 import test from '../data/test.json';
 
 import './HomePage.css'
@@ -113,9 +114,9 @@ function Home() {
                     
                 </Navbar>
                 <MiddleContent>
-                    <Song></Song>
-                    <Song></Song>
-                    <Song></Song>
+                    <PlayListView>
+
+                    </PlayListView>
                 </MiddleContent>
                 <Footer>
                    123222
