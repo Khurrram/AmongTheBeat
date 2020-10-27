@@ -18,6 +18,7 @@ const Container = styled.div`
     
     &:hover {
         background-color: lightgrey;
+        color:
     }
 `
 
@@ -70,7 +71,9 @@ function Song(props) {
                 <Avatar variant="rounded" >
                     
                 </Avatar>
-                <SongName id="test">Test Data</SongName>
+
+               <SongName>{props.name}</SongName>
+
             </SongInfo>
             <SongAction>
                 <StyledHeart></StyledHeart>

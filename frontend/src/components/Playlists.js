@@ -12,12 +12,20 @@ function Playlists(props) {
 
     return(
 
-        <div id = "inside" className = "fullscreen-container">
+        <div id = "inside" >
             {props.name}
-            <Song 
-            name  = {props.name}
-            songs = {props.songs}
-            />
+
+
+            {props.songs.map((song) => 
+            {
+                return(
+
+                    <Song 
+                    name  = {song.name}
+                    />
+                );
+            })}
+
         </div>
 
     );
