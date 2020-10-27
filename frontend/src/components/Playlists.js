@@ -58,6 +58,12 @@ const MiddleContent = styled.div`
     order: 1;
 `
 
+const SongDiv = styled.div`
+    min-height: 65vh;
+    max-height: 65vh;
+    overflow-y: auto;
+`
+
 function Playlists(props) {
 
     const history = useHistory();
@@ -127,7 +133,8 @@ function Playlists(props) {
                 <PlayListView
                 name = {l.state.name}
                 ></PlayListView>
-                <div id = "inside" >
+                <SongDiv>
+                    <div id = "inside" >
                     {l.state.songs.map((song) => 
                     {
                         return(
@@ -137,7 +144,9 @@ function Playlists(props) {
                             />
                         );
                     })}
-                </div>
+                    </div>
+                </SongDiv>
+                
                 </MiddleContent>
                 <Footer>
                    123222

@@ -36,6 +36,7 @@ const ContentWindow = styled.div`
     align-items: stretch;
     background:linear-gradient(rgb(46, 0, 48),transparent);
     background-color:rgb(77, 77, 75);
+
 `
 
 const Navbar = styled.div`
@@ -54,6 +55,12 @@ const Footer = styled.div`
 `
 const MiddleContent = styled.div`
     order: 1;
+    
+`
+
+const SongDiv = styled.div`
+    max-height: 65vh;
+    overflow-y: auto;
 `
 
 function Browse(props)
@@ -117,19 +124,22 @@ function Browse(props)
                 </Navbar>
                 <MiddleContent>
                 <BrowseView></BrowseView>
-                <div id = "inside" >
-                    {
-                        test.songs.map((song) =>
+                <SongDiv>
+                    <div id = "inside" >
                         {
-                            return (
-                                <Song 
-                                name  = {song.name}
-                                artist = {song.author}
-                                />
-                            );
-                        })
-                    }
-                </div>
+                            test.songs.map((song) =>
+                            {
+                                return (
+                                    <Song 
+                                    name  = {song.name}
+                                    artist = {song.author}
+                                    />
+                                );
+                            })
+                        }
+                    </div>
+                </SongDiv>
+                
                 </MiddleContent>
                 <Footer>
                    123222

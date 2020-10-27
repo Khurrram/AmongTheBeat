@@ -5,6 +5,7 @@ import SettingIcon from '@material-ui/icons/Settings'
 import Button from '@material-ui/core/Button'
 
 
+
 const StyledDiv = styled.div`
     padding: 1.5rem;
     margin-right: 1rem;
@@ -28,8 +29,6 @@ const StyledDiv = styled.div`
     & h6 {
         color: white;
     }
-
-   
 `
 
 const StyledSpan = styled.span`
@@ -63,6 +62,12 @@ const StyledButton = styled(Button)`
     margin-left: 2rem;
 `
 
+const SongDiv = styled.div`
+    min-height: 65vh;
+    max-height: 65vh;
+    overflow-y:auto;
+`
+
 
 function BrowseView(props) {
 
@@ -79,11 +84,10 @@ function BrowseView(props) {
             <span>
                 <hr/>
             </span>
-            <Song name="asdasd"></Song>
-            <Song name="asd23asd"></Song>
-            <Song name="asda33sd"></Song>
-            <Song></Song>
-            <Song></Song>
+            {/* <SongDiv>
+                
+            </SongDiv> */}
+            
         </StyledDiv>
         
     );

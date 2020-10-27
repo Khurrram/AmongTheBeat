@@ -31,6 +31,8 @@ const StyledDiv = styled.div`
 `
 
 const SongDiv = styled.div`
+    min-height: 65vh;
+    max-height: 65vh;
     overflow-y:auto;
 `
 
@@ -84,9 +86,9 @@ function PlayListView(props) {
             <span>
                 <hr/>
             </span>
-            <SongDiv>
-                {/* PUT SONGS HERE */}
-            </SongDiv>
+            {/* <SongDiv>
+
+            </SongDiv> */}
         </StyledDiv>
 
     );
