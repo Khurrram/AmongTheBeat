@@ -32,6 +32,7 @@ const SongInfo = styled.div`
     align-items: center;
     margin: 1.5em;
     width: 100%;
+    color: white;
 
     $:hover {
         background-color: black;
