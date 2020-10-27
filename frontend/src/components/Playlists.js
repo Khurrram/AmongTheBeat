@@ -11,10 +11,12 @@ import { NavLink, Link, Redirect, useHistory, useLocation} from 'react-router-do
 import PlayingNow from '../components/PlayingNow'
 import test from '../data/test.json';
 import Browse from '../components/Browse';
+import PlaylistView from '../Homepage/PlayListView';
 
 import './Playlists.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pro-sidebar/dist/css/styles.css';
+import PlayListView from '../Homepage/PlayListView';
 
 const Button = styled.button`
     padding: .5em;
@@ -77,15 +79,20 @@ function Playlists(props) {
                 </SidebarHeader>
                 <SidebarContent >
                     <Menu>
-                        <MenuItem id="fontsize"
-                        
-                        >Browse</MenuItem>
+                        <MenuItem id="fontsize">
+                            <Link to = {{
+                            pathname: "/browse",
+                            state:
+                            {
+                                songs:test.songs
+                            }
+                        }}>Browse</Link>
+                        </MenuItem>
                         <MenuItem id="fontsize">Search</MenuItem>
                     </Menu>
                     <hr width="90%" color="black"></hr>
                     <Menu>
                         <MenuItem id="fontlarge">Playlists</MenuItem>
-                        <MenuItem id="fontlarge">P2ts</MenuItem>
                         {test.playlists.map((playlist) => 
                         {
                             let path = "/playlist/" + playlist.name;
@@ -117,14 +124,16 @@ function Playlists(props) {
                     
                 </Navbar>
                 <MiddleContent>
+                <PlayListView
+                name = {l.state.name}
+                ></PlayListView>
                 <div id = "inside" >
-                    {l.state.name}
-
                     {l.state.songs.map((song) => 
                     {
                         return(
                             <Song 
                             name  = {song.name}
+                            artist = {song.author}
                             />
                         );
                     })}

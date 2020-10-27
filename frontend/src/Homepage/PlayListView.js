@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Song from './Song'
 import SettingIcon from '@material-ui/icons/Settings'
 import Button from '@material-ui/core/Button'
-
+import {Link, useHistory, useLocation} from 'react-router-dom';
 
 const StyledDiv = styled.div`
     padding: 1.5rem;
@@ -66,10 +66,12 @@ const StyledButton = styled(Button)`
 
 function PlayListView(props) {
 
+    let l = useLocation();
+
     return (
         <StyledDiv>
             <span>
-                <h1>PLAYLISTName </h1>
+                <h1>{l.state.name} </h1>
                 <StyledSettings></StyledSettings>
                 <StyledButton variant="contained" disableElevation >Share</StyledButton>
             </span>

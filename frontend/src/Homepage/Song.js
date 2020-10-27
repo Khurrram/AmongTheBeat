@@ -71,8 +71,8 @@ function Song(props) {
         <Container >
             <StyledAvatar variant="rounded" > L </StyledAvatar>
             <SongInfo>
-               <SongName>{props.name}dd1</SongName>
-               <SongArtist>{props.artist}dd2</SongArtist>
+               <SongName>{props.name}</SongName>
+               <SongArtist>{props.artist}</SongArtist>
             </SongInfo>
             <SongAction>
                 <StyledHeart></StyledHeart>

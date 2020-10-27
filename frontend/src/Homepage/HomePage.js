@@ -7,7 +7,7 @@ import Song from './Song';
 import Avatar from '@material-ui/core/Avatar';
 import SettingsIcon from '@material-ui/icons/Settings';
 import {ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent} from 'react-pro-sidebar'
-import { NavLink, Link, Redirect, useHistory} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import PlayingNow from '../components/PlayingNow'
 import PlayListView from './PlayListView';
 import BrowseView from "./BrowseView";
@@ -88,9 +88,15 @@ function Home() {
                 </SidebarHeader>
                 <SidebarContent >
                     <Menu>
-                        <MenuItem id="fontsize"
-                        
-                        >Browse</MenuItem>
+                        <MenuItem id="fontsize">
+                            <Link to = {{
+                                pathname: "/browse",
+                                state:
+                                {
+                                    songs:test.songs
+                                }
+                            }}>Browse</Link>
+                        </MenuItem>
                         <MenuItem id="fontsize">Search</MenuItem>
                     </Menu>
                     <hr width="90%" color="black"></hr>
@@ -128,7 +134,7 @@ function Home() {
                     
                 </Navbar>
                 <MiddleContent>
-                    <BrowseView></BrowseView>
+                    
                 </MiddleContent>
                 <Footer>
                    123222

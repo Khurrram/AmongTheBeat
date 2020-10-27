@@ -79,7 +79,6 @@ function BrowseView(props) {
             <span>
                 <hr/>
             </span>
-            <Song></Song>
         </StyledDiv>
         
     );
