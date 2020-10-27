@@ -12,6 +12,8 @@ import PlayingNow from '../components/PlayingNow'
 import test from '../data/test.json';
 import Browse from '../components/Browse';
 import TextField from '@material-ui/core/TextField';
+import PlayIcon from '@material-ui/icons/PlayArrow';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
 import './Playlists.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -48,11 +50,25 @@ const Navbar = styled.div`
     padding-right: 8em;
     align-items: center;
 `
+
 const Footer = styled.div`
+    display: flex;
+    align-items: center;
     order: 2;
     margin-top:auto;
-    padding: 1em;
+    padding-left: 1em;
+    height: 7%;
     background-color: black;
+
+    & span {
+        color: white;
+        margin-left: 1.5em;
+    }
+
+    &.right {
+        margin-left: auto;
+        margin-right: 2em;
+    }
 `
 const MiddleContent = styled.div`
     order: 1;
@@ -149,7 +165,18 @@ function Playlists(props) {
                 
                 </MiddleContent>
                 <Footer>
-                   123222
+                    <Avatar variant="rounded">
+                            D
+                        </Avatar>
+                        <span>
+                            Rogue - Air
+                        </span>
+                        <span>
+                            <PlayIcon></PlayIcon>
+                        </span>
+                        <span id="right">
+                            <PlaylistAddIcon></PlaylistAddIcon>
+                        </span>
                 </Footer>
             </ContentWindow>
         </div>
