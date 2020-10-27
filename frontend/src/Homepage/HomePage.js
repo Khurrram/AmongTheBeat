@@ -14,6 +14,9 @@ import BrowseView from "./BrowseView";
 import test from '../data/test.json';
 import Playlists from '../components/Playlists';
 import Browse from '../components/Browse';
+import PlayIcon from '@material-ui/icons/PlayArrow';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+
 
 import './HomePage.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -52,15 +55,31 @@ const Navbar = styled.div`
 `
 
 const Footer = styled.div`
+    display: flex;
+    align-items: center;
     order: 2;
     margin-top:auto;
-    padding: 1em;
+    padding-left: 1em;
+    height: 7%;
     background-color: black;
+
+    & span {
+        color: white;
+        margin-left: 1.5em;
+    }
+
+    &.right {
+        margin-left: auto;
+        margin-right: 2em;
+    }
 `
 
 const MiddleContent = styled.div`
     order: 1;
 `
+
+// const PlayingNowInfo =
+
 
 function Home() {
 
@@ -137,7 +156,18 @@ function Home() {
                     <BrowseView></BrowseView>
                 </MiddleContent>
                 <Footer>
-                   123222
+                    <Avatar variant="rounded">
+                        D
+                    </Avatar>
+                    <span>
+                        Rogue - Air
+                    </span>
+                    <span>
+                        <PlayIcon></PlayIcon>
+                    </span>
+                    <span id="right">
+                        <PlaylistAddIcon></PlaylistAddIcon>
+                    </span>
                 </Footer>
             </ContentWindow>
         </div>
