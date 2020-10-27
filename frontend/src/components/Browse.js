@@ -13,6 +13,7 @@ import test from '../data/test.json';
 import TextField from '@material-ui/core/TextField';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import {makeStyles} from '@material-ui/core/styles';
 
 import './Browse.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -78,9 +79,43 @@ const SongDiv = styled.div`
     max-height: 65vh;
     overflow-y: auto;
 `
+const useStyles = makeStyles({
+    root: {
+        "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+          borderColor: "grey"
+        },
+        "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+          borderColor: "white"
+        },
+        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+          borderColor: "white"
+        },
+        "& .MuiOutlinedInput-input": {
+          color: "grey"
+        },
+        "&:hover .MuiOutlinedInput-input": {
+          color: "white"
+        },
+        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+          color: "white"
+        },
+        "& .MuiInputLabel-outlined": {
+          color: "grey"
+        },
+        "&:hover .MuiInputLabel-outlined": {
+          color: "white"
+        },
+        "& .MuiInputLabel-outlined.Mui-focused": {
+          color: "white"
+        }
+      }
+
+});
+
 
 function Browse(props)
 {
+    const classes = useStyles();
     const history = useHistory();
     let l = useLocation();
 
@@ -103,7 +138,13 @@ function Browse(props)
                         <MenuItem id="fontsize">
                             Browse
                         </MenuItem>
-                        <MenuItem id="fontsize"><TextField id = "search" label = "Search" variant = "outlined" defaultValue = ""/></MenuItem>
+                        <MenuItem id="fontsize">
+                            <TextField className={classes.root}
+                            defaultValue=""
+                            variant="outlined"
+                            label="Search"           
+                            id = "search"  />
+                        </MenuItem>
                     </Menu>
                     <hr width="90%" color="black"></hr>
                     <Menu>
