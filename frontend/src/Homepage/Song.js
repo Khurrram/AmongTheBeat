@@ -27,14 +27,11 @@ const StyledAvatar = styled(Avatar)`
 `
 
 const SongInfo = styled.div`
-    display: inline-grid;
-    grid-template-columns: auto auto;
-    grid-column-gap: 1em;
+    display: flex;
     margin-right: auto;
     align-items: center;
     margin: 1.5em;
-    width:80%;
-    justify-content: space-evenly
+    width: 100%;
 
     $:hover {
         background-color: black;
@@ -51,11 +48,11 @@ const StyledHeart = styled(HeartIcon)`
 `
 
 const SongArtist = styled.span`
-    grid-column-start: 2
+    width: 43rem;
    
 `
 const SongName = styled.span`
-    grid-column-start: 1
+    flex: auto;
 `
 
 const SongAction = styled.div`
@@ -71,8 +68,8 @@ function Song(props) {
         <Container >
             <StyledAvatar variant="rounded" > L </StyledAvatar>
             <SongInfo>
-               <SongName>{props.name}dd1</SongName>
-               <SongArtist>{props.artist}dd2</SongArtist>
+               <SongName>{props.name}d1</SongName>
+               <SongArtist>{props.artist}d123123d2</SongArtist>
             </SongInfo>
             <SongAction>
                 <StyledHeart></StyledHeart>

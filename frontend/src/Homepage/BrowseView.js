@@ -51,7 +51,7 @@ const Artist = styled.h6`
 
 const Title = styled.h6`
     grid-column-start: 1;
-      grid-row-end: 1;
+    grid-row-end: 1;
 `
 
 const StyledSettings = styled(SettingIcon)`
@@ -79,6 +79,10 @@ function BrowseView(props) {
             <span>
                 <hr/>
             </span>
+            <Song name="asdasd"></Song>
+            <Song name="asd23asd"></Song>
+            <Song name="asda33sd"></Song>
+            <Song></Song>
             <Song></Song>
         </StyledDiv>
         

@@ -27,9 +27,11 @@ const StyledDiv = styled.div`
 
     & h6 {
         color: white;
-    }
+    }  
+`
 
-   
+const SongDiv = styled.div`
+    overflow-y:auto;
 `
 
 const StyledSpan = styled.span`
@@ -80,6 +82,9 @@ function PlayListView(props) {
             <span>
                 <hr/>
             </span>
+            <SongDiv>
+                {/* PUT SONGS HERE */}
+            </SongDiv>
         </StyledDiv>
 
     );
