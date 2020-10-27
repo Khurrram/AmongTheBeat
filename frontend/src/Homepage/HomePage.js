@@ -60,31 +60,6 @@ const MiddleContent = styled.div`
     order: 1;
 `
 
-let typ = "browse";
-let pname = "";
-let psongs = "";
-
-function changeP(type, name , songs)
-{
-    typ = type;
-    pname = name;
-    psongs = songs;
-}
-
-function alt()
-{
-    if(typ === "playlist")
-    {
-        return (<Playlists 
-            name = {pname}
-            songs = {psongs}
-            />);
-    }
-    else{
-        return (<Browse />);
-    }
-}
-
 function Home() {
 
     const history = useHistory();
@@ -95,30 +70,11 @@ function Home() {
         history.push(path);
     };
 
-    let typ = "browse";
-    let pname = "";
-    let psongs = "";
-
-    const changeP = (type, name , songs) =>
+    const playlistChange = (pname) =>
     {
-        typ = type;
-        pname = name;
-        psongs = songs;
-    }
-
-    const alt = () => 
-    {
-        if(typ === "playlist")
-        {
-            return (<Playlists 
-                name = {pname}
-                songs = {psongs}
-                />);
-        }
-        else{
-            return (<Browse />);
-        }
-    }
+        let path2 = '/playlist/' + pname;
+        history.push(path2);
+    };
 
     return (
         <div className="homepage">
@@ -131,7 +87,7 @@ function Home() {
                 <SidebarContent >
                     <Menu>
                         <MenuItem id="fontsize"
-                        onClick = {changeP("browse","","")}
+                        
                         >Browse</MenuItem>
                         <MenuItem id="fontsize">Search</MenuItem>
                     </Menu>
@@ -141,11 +97,17 @@ function Home() {
                         <MenuItem id="fontlarge">P2ts</MenuItem>
                         {test.playlists.map((playlist) => 
                         {
+                            let path = "/playlist/" + playlist.name;
                             return(
-                                <MenuItem
-                                onClick = {changeP("playlist", playlist.name,playlist.songs)}
-                                >
-                                    {playlist.name}
+                                <MenuItem>
+                                    <Link to = 
+                                    {{pathname: path,
+                                        state:
+                                        {
+                                            name: playlist.name,
+                                            songs: playlist.songs
+                                        }
+                                    }}> {playlist.name} </Link>
                                 </MenuItem>);
                         })}
                     </Menu>
@@ -164,7 +126,7 @@ function Home() {
                     
                 </Navbar>
                 <MiddleContent>
-                    {alt()}
+                    
                 </MiddleContent>
                 <Footer>
                    123222
