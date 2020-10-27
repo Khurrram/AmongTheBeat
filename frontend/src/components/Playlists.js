@@ -1,12 +1,25 @@
-import React from 'react'
+import React from 'react';
 
-function Playlists() {
+import test from '../data/test.json';
+import Song from '../Homepage/Song';
+
+import './Playlists.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-pro-sidebar/dist/css/styles.css';
+import {useLocation} from 'react-router-dom';
+
+function Playlists(props) {
+
     return(
-        <ul>
-            <li>
-                bitch
-            </li>
-        </ul>
+
+        <div id = "inside" className = "fullscreen-container">
+            {props.name}
+            <Song 
+            name  = {props.name}
+            songs = {props.songs}
+            />
+        </div>
+
     );
 }
 

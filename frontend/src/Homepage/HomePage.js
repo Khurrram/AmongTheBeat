@@ -11,6 +11,8 @@ import { NavLink, Link, Redirect, useHistory} from 'react-router-dom';
 import PlayingNow from '../components/PlayingNow'
 import PlayListView from './PlayListView'
 import test from '../data/test.json';
+import Playlists from '../components/Playlists';
+import Browse from '../components/Browse';
 
 import './HomePage.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -58,6 +60,30 @@ const MiddleContent = styled.div`
     order: 1;
 `
 
+let typ = "browse";
+let pname = "";
+let psongs = "";
+
+function changeP(type, name , songs)
+{
+    typ = type;
+    pname = name;
+    psongs = songs;
+}
+
+function alt()
+{
+    if(typ === "playlist")
+    {
+        return (<Playlists 
+            name = {pname}
+            songs = {psongs}
+            />);
+    }
+    else{
+        return (<Browse />);
+    }
+}
 
 function Home() {
 
@@ -79,7 +105,9 @@ function Home() {
                 </SidebarHeader>
                 <SidebarContent >
                     <Menu>
-                        <MenuItem id="fontsize">Browse</MenuItem>
+                        <MenuItem id="fontsize"
+                        onClick = {changeP("browse","","")}
+                        >Browse</MenuItem>
                         <MenuItem id="fontsize">Search</MenuItem>
                     </Menu>
                     <hr width="90%" color="black"></hr>
@@ -88,15 +116,12 @@ function Home() {
                         <MenuItem id="fontlarge">P2ts</MenuItem>
                         {test.playlists.map((playlist) => 
                         {
-                            return (
-                                <MenuItem>
-                                {<Link to = {{pathname: "/playlist",
-                                state: {data: playlist.name}
-                                }}
-                                
-                                >{playlist.name}</Link>}
-                                </MenuItem>
-                            );
+                            return(
+                                <MenuItem
+                                onClick = {changeP("playlist", playlist.name,playlist.songs)}
+                                >
+                                    {playlist.name}
+                                </MenuItem>);
                         })}
                     </Menu>
                 </SidebarContent>
@@ -114,9 +139,7 @@ function Home() {
                     
                 </Navbar>
                 <MiddleContent>
-                    <PlayListView>
-
-                    </PlayListView>
+                    <PlayListView></PlayListView>
                 </MiddleContent>
                 <Footer>
                    123222

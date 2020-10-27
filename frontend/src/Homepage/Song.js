@@ -4,6 +4,7 @@ import Avatar from '@material-ui/core/Avatar';
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import HeartIcon from '@material-ui/icons/Favorite';
 import TrashIcon from '@material-ui/icons/Delete';
+import './Song.css'
 import Icon from '@material-ui/core/Icon'
 
 const Container = styled.div`
