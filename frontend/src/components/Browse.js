@@ -10,16 +10,15 @@ import {ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent
 import { NavLink, Link, Redirect, useHistory, useLocation} from 'react-router-dom';
 import PlayingNow from '../components/PlayingNow'
 import test from '../data/test.json';
-import Browse from '../components/Browse';
 import TextField from '@material-ui/core/TextField';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import {makeStyles} from '@material-ui/core/styles';
 
-import './Playlists.css'
+import './Browse.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pro-sidebar/dist/css/styles.css';
-import PlayListView from '../Homepage/PlayListView';
+import BrowseView from '../Homepage/BrowseView';
 
 const Button = styled.button`
     padding: .5em;
@@ -41,6 +40,7 @@ const ContentWindow = styled.div`
     align-items: stretch;
     background:linear-gradient(rgb(46, 0, 48),transparent);
     background-color:rgb(77, 77, 75);
+
 `
 
 const Navbar = styled.div`
@@ -51,7 +51,6 @@ const Navbar = styled.div`
     padding-right: 8em;
     align-items: center;
 `
-
 const Footer = styled.div`
     display: flex;
     align-items: center;
@@ -73,10 +72,10 @@ const Footer = styled.div`
 `
 const MiddleContent = styled.div`
     order: 1;
+    
 `
 
 const SongDiv = styled.div`
-    min-height: 65vh;
     max-height: 65vh;
     overflow-y: auto;
 `
@@ -113,8 +112,9 @@ const useStyles = makeStyles({
 
 });
 
-function Playlists(props) {
 
+function Browse(props)
+{
     const classes = useStyles();
     const history = useHistory();
     let l = useLocation();
@@ -136,20 +136,14 @@ function Playlists(props) {
                 <SidebarContent >
                     <Menu>
                         <MenuItem id="fontsize">
-                            <Link to = {{
-                            pathname: "/browse",
-                            state:
-                            {
-                                songs:test.songs
-                            }
-                        }}>Browse</Link>
+                            Browse
                         </MenuItem>
                         <MenuItem id="fontsize">
                             <TextField className={classes.root}
-                                defaultValue=""
-                                variant="outlined"
-                                label="Search"           
-                                id = "search"  />
+                            defaultValue=""
+                            variant="outlined"
+                            label="Search"           
+                            id = "search"  />
                         </MenuItem>
                     </Menu>
                     <hr width="90%" color="black"></hr>
@@ -184,22 +178,24 @@ function Playlists(props) {
                     <Avatar className="AvatarIcon">J</Avatar>
                     <Link to = "/settings"><SettingsIcon id="margin"/></Link>
                     
+    
+
                 </Navbar>
                 <MiddleContent>
-                <PlayListView
-                name = {l.state.name}
-                ></PlayListView>
+                <BrowseView></BrowseView>
                 <SongDiv>
                     <div id = "inside" >
-                    {l.state.songs.map((song) => 
-                    {
-                        return(
-                            <Song 
-                            name  = {song.name}
-                            artist = {song.author}
-                            />
-                        );
-                    })}
+                        {
+                            test.songs.map((song) =>
+                            {
+                                return (
+                                    <Song 
+                                    name  = {song.name}
+                                    artist = {song.author}
+                                    />
+                                );
+                            })
+                        }
                     </div>
                 </SongDiv>
                 
@@ -221,7 +217,7 @@ function Playlists(props) {
             </ContentWindow>
         </div>
     );
+
 }
 
-export default Playlists
-
+export default Browse

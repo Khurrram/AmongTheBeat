@@ -3,16 +3,26 @@ import React from 'react';
 import styled from 'styled-components'
 import logo from '../assets/logo.png'
 import {Image} from 'react-bootstrap'
+import Song from './Song';
 import Avatar from '@material-ui/core/Avatar';
 import SettingsIcon from '@material-ui/icons/Settings';
 import {ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent} from 'react-pro-sidebar'
+import {Link, useHistory} from 'react-router-dom';
 import PlayingNow from '../components/PlayingNow'
+import PlayListView from './PlayListView';
+import BrowseView from "./BrowseView";
 import test from '../data/test.json';
+import Playlists from '../components/Playlists';
+import Browse from '../components/Browse';
+import TextField from '@material-ui/core/TextField';
+import PlayIcon from '@material-ui/icons/PlayArrow';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+
 
 import './HomePage.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pro-sidebar/dist/css/styles.css';
-import { NavLink, Link, Redirect, useHistory} from 'react-router-dom';
+
 
 const Button = styled.button`
     padding: .5em;
@@ -32,7 +42,8 @@ const ContentWindow = styled.div`
     width: 100%;
     height: 100%;
     align-items: stretch;
-    background-color: white;
+    background:linear-gradient(rgb(46, 0, 48),transparent);
+    background-color:rgb(77, 77, 75);
 `
 
 const Navbar = styled.div`
@@ -45,15 +56,30 @@ const Navbar = styled.div`
 `
 
 const Footer = styled.div`
+    display: flex;
+    align-items: center;
     order: 2;
     margin-top:auto;
-    padding: 1em;
+    padding-left: 1em;
+    height: 7%;
     background-color: black;
+
+    & span {
+        color: white;
+        margin-left: 1.5em;
+    }
+
+    &.right {
+        margin-left: auto;
+        margin-right: 2em;
+    }
 `
 
 const MiddleContent = styled.div`
     order: 1;
 `
+
+// const PlayingNowInfo =
 
 
 function Home() {
@@ -76,24 +102,34 @@ function Home() {
                 </SidebarHeader>
                 <SidebarContent >
                     <Menu>
-                        <MenuItem id="fontsize">Browse</MenuItem>
-                        <MenuItem id="fontsize">Search</MenuItem>
+                        <MenuItem id="fontsize">
+                            <Link to = {{
+                                pathname: "/browse",
+                                state:
+                                {
+                                    songs:test.songs
+                                }
+                            }}>Browse</Link>
+                        </MenuItem>
+                        <MenuItem id="fontsize"><TextField id = "outlined-basic" label = "Search" variant = "outlined" /></MenuItem>
                     </Menu>
                     <hr width="90%" color="black"></hr>
                     <Menu>
                         <MenuItem id="fontlarge">Playlists</MenuItem>
-                        <MenuItem id="fontlarge">P2ts</MenuItem>
                         {test.playlists.map((playlist) => 
                         {
-                            return (
+                            let path = "/playlist/" + playlist.name;
+                            return(
                                 <MenuItem>
-                                {<Link to = {{pathname: "/playlist",
-                                state: {data: playlist.name}
-                                }}
-                                
-                                >{playlist.name}</Link>}
-                                </MenuItem>
-                            );
+                                    <Link to = 
+                                    {{pathname: path,
+                                        state:
+                                        {
+                                            name: playlist.name,
+                                            songs: playlist.songs
+                                        }
+                                    }}> {playlist.name} </Link>
+                                </MenuItem>);
                         })}
                     </Menu>
                 </SidebarContent>
@@ -111,10 +147,21 @@ function Home() {
                     
                 </Navbar>
                 <MiddleContent>
-
+                    <BrowseView></BrowseView>
                 </MiddleContent>
                 <Footer>
-                   123222
+                    <Avatar variant="rounded">
+                        D
+                    </Avatar>
+                    <span>
+                        Rogue - Air
+                    </span>
+                    <span>
+                        <PlayIcon></PlayIcon>
+                    </span>
+                    <span id="right">
+                        <PlaylistAddIcon></PlaylistAddIcon>
+                    </span>
                 </Footer>
             </ContentWindow>
         </div>

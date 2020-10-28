@@ -1,0 +1,62 @@
+.homepage {
+    background-color: blue;
+    height: 100vmin;
+    display: flex;
+    align-items: stretch;
+}
+
+#center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: blueviolet; */
+}
+
+#placeholder {
+    margin: 1em;
+    width: 95%;
+    height: 100px;
+    background-color:grey;
+}
+
+#fontsize {
+    font-size: larger;
+    color: white;
+}
+
+#fontlarge {
+    font-size: large;
+    color: white;
+}
+#fontlarger {
+    font-size: larger;
+    color: white;
+}
+#fontmedium{
+    font-size: medium;
+}
+
+#img {
+    max-width: 100%;
+    margin: 1em;
+}
+
+.AvatarIcon {
+    height: 5em;
+    width: 5em;
+}
+
+#margin {
+    margin-right: 12px;
+}
+
+#inside
+{
+    color: white;
+}
+
+#search
+{
+    color: white;
+    background-color: light-grey;
+}

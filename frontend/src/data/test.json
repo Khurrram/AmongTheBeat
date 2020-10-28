@@ -20,6 +20,18 @@
                     "author": "Jack Harlow",
                     "album": "Sweet Action",
                     "length": "2:19"
+                },
+                {
+                    "name": "Take You Dancing",
+                    "author": "Jason Derulo",
+                    "album": "Take You Dancing",
+                    "length": "3:10"
+                },
+                {
+                    "name": "Dynamite",
+                    "author": "BTS",
+                    "album": "Dynamite",
+                    "length": "3:19"
                 }
             ]
 
@@ -38,6 +50,18 @@
                     "author": "DJ Khaled, Drake",
                     "album": "POPSTAR (feat. Drake)",
                     "length": "3:20"
+                },
+                {
+                    "name": "Tick Tock (feat. 24kGoldn)",
+                    "author": "Clean Bandit, Mabel, 24kGoldn",
+                    "album": "Tick Tock (feat. 24kGoldn)",
+                    "length": "2:58"
+                },
+                {
+                    "name": "SO DONE",
+                    "author": "The Kid LAROI",
+                    "album": "SO DONE",
+                    "length": "2:07"
                 }
 
             ]
@@ -47,9 +71,9 @@
             "name": "WAP Caviar",
             "songs": [
                 {
-                    "name": "WAP (feat. Megan Thee Stallion",
+                    "name": "WAP (feat. Megan Thee Stallion)",
                     "author": "Cardi B, Megan Thee Stallion",
-                    "album": "WAP (feat. Megan Thee Stallion",
+                    "album": "WAP (feat. Megan Thee Stallion)",
                     "length": "3:07"
                 },
                 {
@@ -57,11 +81,98 @@
                     "author": "Nicki Minaj",
                     "album": "MEGATRON",
                     "length": "3:10"
+                },
+                {
+                    "name": "OK Not To Be OK",
+                    "author": "Marshmello, Demi Lovato",
+                    "album": "OK Not To Be Ok",
+                    "length": "2:40"
+                },
+                {
+                    "name": "Your Man",
+                    "author": "Joji",
+                    "album": "Nectar",
+                    "length": "2:44"
                 }
 
             ]
         }
+    ],
+    "songs":[
+        {
+            "name": "The Box",
+            "author": "Roddy Rich",
+            "album": "Please Excuse Me For Being Antisocial",
+            "length": "3:16"
+        },
+        {
+            "name": "WHATS POPPIN",
+            "author": "Jack Harlow",
+            "album": "Sweet Action",
+            "length": "2:19"
+        },
+        {
+            "name": "Wow.",
+            "author": "Post Malone",
+            "album": "Hollywood's Bleeding",
+            "length": "2:29"
+        },
+        {
+            "name": "POPSTAR (feat. Drake)",
+            "author": "DJ Khaled, Drake",
+            "album": "POPSTAR (feat. Drake)",
+            "length": "3:20"
+        },
+        {
+            "name": "WAP (feat. Megan Thee Stallion)",
+            "author": "Cardi B, Megan Thee Stallion",
+            "album": "WAP (feat. Megan Thee Stallion)",
+            "length": "3:07"
+        },
+        {
+            "name": "MEGATRON",
+            "author": "Nicki Minaj",
+            "album": "MEGATRON",
+            "length": "3:10"
+        },
+        {
+            "name": "OK Not To Be OK",
+            "author": "Marshmello, Demi Lovato",
+            "album": "OK Not To Be Ok",
+            "length": "2:40"
+        },
+        {
+            "name": "Your Man",
+            "author": "Joji",
+            "album": "Nectar",
+            "length": "2:44"
+        },
+        {
+            "name": "Tick Tock (feat. 24kGoldn)",
+            "author": "Clean Bandit, Mabel, 24kGoldn",
+            "album": "Tick Tock (feat. 24kGoldn)",
+            "length": "2:58"
+        },
+        {
+            "name": "SO DONE",
+            "author": "The Kid LAROI",
+            "album": "SO DONE",
+            "length": "2:07"
+        },
+        {
+            "name": "Take You Dancing",
+            "author": "Jason Derulo",
+            "album": "Take You Dancing",
+            "length": "3:10"
+        },
+        {
+            "name": "Dynamite",
+            "author": "BTS",
+            "album": "Dynamite",
+            "length": "3:19"
+        }
     ]
+    
     
 }
     
