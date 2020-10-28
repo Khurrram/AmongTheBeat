@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import Song from './Song'
 import SettingIcon from '@material-ui/icons/Settings'
 import Button from '@material-ui/core/Button'
+import SearchBar from "material-ui-search-bar";
+import { Search } from '@material-ui/icons'
 
 
 
@@ -45,7 +47,7 @@ const StyledSpan = styled.span`
 
 const Artist = styled.h6`
     grid-column-start: 3;
-      grid-row-end: 3;
+    grid-row-end: 3;
 `
 
 const Title = styled.h6`
@@ -53,9 +55,9 @@ const Title = styled.h6`
     grid-row-end: 1;
 `
 
-const StyledSettings = styled(SettingIcon)`
-    margin-left: 2.5rem;
-    margin-right: 4rem;
+const StyledSearch = styled(SearchBar)`
+    margin-left: auto;
+    max-height: 2rem;
 `
 
 const StyledButton = styled(Button)`
@@ -75,7 +77,7 @@ function BrowseView(props) {
         <StyledDiv>
             <span>
                 <h1>Browse </h1>
-                <StyledSettings></StyledSettings>
+                <StyledSearch/>
             </span>
             <StyledSpan>
                 <Title>Title</Title>

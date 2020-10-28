@@ -13,12 +13,14 @@ import test from '../data/test.json';
 import TextField from '@material-ui/core/TextField';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
-import {makeStyles} from '@material-ui/core/styles';
+import {createMuiTheme, ThemeProvider } from "@material-ui/core"
+import SearchBar from "material-ui-search-bar";
 
 import './Browse.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pro-sidebar/dist/css/styles.css';
 import BrowseView from '../Homepage/BrowseView';
+import { PlayCircleFilledWhite } from '@material-ui/icons';
 
 const Button = styled.button`
     padding: .5em;
@@ -79,43 +81,19 @@ const SongDiv = styled.div`
     max-height: 65vh;
     overflow-y: auto;
 `
-const useStyles = makeStyles({
-    root: {
-        "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-          borderColor: "grey"
-        },
-        "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-          borderColor: "white"
-        },
-        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-          borderColor: "white"
-        },
-        "& .MuiOutlinedInput-input": {
-          color: "grey"
-        },
-        "&:hover .MuiOutlinedInput-input": {
-          color: "white"
-        },
-        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-          color: "white"
-        },
-        "& .MuiInputLabel-outlined": {
-          color: "grey"
-        },
-        "&:hover .MuiInputLabel-outlined": {
-          color: "white"
-        },
-        "& .MuiInputLabel-outlined.Mui-focused": {
-          color: "white"
-        }
-      }
 
-});
+const StyledSettingIcon = styled(SettingsIcon)`
+    color: white;
+`
 
+const StyledSearh = styled(SearchBar)`
+    max-height: 2em;
+    margin-left: 1em;
+    margin-right: 1em;
+`
 
 function Browse(props)
 {
-    const classes = useStyles();
     const history = useHistory();
     let l = useLocation();
 
@@ -138,13 +116,8 @@ function Browse(props)
                         <MenuItem id="fontsize">
                             Browse
                         </MenuItem>
-                        <MenuItem id="fontsize">
-                            <TextField className={classes.root}
-                            defaultValue=""
-                            variant="outlined"
-                            label="Search"           
-                            id = "search"  />
-                        </MenuItem>
+                        <StyledSearh></StyledSearh>
+
                     </Menu>
                     <hr width="90%" color="black"></hr>
                     <Menu>
@@ -176,7 +149,7 @@ function Browse(props)
             <ContentWindow>
                 <Navbar>
                     <Avatar className="AvatarIcon">J</Avatar>
-                    <Link to = "/settings"><SettingsIcon id="margin"/></Link>
+                    <Link to = "/settings"><StyledSettingIcon id="margin"/></Link>
                     
     
 

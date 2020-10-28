@@ -65,6 +65,7 @@ const StyledSettings = styled(SettingIcon)`
 
 const StyledButton = styled(Button)`
     margin-left: 2rem;
+    max-height: 1.7rem;
 `
 
 

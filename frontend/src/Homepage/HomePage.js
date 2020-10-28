@@ -17,6 +17,7 @@ import Browse from '../components/Browse';
 import TextField from '@material-ui/core/TextField';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import SearchBar from 'material-ui-search-bar';
 
 
 import './HomePage.css'
@@ -79,7 +80,11 @@ const MiddleContent = styled.div`
     order: 1;
 `
 
-// const PlayingNowInfo =
+const StyledSearh = styled(SearchBar)`
+    max-height: 2em;
+    margin-left: 1em;
+    margin-right: 1em;
+`
 
 
 function Home() {
@@ -107,11 +112,11 @@ function Home() {
                                 pathname: "/browse",
                                 state:
                                 {
-                                    songs:test.songs
+                                    songs:test.songsgit 
                                 }
                             }}>Browse</Link>
                         </MenuItem>
-                        <MenuItem id="fontsize"><TextField id = "outlined-basic" label = "Search" variant = "outlined" /></MenuItem>
+                        <StyledSearh></StyledSearh>
                     </Menu>
                     <hr width="90%" color="black"></hr>
                     <Menu>

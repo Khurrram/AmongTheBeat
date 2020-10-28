@@ -17,7 +17,7 @@ const Container = styled.div`
     border-radius: 5px;
     
     &:hover {
-        background-color: lightgrey;
+        background-color: #686868;
     }
 
 `

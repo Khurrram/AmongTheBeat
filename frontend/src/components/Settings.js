@@ -72,8 +72,8 @@ function Settings()
                 <TextField className={classes.root}
                         defaultValue=""
                         variant="outlined"
-                        label="Confirm New Password"           
-                        id = "cnewpc"  />
+                        label="Confirm Password"           
+                        id = "newp"  />
             </div>
 
             <Button id = "confirm">Confirm</Button>
