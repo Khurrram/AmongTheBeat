@@ -1,55 +1,73 @@
 import React from 'react';
-import M from "materialize-css";
 import './LandingBox.css';
-// import 'materialize-css/dist/css/materialize.min.css';
+import {Row, CardPanel} from 'react-materialize'
 import {Email, AccountCircle, Lock, CheckCircle} from '@material-ui/icons';
+import {TextField, Grid, Button} from '@material-ui/core';
+import data from '../data/test.json';
 
 function RegisterBox(props) {
     const button = props.button;
     return (
-        <div class="card box-dim hoverable">
+        <CardPanel className="box-dim hoverable">
             <div class="overlay input-dim">
-            <div class="row">
-            <div class="input-field input-size">
-                {/* <i class="large material-icons prefix">{Email}</i> */}
-                <Email className="prefix"/>
-                <input id="email" type="email" class="validate" required="" aria-required="true"/>
-                <label htmlFor="email">Email</label>
-                <span class="helper-text" data-error="Enter a valid email." ></span>
-            </div>
-            </div>
-            <div class="row">
-                <div class="input-field input-size">
-                <AccountCircle className="prefix"/>
-                <input id="username" type="text" class="validate" />
-                <label htmlFor="username">Username</label>
-                <span class="helper-text" data-error="Enter a valid username." ></span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field input-size">
-                <Lock className="prefix"/>
-                <input id="password" type="password" class="validate" />
-                <label htmlFor="password">Password</label>
-                <span class="helper-text" data-error="Enter a valid password." ></span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field input-size">
-                <CheckCircle className="prefix"/>
-                <input id="confirm_password" type="password" class="validate" onChange={confirm_password_handler} />
-                <label id="confirm_password_label" htmlFor="confirm_password">Confirm Password</label>
-                <span class="helper-text" data-error="Passwords do not match." ></span>
-                </div>
-            </div>
-            <div class="input-field input-size center-align">
-            <button class="btn waves-effect waves-light btn-color pulse" type="submit" name="action">Register</button>
+            <Row>
+                <Grid container spacing={2} alignItems="stretch" direction="row" alignContent="center" justify="center">
+                <Grid item className="icon-margin">
+                    <Email fontSize="large" className="icon-color" />
+                </Grid>
+                <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
+                    <TextField id="email" variant="standard" label="Email" fullWidth required helperText="" />
+                </Grid>
+                </Grid>
+            </Row>
+            <Row className="gap" />
+            <Row>
+                <Grid container spacing={2} alignItems="center" justify="center">
+                <Grid item  className="icon-margin">
+                    <AccountCircle required fontSize="large" className="icon-color" />
+                </Grid>
+                <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
+                    <TextField id="username" variant="standard" label="Username" fullWidth required helperText="" />
+                </Grid>
+                </Grid>
+            </Row>
+            <Row className="gap" />
+            <Row>
+                <Grid container spacing={2} alignItems="flex-end" justify="center">
+                <Grid item  className="icon-margin">
+                    <Lock required fontSize="large"  className="icon-color"/>
+                </Grid>
+                <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
+                    <TextField id="password" variant="standard" label="Password" fullWidth required helperText="" />
+                </Grid>
+                </Grid>
+            </Row>
+            <Row className="gap" />
+            <Row>
+                <Grid container spacing={2} alignItems="flex-end" justify="center">
+                <Grid item  className="icon-margin">
+                    <CheckCircle required fontSize="large" className="icon-color" />
+                </Grid>
+                <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
+                    <TextField id="confirmpassword" variant="standard" label="Confirm Password" fullWidth required helperText=""/>
+                </Grid>
+                </Grid>
+            </Row>
+            <Row className="gap"/>
+            <Row className="gap"/>
+            <Row className="gap"/>
+            <Row className="gap"/>
+            <Row>
+            <Grid container spacing={2} alignItems="flex-end" justify="center">
+            <Button variant="contained" className="btn-color" onClick={props.onClick}> Register </Button>
                 {button}
+            </Grid>
+            </Row>
             </div>
-            </div>
-        </div>
+        </CardPanel>
     );
 }
+
 
 function confirm_password_handler() {
     console.log(document.getElementById('confirm_password').value);
@@ -66,46 +84,57 @@ function confirm_password_handler() {
 function LoginBox(props) {
     const button = props.button;
     return (
-        <div class="card box-dim hoverable">
+        <CardPanel className="box-dim hoverable">
             <div class="overlay input-dim">
-            <div class="row">
-                <div class="input-field center-align input-size">
-                <AccountCircle className="prefix"/>
-                <input id="username" type="text" class="validate" />
-                <label htmlFor="username">Username</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field center-align input-size">
-                <Lock className="prefix"/>
-                <input id="password" type="password" class="validate" />
-                <label htmlFor="password">Password</label>
-                </div>
-            </div>
-            <div class="input-field col s12 center-align">
-                <button class="btn waves-effect waves-light btn-color pulse" type="submit" name="action">Log In</button>
+            <Row>
+                <Grid container spacing={2} alignItems="center" justify="center">
+                <Grid item  className="icon-margin">
+                    <AccountCircle required fontSize="large" className="icon-color" />
+                </Grid>
+                <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
+                    <TextField id="username" variant="standard" label="Username" fullWidth required helperText="" />
+                </Grid>
+                </Grid>
+            </Row>
+            <Row className="gap" />
+            <Row>
+                <Grid container spacing={2} alignItems="flex-end" justify="center">
+                <Grid item  className="icon-margin">
+                    <Lock required fontSize="large"  className="icon-color"/>
+                </Grid>
+                <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
+                    <TextField id="password" variant="standard" label="Password" fullWidth required helperText="" />
+                </Grid>
+                </Grid>
+            </Row>
+            <Row className="gap"/>
+            <Row className="gap"/>
+            <Row className="gap"/>
+            <Row>
+            <Grid container spacing={2} alignItems="flex-end" justify="center">
+            <Button variant="contained" className="btn-color" onClick={props.onClick}> Log In </Button>
                 {button}
+            </Grid>
+            </Row>
             </div>
-            </div>
-        </div>
+        </CardPanel>
     );
 }
 
 function LoginButton(props) {
     return (
-        <button class="btn waves-effect waves-light btn-color btn-pad" type="submit" name="action" onClick={props.onClick}>
+        <Button variant="contained" className="btn-color btn-pad" onClick={props.onClick}>
             Register
-            {console.log(props.onClick)}
-        </button>
+        </Button>
     );
 }
 
 function RegisterButton(props) {
     return (
-        <button class="btn waves-effect waves-light btn-color btn-pad" type="submit" name="action" onClick={props.onClick}>
+        <Button variant="contained" className="btn-color btn-pad" onClick={props.onClick}>
             Login
-        </button>
-    )
+        </Button>
+    );
 }
 
 function CurrentBox(props) {
@@ -127,9 +156,6 @@ class LandingBox extends React.Component {
         this.RegisterBox_handler = this.RegisterBox_handler.bind(this);
     }
 
-    componentDidMount() {
-        M.updateTextFields();
-      }
     
     LoginBox_handler() {
         this.setState({isloginclicked : false});

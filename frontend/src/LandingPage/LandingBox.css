@@ -1,11 +1,18 @@
 .box-dim {
-    height : 70vh;
-    width : 55vh;
-    border-radius:15px !important;
+  border-radius: 15px;
+  background-color: white;
+  margin-top: 15%;
+  padding-bottom: 19%;
+  width: 60%;
+  margin-left: 10%;
 }
 
-.head-text {
-  margin-top: 30px;
+.gap {
+  height: 2vh;
+}
+
+.icon-margin {
+  margin-top: 2% !important;
 }
 
 .input-dim {
@@ -22,91 +29,24 @@
     height: auto;
 }
 
-  /* label color */
-  .input-field label {
+   .input-field label {
     color: #133E7C;
   }
-  /* label focus color */
-  .input-field input[type=email]:focus + label {
-    color:  #0ABDC6;
-  }
 
-  .input-field input[type=email].invalid + label {
-    color:  #FF040E;
-  }
-
-  /* label underline focus color */
-  .input-field input[type=email]:focus {
-    border-bottom: 1px solid  #0ABDC6 !important;
-    box-shadow: 0 1px 0 0  #0ABDC6 !important;
-  }
-  /* valid color */
-  .input-field input[type=email] {
-    border-bottom: 1px solid #133E7C !important;
-    box-shadow: 0 1px 0 0 #133E7C !important;
-  }
-
-  .input-field input[type=text]:focus {
-    border-bottom: 1px solid  #0ABDC6 !important;
-    box-shadow: 0 1px 0 0  #0ABDC6 !important;
-  }
-  /* valid color */
-  .input-field input[type=text] {
-    border-bottom: 1px solid #133E7C !important;
-    box-shadow: 0 1px 0 0 #133E7C !important;
-  }
-  
-  .input-field input[type=password]:focus {
-    border-bottom: 1px solid  #0ABDC6 !important;
-    box-shadow: 0 1px 0 0  #0ABDC6 !important;
-  }
-  /* valid color */
-  .input-field input[type=password] {
-    border-bottom: 1px solid #133E7C !important;
-    box-shadow: 0 1px 0 0 #133E7C !important;
-  }
-
-.input-field input[type=email].invalid {
-    border-bottom: 1px solid     #FF040E !important;
-    box-shadow: 0 1px 0 0     #FF040E !important;
-}
-
-.input-field input[type=email].valid {
-    border-bottom: 1px solid     #6DFC01 !important;
-    box-shadow: 0 1px 0 0    #6DFC01 !important;
-}
-.input-field input[type=submit]:focus {
-  border-bottom: 1px solid  #0ABDC6 !important;
-  box-shadow: 0 1px 0 0  #0ABDC6 !important;
-}
-/* valid color */
-.input-field input[type=submit] {
-  border-bottom: 1px solid #133E7C !important;
-  box-shadow: 0 1px 0 0 #133E7C !important;
-}
-  /* invalid color */
-  /* .input-field input[type=email].invalid {
-    border-bottom: 1px solid rgb(255, 0, 0) !important;
-    box-shadow: 0 1px 0 0 rgb(255, 0, 0) !important;
-  } */
-  /* icon prefix focus color */
-  .input-field .prefix {
-    color:     #133E7C;
-  }
-
-  .input-field .prefix.active {
-    color:     #0ABDC6 !important;
+  .icon-color {
+    color:     #133E7C !important;
   }
 
   .btn-color{
     background-color: #133E7C !important;
+    color:white !important;
   }
 
   .btn-color:hover {
-    background-color:#0ABDC6 !important;
-    color: white;
+    background-color:#662C90 !important;
+    color: white !important;
   }
 
   .btn-pad {
-    margin-left: 5px;
-  }
+    margin-left: 30px !important;
+  } 
