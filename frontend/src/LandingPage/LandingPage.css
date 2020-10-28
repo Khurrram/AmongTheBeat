@@ -1,5 +1,6 @@
 .full-height {
-    height: 100%;
+    height: 100vh;
+    background-color:#091835;
 }
 
 .landing-box {
@@ -9,7 +10,7 @@
 .atb-gif {
     width: 110%;
     height: 70%;
-    margin-top: 15%;
+    margin-top: 8%;
 }
 
 .gif-overlay{
