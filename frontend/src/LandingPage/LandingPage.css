@@ -1,14 +1,22 @@
 .full-height {
-    height: 100vh;
-    min-height: 1000px !important;
+    height: 100%;
+}
+
+.landing-box {
+    height: 70%;
 }
 
 .atb-gif {
-    width: 98%;
-    height: 98%;
+    width: 110%;
+    height: 70%;
+    margin-top: 15%;
 }
 
 .gif-overlay{
-    height: 70vh;
-    padding-top: 25%;
+    height: 70%;
+}
+
+.white-text {
+    color: #EC2C6D;
+    text-align: center;
 }
