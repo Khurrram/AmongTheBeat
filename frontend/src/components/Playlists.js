@@ -121,7 +121,7 @@ function Playlists(props) {
                             }
                         }}>Browse</Link>
                         </MenuItem>
-                        <StyledSearh></StyledSearh>
+                        <StyledSearh placeholder= 'Search User'></StyledSearh>
                     </Menu>
                     <hr width="90%" color="black"></hr>
                     <Menu>

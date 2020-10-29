@@ -87,7 +87,7 @@ const StyledSettingIcon = styled(SettingsIcon)`
     color: white;
 `
 
-const StyledSearh = styled(SearchBar)`
+const StyledSearch = styled(SearchBar)`
     max-height: 2em;
     margin-left: 1em;
     margin-right: 1em;
@@ -117,7 +117,9 @@ function Browse(props)
                         <MenuItem id="fontsize">
                             Browse
                         </MenuItem>
-                        <StyledSearh></StyledSearh>
+                        <StyledSearch
+                            placeholder= 'Search User'
+                        />
 
                     </Menu>
                     <hr width="90%" color="black"></hr>

@@ -86,6 +86,10 @@ const StyledSearh = styled(SearchBar)`
     margin-right: 1em;
 `
 
+const StyledSettingIcon = styled(SettingsIcon)`
+    color: white;
+`
+
 
 function Home() {
 
@@ -148,7 +152,7 @@ function Home() {
             <ContentWindow>
                 <Navbar>
                     <Avatar className="AvatarIcon">J</Avatar>
-                    <SettingsIcon id="margin"/>
+                    <Link to = "/settings"><StyledSettingIcon id="margin"/></Link>
                     
                 </Navbar>
                 <MiddleContent>
