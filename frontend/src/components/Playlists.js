@@ -167,6 +167,7 @@ function Playlists(props) {
                             <Song 
                             name  = {song.name}
                             artist = {song.author}
+                            type = "Playlists"
                             />
                         );
                     })}
