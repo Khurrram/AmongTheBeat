@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Song from './Song'
-import SettingIcon from '@material-ui/icons/Settings'
+import TrashIcon from '@material-ui/icons/Delete'
 import Button from '@material-ui/core/Button'
 import {Link, useHistory, useLocation} from 'react-router-dom';
 
@@ -55,17 +55,17 @@ const Artist = styled.h6`
 
 const Title = styled.h6`
     grid-column-start: 1;
-      grid-row-end: 1;
+    grid-row-end: 1;
 `
 
-const StyledSettings = styled(SettingIcon)`
-    margin-left: 2.5rem;
-    margin-right: 4rem;
+const StyledTrash = styled(TrashIcon)`
+    margin-left: 2rem;
+    color: white;
 `
 
 const StyledButton = styled(Button)`
     margin-left: 2rem;
-    max-height: 1.7rem;
+    max-height: 2rem;
 `
 
 
@@ -77,8 +77,8 @@ function PlayListView(props) {
         <StyledDiv>
             <span>
                 <h1>{l.state.name} </h1>
-                <StyledSettings></StyledSettings>
-                <StyledButton variant="contained" disableElevation >Share</StyledButton>
+                <StyledButton variant="contained" disableElevation>Share</StyledButton>
+                <StyledTrash/>
             </span>
             <StyledSpan>
                 <Title>Title</Title>
