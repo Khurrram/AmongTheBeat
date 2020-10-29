@@ -7,6 +7,7 @@ import test from '../data/test.json';
 import TextField from '@material-ui/core/TextField';
 import {makeStyles} from '@material-ui/core/styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import styled from 'styled-components';
 
 const useStyles = makeStyles({
     root: {
@@ -41,46 +42,87 @@ const useStyles = makeStyles({
 
 });
 
-function Settings()
-{
+const CenterDiv = styled.div`
+  height: 100vh;
+  width: 100vw;
+  background:linear-gradient(rgb(46, 0, 48),transparent);
+  background-color:rgb(77, 77, 75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const BackButton = styled.div`
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+`
+
+const AlignTextDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+`
+
+const AccountDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem;
+`
+
+const AccountButtonDiv = styled(AccountDiv)`
+  width: 100%;
+`
+
+function Settings()   {
     const classes = useStyles();
     return(
 
-        <div id = "settings" className = "fullscreen-container">
-            <Link to = "/browse"><Button><ArrowBackIcon id = "arr"/></Button></Link>
-
-            <Avatar id = "av" className= "AvatarIcon">J</Avatar>
-            <div id = "user">{test.username}</div>
+        <CenterDiv>
+            <Link to = "/browse"><BackButton><ArrowBackIcon id = "arr"/></BackButton></Link>
+            <AlignTextDiv>
+              <AccountDiv>
+                <Avatar id = "av" className= "AvatarIcon">J</Avatar>
+                <div id = "user">{test.username}</div>
+              </AccountDiv>
+              
     
-            <div id = "oldpc">
-                <TextField className={classes.root}
-                        defaultValue=""
-                        variant="outlined"
-                        label="Old Password"           
-                        id = "oldp"  />
-            </div>
-            
-            <div id = "newpc">
-                <TextField className={classes.root}
-                        defaultValue=""
-                        variant="outlined"
-                        label="New Password"           
-                        id = "newp"  />
-            </div>
+              <div id = "newpc">
+                  <TextField className={classes.root}
+                          defaultValue=""
+                          variant="outlined"
+                          label="Old Password"           
+                          id = "oldp"  />
+              </div>
+              
+              <div id = "newpc">
+                  <TextField className={classes.root}
+                          defaultValue=""
+                          variant="outlined"
+                          label="New Password"           
+                          id = "newp"  />
+              </div>
 
-            <div id = "cnewpc">
-                <TextField className={classes.root}
-                        defaultValue=""
-                        variant="outlined"
-                        label="Confirm Password"           
-                        id = "newp"  />
-            </div>
+              <div id = "newpc">
+                  <TextField className={classes.root}
+                          defaultValue=""
+                          variant="outlined"
+                          label="Confirm Password"           
+                          id = "newp"  />
+              </div>
 
-            <Button id = "confirm">Confirm</Button>
-            <Link to = "/land"><Button id = "logout">Log Out</Button></Link>
+              <AccountButtonDiv>
+                <Button id = "confirm">Confirm</Button>
+                <Link to = "/land"><Button id = "logout">Log Out</Button></Link>
+              </AccountButtonDiv>
             
             
-        </div>
+            </AlignTextDiv>
+            
+            
+        </CenterDiv>
     );
 
 }

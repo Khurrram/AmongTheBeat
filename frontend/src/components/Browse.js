@@ -43,9 +43,7 @@ const ContentWindow = styled.div`
     align-items: stretch;
     background:linear-gradient(rgb(46, 0, 48),transparent);
     background-color:rgb(77, 77, 75);
-
 `
-
 const Navbar = styled.div`
     order: 0;
     display: flex;
@@ -79,6 +77,8 @@ const MiddleContent = styled.div`
 `
 
 const SongDiv = styled.div`
+    display: flex;
+    flex-direction: column;
     max-height: 65vh;
     overflow-y: auto;
 `
@@ -152,8 +152,6 @@ function Browse(props)
                     <Avatar className="AvatarIcon">J</Avatar>
                     <Link to = "/settings"><StyledSettingIcon id="margin"/></Link>
                     
-    
-
                 </Navbar>
                 <MiddleContent>
                     <BrowseView></BrowseView>
