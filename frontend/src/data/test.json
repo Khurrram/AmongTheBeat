@@ -7,6 +7,13 @@
     "account_type": 0,
     "playlists" : [
         {
+            "name": "Liked Songs",
+            "songs": [
+                
+            ]
+            
+        },
+        {
             "name": "Beast Mode",
             "songs": [
                 {
