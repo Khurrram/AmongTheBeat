@@ -13,7 +13,7 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path='/' exact={true} component={BrowsePage}/>
+        <Route path='/' exact={true} component={LandingPage}/>
         <Route path = '/browse' exact = {true} component = {BrowsePage}/>
         <Route path = '/mood' exact = {true} component = {MoodPage}/>
         <Route path = '/playlist/:id' exact = {true} component = {PlaylistPage} />
