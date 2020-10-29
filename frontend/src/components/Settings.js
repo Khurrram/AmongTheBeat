@@ -77,7 +77,8 @@ function Settings()
             </div>
 
             <Button id = "confirm">Confirm</Button>
-            <Button id = "logout">Log Out</Button>
+            <Link to = "/land"><Button id = "logout">Log Out</Button></Link>
+            
             
         </div>
     );
