@@ -15,6 +15,7 @@ import PlayIcon from '@material-ui/icons/PlayArrow';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import {createMuiTheme, ThemeProvider } from "@material-ui/core"
 import SearchBar from "material-ui-search-bar";
+import RepeatIcon from '@material-ui/icons/Repeat';
 
 import './Browse.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -155,23 +156,23 @@ function Browse(props)
 
                 </Navbar>
                 <MiddleContent>
-                <BrowseView></BrowseView>
-                <SongDiv>
-                    <div id = "inside" >
-                        {
-                            test.songs.map((song) =>
+                    <BrowseView></BrowseView>
+                    <SongDiv>
+                        <div id = "inside" >
                             {
-                                return (
-                                    <Song 
-                                    name  = {song.name}
-                                    artist = {song.author}
-                                    Browse
-                                    />
-                                );
-                            })
-                        }
-                    </div>
-                </SongDiv>
+                                test.songs.map((song) =>
+                                {
+                                    return (
+                                        <Song 
+                                        name  = {song.name}
+                                        artist = {song.author}
+                                        Browse
+                                        />
+                                    );
+                                })
+                            }
+                        </div>
+                    </SongDiv>
                 
                 </MiddleContent>
                 <Footer>
@@ -186,6 +187,9 @@ function Browse(props)
                         </span>
                         <span id="right">
                             <PlaylistAddIcon></PlaylistAddIcon>
+                        </span>
+                        <span>
+                            <RepeatIcon></RepeatIcon>
                         </span>
                 </Footer>
             </ContentWindow>

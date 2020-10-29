@@ -14,10 +14,10 @@ import BrowseView from "./BrowseView";
 import test from '../data/test.json';
 import Playlists from '../components/Playlists';
 import Browse from '../components/Browse';
-import TextField from '@material-ui/core/TextField';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import SearchBar from 'material-ui-search-bar';
+import RepeatIcon from '@material-ui/icons/Repeat';
 
 
 import './HomePage.css'
@@ -152,7 +152,12 @@ function Home() {
                     
                 </Navbar>
                 <MiddleContent>
-                    <BrowseView></BrowseView>
+                    <BrowseView username="Joshua 'THE DANIEL' Canta" />
+                    <Song 
+                        name = "Jousha road trip"
+                        playlist 
+                        Browse
+                        />
                 </MiddleContent>
                 <Footer>
                     <Avatar variant="rounded">
@@ -166,6 +171,9 @@ function Home() {
                     </span>
                     <span id="right">
                         <PlaylistAddIcon></PlaylistAddIcon>
+                    </span>
+                    <span>
+                        
                     </span>
                 </Footer>
             </ContentWindow>

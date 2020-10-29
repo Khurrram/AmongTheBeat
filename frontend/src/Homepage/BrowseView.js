@@ -77,12 +77,21 @@ function BrowseView(props) {
     return (
         <StyledDiv>
             <span>
-                <h1>Browse </h1>
+                <h1>
+                    {props.username 
+                        ? props.username
+                        : "Browse"
+                    }
+                </h1>
+
                 <StyledSearch/>
             </span>
             <StyledSpan>
                 <Title>Title</Title>
-                <Artist>Artist</Artist>
+                {props.username
+                    ?  ""
+                    : <Artist>Artist</Artist>
+                }
             </StyledSpan>
             <span>
                 <hr/>
@@ -95,5 +104,6 @@ function BrowseView(props) {
         
     );
 }
+
 
 export default BrowseView;

@@ -59,7 +59,7 @@ const Title = styled.h6`
 `
 
 const StyledTrash = styled(TrashIcon)`
-    margin-left: 2rem;
+    margin-left: 1rem;
     color: white;
 `
 
@@ -82,7 +82,7 @@ function PlayListView(props) {
             <span>
                 <h1>{l.state.name} </h1>
                 <StyledButton variant="contained" disableElevation>Share</StyledButton>
-                <StyledTrash/>
+                <StyledTrash fontSize="large"/>
             </span>
             <StyledSpan>
                 <Title>Title</Title>

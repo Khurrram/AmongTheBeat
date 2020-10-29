@@ -14,6 +14,7 @@ import Browse from '../components/Browse';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import SearchBar from 'material-ui-search-bar';
+import RepeatIcon from '@material-ui/icons/Repeat';
 
 import './Playlists.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -187,6 +188,9 @@ function Playlists(props) {
                         </span>
                         <span id="right">
                             <PlaylistAddIcon></PlaylistAddIcon>
+                        </span>
+                        <span>
+                            <RepeatIcon></RepeatIcon>
                         </span>
                 </Footer>
             </ContentWindow>

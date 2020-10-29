@@ -5,6 +5,7 @@ import HeartIcon from '@material-ui/icons/Favorite';
 import TrashIcon from '@material-ui/icons/Delete';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import QueueMusicIcon from '@material-ui/icons/QueueMusic';
+import AddIcon from '@material-ui/icons/Add';
 import './Song.css'
 
 const Container = styled.div`
@@ -52,6 +53,8 @@ const StyledQueue = styled(QueueMusicIcon)`
     margin-right: 1rem;
 `
 
+
+
 const SongArtist = styled.span`
     width: 43rem;
    
@@ -76,15 +79,27 @@ function Song(props) {
                <SongName>{props.name}</SongName>
                <SongArtist>{props.artist}</SongArtist>
             </SongInfo>
-            <SongAction>
-                <StyledHeart></StyledHeart>
-                <StyledQueue/>
+            
+            {props.playlist
+                ? <SongAction><AddIcon/></SongAction>
+                : view(props)
+            }
+            
+        </Container>
+    );
+}
+
+function view(props) {
+    console.log(props);
+    return (
+        <SongAction>
+            <StyledHeart></StyledHeart>
+            <StyledQueue/>
                 {props.Browse 
                     ? <PlaylistAddIcon/>
                     : <TrashIcon/>
                 }
-            </SongAction>
-        </Container>
+        </SongAction>
     );
 }
 
