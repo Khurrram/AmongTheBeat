@@ -3,6 +3,10 @@
     background-color:#091835;
 }
 
+body {
+    overflow: hidden;
+}
+
 .landing-box {
     height: 70%;
 }
