@@ -12,12 +12,12 @@ import 'react-pro-sidebar/dist/css/styles.css';
 const Button = styled.button`
     padding: .5em;
     color: white;
-    border-radius: 10px;
+    border: none;
     margin: .5em;
     width: 5%;
     font-size: 30px;
     font-family: 'Roboto', sans-serif;
-    background-color: orange;
+    background-color: Transparent;
 `
 
 function MoodPage()
@@ -36,7 +36,7 @@ function MoodPage()
             <Button id = " but" node= "button" className = "orange" large 
             onClick = {homeChange}
             >
-                <ArrowBackIcon />
+                <ArrowBackIcon id = "arrow"/>
             </Button>
             </div>
 
