@@ -173,7 +173,7 @@ function Home() {
                         <PlaylistAddIcon></PlaylistAddIcon>
                     </span>
                     <span>
-                        
+                        <RepeatIcon></RepeatIcon>
                     </span>
                 </Footer>
             </ContentWindow>
