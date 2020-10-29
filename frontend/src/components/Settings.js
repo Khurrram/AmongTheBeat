@@ -47,7 +47,7 @@ function Settings()
     return(
 
         <div id = "settings" className = "fullscreen-container">
-            <Link to = "/"><Button><ArrowBackIcon id = "arr"/></Button></Link>
+            <Link to = "/browse"><Button><ArrowBackIcon id = "arr"/></Button></Link>
 
             <Avatar id = "av" className= "AvatarIcon">J</Avatar>
             <div id = "user">{test.username}</div>
@@ -77,7 +77,8 @@ function Settings()
             </div>
 
             <Button id = "confirm">Confirm</Button>
-            <Button id = "logout">Log Out</Button>
+            <Link to = "/land"><Button id = "logout">Log Out</Button></Link>
+            
             
         </div>
     );

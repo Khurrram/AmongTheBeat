@@ -152,7 +152,7 @@ function Home() {
                     
                 </Navbar>
                 <MiddleContent>
-                    <BrowseView username="Joshua 'THE DANIEL' Canta" />
+                    <BrowseView username="Joshua Canta's Playlists" />
                     <Song 
                         name = "Jousha road trip"
                         playlist 
