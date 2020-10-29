@@ -4,6 +4,7 @@ import Avatar from '@material-ui/core/Avatar';
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import HeartIcon from '@material-ui/icons/Favorite';
 import TrashIcon from '@material-ui/icons/Delete';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import './Song.css'
 import Icon from '@material-ui/core/Icon'
 
@@ -65,6 +66,19 @@ const SongAction = styled.div`
 
 function Song(props) {
     
+    const icontype = () =>
+    {
+        if (props.type === "Browse")
+        {
+            return (<PlaylistAddIcon></PlaylistAddIcon>);
+        }
+        else
+        {
+            return (<TrashIcon></TrashIcon>);
+        }
+
+    };
+    
     return (
         <Container >
             <StyledAvatar variant="rounded" > L </StyledAvatar>
@@ -74,7 +88,7 @@ function Song(props) {
             </SongInfo>
             <SongAction>
                 <StyledHeart></StyledHeart>
-                <TrashIcon></TrashIcon>
+                {icontype()}
             </SongAction>
         </Container>
     );
