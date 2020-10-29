@@ -12,28 +12,39 @@ const Button = styled.button`
     color: Black;
     border-radius: 10px;
     margin: .5em;
-    width: 15%;
     font-size: 30px;
     font-family: 'Roboto', sans-serif;
     background-color: light-grey;
 `
 
+const CenterDiv = styled.div`
+    heigh: 100vh;
+    width: 100vw;
+    background:linear-gradient(rgb(46, 0, 48),transparent);
+    background-color:rgb(77, 77, 75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+`
+
 function Admin()
 {
     return(
-        <div id = "Admin" className = "fullscreen-container">
+        <CenterDiv className = "fullscreen-container">
             <div id = "atxt">
                 Admin
             </div>
 
-            <div id = "bu">
+            <div >
                 <Button>Ban User</Button>
                 <Button>Unban User</Button>
                 <Button>Edit User</Button>
             </div>
 
             
-        </div>
+        </CenterDiv>
     );
 }
 
