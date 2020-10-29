@@ -1,5 +1,5 @@
 import React from 'react';
-import Home from './Homepage/HomePage';
+import HomePage from './Homepage/HomePage';
 import MoodPage from './MoodPage/MoodPage';
 import PlaylistPage from './components/Playlists'
 import LandingPage from './LandingPage/LandingPage';
@@ -19,6 +19,7 @@ function App() {
         <Route path = '/playlist/:id' exact = {true} component = {PlaylistPage} />
         <Route path = '/land' exact = {true} component = {LandingPage} />
         <Route path= '/settings' exact = {true} component = {SettingsPage} />
+        <Route path= '/searchuser' exact = {true} component = {HomePage} />
       </Switch>
     </Router>
   );
