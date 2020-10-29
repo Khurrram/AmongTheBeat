@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import Avatar from '@material-ui/core/Avatar';
-import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import HeartIcon from '@material-ui/icons/Favorite';
 import TrashIcon from '@material-ui/icons/Delete';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import './Song.css'
 import Icon from '@material-ui/core/Icon'
 
@@ -41,10 +41,10 @@ const SongInfo = styled.div`
 
 const StyledHeart = styled(HeartIcon)`
     margin-right: 1rem;
-    color: ${props => props.fav ? "grey" : "red"};
+    color: ${props => props.fav ? "red" : "grey"};
 
     &:hover {
-        color: ${props => props.fav ? "red" : "grey"};
+        color: ${props => props.fav ? "grey" : "red"};
     }
 `
 
@@ -74,7 +74,10 @@ function Song(props) {
             </SongInfo>
             <SongAction>
                 <StyledHeart></StyledHeart>
-                <TrashIcon></TrashIcon>
+                {props.Browse 
+                    ? <PlaylistAddIcon/>
+                    : <TrashIcon/>
+                }
             </SongAction>
         </Container>
     );

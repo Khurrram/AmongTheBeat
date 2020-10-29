@@ -73,6 +73,7 @@ const SongDiv = styled.div`
 
 function BrowseView(props) {
 
+
     return (
         <StyledDiv>
             <span>
