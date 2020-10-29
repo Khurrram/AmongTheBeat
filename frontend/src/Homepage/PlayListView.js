@@ -23,6 +23,7 @@ const StyledDiv = styled.div`
     & h1 {
         Color: white;
         font-weight: bold;
+        margin-right: 2rem;
     }
 
     & h6 {

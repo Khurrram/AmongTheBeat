@@ -49,7 +49,7 @@ const StyledHeart = styled(HeartIcon)`
 `
 
 const StyledQueue = styled(QueueMusicIcon)`
-    margin-left: 1rem;
+    margin-right: 1rem;
 `
 
 const SongArtist = styled.span`
@@ -78,11 +78,11 @@ function Song(props) {
             </SongInfo>
             <SongAction>
                 <StyledHeart></StyledHeart>
+                <StyledQueue/>
                 {props.Browse 
                     ? <PlaylistAddIcon/>
                     : <TrashIcon/>
                 }
-                <StyledQueue/>
             </SongAction>
         </Container>
     );

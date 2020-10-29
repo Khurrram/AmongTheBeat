@@ -11,7 +11,7 @@ function MoodPage()
 
     const homeChange = () => 
     {
-        let path = '/';
+        let path = '/browse';
         history.push(path);
     }
 
