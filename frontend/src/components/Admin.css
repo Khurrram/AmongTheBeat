@@ -1,0 +1,19 @@
+#Admin
+{
+    background:linear-gradient(rgb(46, 0, 48),transparent);
+    background-color:rgb(77, 77, 75);
+}
+
+#atxt
+{
+    color: white;
+    font-size: 50px;
+    margin-top: 5%;
+    text-align: center;
+}
+
+#bu
+{
+    padding-left: 50%;
+}
+
