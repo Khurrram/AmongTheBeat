@@ -3,10 +3,13 @@ import './LandingBox.css';
 import {Row, CardPanel} from 'react-materialize'
 import {Email, AccountCircle, Lock, CheckCircle} from '@material-ui/icons';
 import {TextField, Grid, Button} from '@material-ui/core';
+import {Link} from 'react-router-dom';
 import data from '../data/test.json';
+
 
 function RegisterBox(props) {
     const button = props.button;
+    
     return (
         <CardPanel className="box-dim hoverable">
             <div class="overlay input-dim">
@@ -112,7 +115,8 @@ function LoginBox(props) {
             <Row className="gap"/>
             <Row>
             <Grid container spacing={2} alignItems="flex-end" justify="center">
-            <Button variant="contained" className="btn-color" onClick={props.onClick}> Log In </Button>
+                <Link to="/browse">
+            <Button variant="contained" className="btn-color" > Log In </Button></Link>
                 {button}
             </Grid>
             </Row>
