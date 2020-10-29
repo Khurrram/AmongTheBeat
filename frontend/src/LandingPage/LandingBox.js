@@ -3,7 +3,16 @@ import './LandingBox.css';
 import {Row, CardPanel} from 'react-materialize'
 import {Email, AccountCircle, Lock, CheckCircle} from '@material-ui/icons';
 import {TextField, Grid, Button} from '@material-ui/core';
+import {useHistory} from 'react-router-dom';
 import data from '../data/test.json';
+
+const history = useHistory();
+
+const homeChange = () => 
+{
+    let path = '/browse';
+    history.push(path);
+}
 
 function RegisterBox(props) {
     const button = props.button;
@@ -112,7 +121,7 @@ function LoginBox(props) {
             <Row className="gap"/>
             <Row>
             <Grid container spacing={2} alignItems="flex-end" justify="center">
-            <Button variant="contained" className="btn-color" onClick={props.onClick}> Log In </Button>
+            <Button variant="contained" className="btn-color" onClick={homeChange}> Log In </Button>
                 {button}
             </Grid>
             </Row>
