@@ -4,6 +4,7 @@ import Avatar from '@material-ui/core/Avatar';
 import HeartIcon from '@material-ui/icons/Favorite';
 import TrashIcon from '@material-ui/icons/Delete';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import AddToQueueIcon from '@material-ui/icons/AddToQueue';
 import './Song.css'
 import Icon from '@material-ui/core/Icon'
 

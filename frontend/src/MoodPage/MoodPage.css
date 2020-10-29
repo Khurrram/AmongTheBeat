@@ -2,12 +2,14 @@
 {
     background:linear-gradient(rgba(236, 113, 13, 0.5),transparent);
     background-color:rgb(231, 219, 45);
-    height: 100vh;
+    height: 100%;
+    width: 100%;
+    position: fixed;
 }
 
 #back
 {
-    margin-left: 2%;
+    padding-left: 10%;
 }
 
 #mood

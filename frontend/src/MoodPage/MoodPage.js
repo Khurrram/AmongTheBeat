@@ -1,9 +1,24 @@
 import React, {Component} from 'react';
 import {Navlink, Redirect, useHistory} from 'react-router-dom';
-import { Button} from 'react-materialize';
+
 import './MoodPage.css';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import dog from './dog.gif';
+
+import styled from 'styled-components'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-pro-sidebar/dist/css/styles.css';
+
+const Button = styled.button`
+    padding: .5em;
+    color: white;
+    border-radius: 10px;
+    margin: .5em;
+    width: 5%;
+    font-size: 30px;
+    font-family: 'Roboto', sans-serif;
+    background-color: orange;
+`
 
 function MoodPage()
 {
@@ -18,7 +33,7 @@ function MoodPage()
     return(
         <div className = "fullscreen-container">
             <div id = "back" className = "row">
-            <Button node= "button" className = "orange" large 
+            <Button id = " but" node= "button" className = "orange" large 
             onClick = {homeChange}
             >
                 <ArrowBackIcon />
