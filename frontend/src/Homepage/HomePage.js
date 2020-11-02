@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useState, useEffect} from 'react';
 
 import styled from 'styled-components'
 import logo from '../assets/logo.png'
@@ -23,6 +23,7 @@ import RepeatIcon from '@material-ui/icons/Repeat';
 import './HomePage.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pro-sidebar/dist/css/styles.css';
+import { StayCurrentPortrait } from '@material-ui/icons';
 
 
 const Button = styled.button`
@@ -86,16 +87,20 @@ const StyledSearh = styled(SearchBar)`
     margin-right: 1em;
 `
 
+const StyledSettingIcon = styled(SettingsIcon)`
+    color: white;
+`
+
 
 function Home() {
 
-    const history = useHistory();
-
-    const moodChange = () => 
-    {
-        let path = '/mood';
-        history.push(path);
-    };
+    const [currF, setcurrF] = useState(
+        {
+            type: "",
+            name: "",
+            songs: ""
+        }
+    )
 
     return (
         <div className="homepage">
@@ -107,14 +112,14 @@ function Home() {
                 </SidebarHeader>
                 <SidebarContent >
                     <Menu>
-                        <MenuItem id="fontsize">
-                            <Link to = {{
-                                pathname: "/browse",
-                                state:
-                                {
-                                    songs:test.songsgit 
-                                }
-                            }}>Browse</Link>
+                        <MenuItem id="fontsize"
+                            onClick = {() => setcurrF({
+                                type: "Browse",
+                                name: "",
+                                songs: ""
+                            })}
+                        >
+                            Browse
                         </MenuItem>
                         <StyledSearh></StyledSearh>
                     </Menu>
@@ -123,41 +128,37 @@ function Home() {
                         <MenuItem id="fontlarge">Playlists</MenuItem>
                         {test.playlists.map((playlist) => 
                         {
-                            let path = "/playlist/" + playlist.name;
                             return(
-                                <MenuItem>
-                                    <Link to = 
-                                    {{pathname: path,
-                                        state:
-                                        {
-                                            name: playlist.name,
-                                            songs: playlist.songs
-                                        }
-                                    }}> {playlist.name} </Link>
+                                <MenuItem
+                                    onClick = {() => setcurrF(
+                                    {
+                                        type: "Playlists",
+                                        name: playlist.name,
+                                        songs: playlist.songs
+                                    }
+                                    )}
+                                >
+                                    {playlist.name}
                                 </MenuItem>);
                         })}
                     </Menu>
                 </SidebarContent>
                 <SidebarFooter id="center">
-                    <Button
-                    onClick = {moodChange}
-                    >Happy</Button>
+                    <Link to = "/mood"><Button>Happy</Button></Link>
                 </SidebarFooter>
                 
             </ProSidebar>
             <ContentWindow>
                 <Navbar>
                     <Avatar className="AvatarIcon">J</Avatar>
-                    <SettingsIcon id="margin"/>
+                    <Link to = "/settings"><StyledSettingIcon id="margin"/></Link>
                     
                 </Navbar>
                 <MiddleContent>
-                    <BrowseView username="Joshua Canta's Playlists" />
-                    <Song 
-                        name = "Jousha road trip"
-                        playlist 
-                        Browse
-                        />
+                    {(currF.type === "Playlists")? <Playlists
+                    name = {currF.name}
+                    songs = {currF.songs}
+                    /> :<Browse />}
                 </MiddleContent>
                 <Footer>
                     <Avatar variant="rounded">

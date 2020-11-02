@@ -115,7 +115,7 @@ function LoginBox(props) {
             <Row className="gap"/>
             <Row>
             <Grid container spacing={2} alignItems="flex-end" justify="center">
-                <Link to="/browse">
+                <Link to="/home">
             <Button variant="contained" className="btn-color" > Log In </Button></Link>
                 {button}
             </Grid>

@@ -81,7 +81,7 @@ function Settings()   {
     return(
 
         <CenterDiv>
-            <Link to = "/browse"><BackButton><ArrowBackIcon id = "arr"/></BackButton></Link>
+            <Link to = "/home"><BackButton><ArrowBackIcon id = "arr"/></BackButton></Link>
             <AlignTextDiv>
               <AccountDiv>
                 <Avatar id = "av" className= "AvatarIcon">J</Avatar>

@@ -75,12 +75,10 @@ const StyledButton = styled(Button)`
 
 function PlayListView(props) {
 
-    let l = useLocation();
-
     return (
         <StyledDiv>
             <span>
-                <h1>{l.state.name} </h1>
+                <h1>{props.name} </h1>
                 <StyledButton variant="contained" disableElevation>Share</StyledButton>
                 <StyledTrash fontSize="large"/>
             </span>

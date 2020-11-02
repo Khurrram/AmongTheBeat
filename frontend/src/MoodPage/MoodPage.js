@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Navlink, Redirect, useHistory} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 import './MoodPage.css';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -22,22 +22,16 @@ const Button = styled.button`
 
 function MoodPage()
 {
-    const history = useHistory();
-
-    const homeChange = () => 
-    {
-        let path = '/browse';
-        history.push(path);
-    }
 
     return(
         <div className = "fullscreen-container">
             <div id = "back" className = "row">
-            <Button id = " but" node= "button" className = "orange" large 
-            onClick = {homeChange}
-            >
-                <ArrowBackIcon id = "arrow"/>
-            </Button>
+            <Link to = "/home">
+                <Button id = " but" node= "button" className = "orange" large >
+                    <ArrowBackIcon id = "arrow"/>
+                </Button>
+            </Link>
+            
             </div>
 
 

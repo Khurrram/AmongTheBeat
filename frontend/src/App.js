@@ -15,12 +15,10 @@ function App() {
     <Router>
       <Switch>
         <Route path='/' exact={true} component={LandingPage}/>
-        <Route path = '/browse' exact = {true} component = {BrowsePage}/>
+        <Route path = '/home' exact = {true} component = {HomePage} />
         <Route path = '/mood' exact = {true} component = {MoodPage}/>
-        <Route path = '/playlist/:id' exact = {true} component = {PlaylistPage} />
         <Route path = '/land' exact = {true} component = {LandingPage} />
         <Route path= '/settings' exact = {true} component = {SettingsPage} />
-        <Route path= '/searchuser' exact = {true} component = {HomePage} />
         <Route path = '/admin' exact = {true} component = {AdminPage} />
       </Switch>
     </Router>
