@@ -90,6 +90,10 @@ const StyledSearh = styled(SearchBar)`
 const StyledSettingIcon = styled(SettingsIcon)`
     color: white;
 `
+<<<<<<< HEAD
+=======
+
+>>>>>>> 73914921f8055945d853a8b941361e14c4a1d28f
 
 
 function Home() {
