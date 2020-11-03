@@ -18,7 +18,6 @@ const SongDiv = styled.div`
     overflow-y: auto;
 `
 
-<<<<<<< HEAD
 function Browse(props)
 {
         return (
@@ -26,51 +25,6 @@ function Browse(props)
                 <BrowseView></BrowseView>
                 <SongDiv>
                     <div id = "inside" >
-=======
-const StyledSettingIcon = styled(SettingsIcon)`
-    color: white;
-`
-
-const StyledSearch = styled(SearchBar)`
-    max-height: 2em;
-    margin-left: 1em;
-    margin-right: 1em;
-`
-
-function Browse(props)
-{
-    const history = useHistory();
-    let l = useLocation();
-
-    const moodChange = () => 
-    {
-        let path = '/mood';
-        history.push(path);
-    };
-
-    return (
-        <div className="homepage">
-            <ProSidebar>
-                <SidebarHeader>
-                    <div id="center">
-                        <Image id='img' src={logo} fluid/>
-                    </div>
-                </SidebarHeader>
-                <SidebarContent >
-                    <Menu>
-                        <MenuItem id="fontsize">
-                            Browse
-                        </MenuItem>
-                        <StyledSearch
-                            placeholder= 'Search User'
-                        />
-
-                    </Menu>
-                    <hr width="90%" color="black"></hr>
-                    <Menu>
-                        <MenuItem id="fontlarge">Playlists</MenuItem>
-                        {test.playlists.map((playlist) => 
->>>>>>> 73914921f8055945d853a8b941361e14c4a1d28f
                         {
                             test.songs.map((song) =>
                             {
