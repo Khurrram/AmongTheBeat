@@ -26,20 +26,12 @@ function MoodPage()
     return(
         <div className = "fullscreen-container">
             <div id = "back" className = "row">
-<<<<<<< HEAD
             <Link to = "/home">
                 <Button id = " but" node= "button" className = "orange" large >
                     <ArrowBackIcon id = "arrow"/>
                 </Button>
             </Link>
             
-=======
-            <Button id = "but" node= "button" className = "orange" large 
-            onClick = {homeChange}
-            >
-                <ArrowBackIcon id = "arrow"/>
-            </Button>
->>>>>>> 73914921f8055945d853a8b941361e14c4a1d28f
             </div>
 
 
