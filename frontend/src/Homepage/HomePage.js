@@ -5,12 +5,12 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import HomeSideBar from "./HomeSideBar";
 import { Link, useHistory } from "react-router-dom";
 import test from "../data/test.json";
-import Playlists from "../components/Playlists";
-import Browse from "../components/Browse";
+
 import PlayIcon from "@material-ui/icons/PlayArrow";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import RepeatIcon from "@material-ui/icons/Repeat";
 import PlayNavBar from "./PlayNavBar";
+import BrowseView from "./BrowseView";
 import "./HomePage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Home } from "@material-ui/icons";
@@ -63,14 +63,7 @@ const StyledSettingIcon = styled(SettingsIcon)`
   color: white;
 `;
 
-function HomePage() {
-  // const history = useHistory();
-
-  // const moodChange = () => {
-  //   let path = "/mood";
-  //   history.push(path);
-  // };
-
+function HomePage(props) {
   return (
     <div className="homepage1">
       <HomeSideBar />
@@ -81,7 +74,9 @@ function HomePage() {
             <StyledSettingIcon id="margin" />
           </Link>
         </Navbar>
-        <MiddleContent></MiddleContent>
+        <MiddleContent>
+          <BrowseView />
+        </MiddleContent>
         <Footer>
           <PlayNavBar />
         </Footer>
