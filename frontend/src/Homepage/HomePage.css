@@ -1,55 +1,55 @@
-.homepage {
-    background-color: blue;
-    height: 100vmin;
-    display: flex;
-    align-items: stretch;
+.homepage1 {
+  background-color: blue;
+  height: 100vmin;
+  display: flex;
+  align-items: stretch;
 }
 
 #center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* background-color: blueviolet; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* background-color: blueviolet; */
 }
 
 #placeholder {
-    margin: 1em;
-    width: 95%;
-    height: 100px;
-    background-color:grey;
+  margin: 1em;
+  width: 95%;
+  height: 100px;
+  background-color: grey;
 }
 
 #pad {
-    padding: .5em;
+  padding: 0.5em;
 }
 
 #fontsize {
-    font-size: larger;
-    color: white;
+  font-size: larger;
+  color: white;
 }
 
 #fontlarge {
-    font-size: large;
-    color: white;
+  font-size: large;
+  color: white;
 }
 #fontlarger {
-    font-size: larger;
-    color: white;
+  font-size: larger;
+  color: white;
 }
-#fontmedium{
-    font-size: medium;
+#fontmedium {
+  font-size: medium;
 }
 
 #img {
-    max-width: 100%;
-    margin: 1em;
+  max-width: 100%;
+  margin: 1em;
 }
 
 .AvatarIcon {
-    height: 5em;
-    width: 5em;
+  height: 5em;
+  width: 5em;
 }
 
 #margin {
-    margin-right: 12px;
+  margin-right: 12px;
 }

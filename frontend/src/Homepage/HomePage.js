@@ -1,40 +1,19 @@
 import React from "react";
 import styled from "styled-components";
-import logo from "../assets/logo.png";
-import { Image } from "react-bootstrap";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
-import {
-  ProSidebar as Sidebar,
-  Menu,
-  MenuItem,
-  SidebarHeader,
-  SidebarFooter,
-  SidebarContent,
-} from "react-pro-sidebar";
+import HomeSideBar from "./HomeSideBar";
 import { Link, useHistory } from "react-router-dom";
 import test from "../data/test.json";
 import Playlists from "../components/Playlists";
 import Browse from "../components/Browse";
 import PlayIcon from "@material-ui/icons/PlayArrow";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
-import SearchBar from "material-ui-search-bar";
 import RepeatIcon from "@material-ui/icons/Repeat";
 import PlayNavBar from "./PlayNavBar";
 import "./HomePage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "react-pro-sidebar/dist/css/styles.css";
-
-const Button = styled.button`
-  padding: 0.5em;
-  color: Black;
-  border-radius: 10px;
-  margin: 0.5em;
-  width: 100%;
-  font-size: 30px;
-  font-family: "Roboto", sans-serif;
-  background-color: light-grey;
-`;
+import { Home } from "@material-ui/icons";
 
 const ContentWindow = styled.div`
   padding: 1.5em 0em 0em 0em;
@@ -80,27 +59,21 @@ const MiddleContent = styled.div`
   order: 1;
 `;
 
-const StyledSearh = styled(SearchBar)`
-  max-height: 2em;
-  margin-left: 1em;
-  margin-right: 1em;
-`;
-
 const StyledSettingIcon = styled(SettingsIcon)`
   color: white;
 `;
 
-function Home() {
-  const history = useHistory();
+function HomePage() {
+  // const history = useHistory();
 
-  const moodChange = () => {
-    let path = "/mood";
-    history.push(path);
-  };
+  // const moodChange = () => {
+  //   let path = "/mood";
+  //   history.push(path);
+  // };
 
   return (
-    <div className="homepage">
-      {newFunction(moodChange)}
+    <div className="homepage1">
+      <HomeSideBar />
       <ContentWindow>
         <Navbar>
           <Avatar className="AvatarIcon">J</Avatar>
@@ -117,58 +90,4 @@ function Home() {
   );
 }
 
-export default Home;
-function newFunction(moodChange) {
-  return (
-    <Sidebar>
-      <SidebarHeader>
-        <div id="center">
-          <Image id="img" src={logo} fluid />
-        </div>
-      </SidebarHeader>
-      <SidebarContent>
-        <Menu>
-          <MenuItem id="fontsize">
-            <Link
-              to={{
-                pathname: "/browse",
-                state: {
-                  songs: test.songsgit,
-                },
-              }}
-            >
-              Browse
-            </Link>
-          </MenuItem>
-          <StyledSearh></StyledSearh>
-        </Menu>
-        <hr width="90%" color="black"></hr>
-        <Menu>
-          <MenuItem id="fontlarge">Playlists</MenuItem>
-          {test.playlists.map((playlist) => {
-            let path = "/playlist/" + playlist.name;
-            return (
-              <MenuItem>
-                <Link
-                  to={{
-                    pathname: path,
-                    state: {
-                      name: playlist.name,
-                      songs: playlist.songs,
-                    },
-                  }}
-                >
-                  {" "}
-                  {playlist.name}{" "}
-                </Link>
-              </MenuItem>
-            );
-          })}
-        </Menu>
-      </SidebarContent>
-      <SidebarFooter id="center">
-        <Button onClick={moodChange}>Happy</Button>
-      </SidebarFooter>
-    </Sidebar>
-  );
-}
+export default HomePage;
