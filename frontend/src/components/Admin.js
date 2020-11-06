@@ -109,13 +109,13 @@ function ScreenType(focus)
                     {
                     userdata.users.map( (user) =>
                     {
-                        if((user.username).includes(currS))
+                        if((user.username).includes(currS) && user.username !== "Administrator")
                         {
                             return(
                                 <div>
                                     {user.username}
                                     <CButton
-                                    onClick = {() => RB(user.account_type)}
+                                    onClick = {() => RB(user.account_type,focus)}
                                     >{focus}</CButton>
                                 </div>
 
@@ -130,15 +130,23 @@ function ScreenType(focus)
     }
 }
 
-function RB(acc_type)
+function RB(acc_type,focus)
 {
-    if(acc_type != 1)
+    if(acc_type !== 1 && focus === "Ban User")
     {
-        alert("Cannot ban! Either the user is already banned or is an administrator.");
+        alert("Cannot ban! User is already banned.");
     }
-    else
+    else if (acc_type === 1 && focus === "Ban User")
     {
         alert("User has been banned.");
+    }
+    else if(acc_type !== -1 && focus === "Unban User")
+    {
+        alert("Cannot unban user. User is already unbanned.")
+    }
+    else if(acc_type === -1 && focus === "Unban User")
+    {
+        alert("User has been unbanned.")
     }
 
 
