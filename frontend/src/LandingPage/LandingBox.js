@@ -66,7 +66,7 @@ function RegisterBox(props) {
                     <Email fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="email" variant="standard" label="Email" type="email" fullWidth required error={errorState.emailError} helperText={errorState.emailError? "Please enter a valid email." : ''} onChange={(e) => emailHandler(e.target.value)}/>
+                    <TextField id="email" variant="standard" label="Email" type="email" fullWidth required error={errorState.emailError} helperText={errorState.emailError? "Please enter a valid email." : ''} onBlur={(e) => emailHandler(e.target.value)}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -77,7 +77,7 @@ function RegisterBox(props) {
                     <AccountCircle required fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="username" variant="standard" label="Username" fullWidth required helperText="" onChange={(e) => setForm({ email: form.email, password: form.password, username: e.target.value, confirm_password: form.confirm_password })}/>
+                    <TextField id="username" variant="standard" label="Username" fullWidth required error = {form.username === ""? true : false} helperText = {form.username === "" ? "Please enter a valid username." : ''} onChange={(e) => setForm({ email: form.email, password: form.password, username: e.target.value, confirm_password: form.confirm_password })}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -88,7 +88,7 @@ function RegisterBox(props) {
                     <Lock required fontSize="large"  className="icon-color"/>
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="password" variant="standard" label="Password" type="password" fullWidth required helperText="" onChange={(e) => setForm({ email: form.email, password: e.target.value, username: form.username, confirm_password: form.confirm_password  })}/>
+                    <TextField id="password" variant="standard" label="Password" type="password" fullWidth required error = {form.password === ""? true : false} helperText = {form.password === "" ? "Please enter a valid password." : ''} onChange={(e) => setForm({ email: form.email, password: e.target.value, username: form.username, confirm_password: form.confirm_password  })}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -99,7 +99,7 @@ function RegisterBox(props) {
                     <CheckCircle required fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="confirmpassword" variant="standard" label="Confirm Password" type="password" fullWidth required helperText="" onChange={(e) => setForm({ email: form.email, password: form.password, username: form.username, confirm_password: e.target.value })}/>
+                    <TextField id="confirmpassword" variant="standard" label="Confirm Password" type="password" fullWidth required error = {form.password !== form.confirm_password? true : false} helperText = {form.password !== form.confirm_password ? "Passwords do not match" : ''} onChange={(e) => setForm({ email: form.email, password: form.password, username: form.username, confirm_password: e.target.value })}/>
                 </Grid>
                 </Grid>
             </Row>
