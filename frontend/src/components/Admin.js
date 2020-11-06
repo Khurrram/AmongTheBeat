@@ -132,24 +132,29 @@ function ScreenType(focus)
 
 function RB(acc_type,focus)
 {
-    if(acc_type !== 1 && focus === "Ban User")
+    if(acc_type !== 1 && focus === "Ban User") //When admin tried to ban an already banned user
     {
         alert("Cannot ban! User is already banned.");
     }
-    else if (acc_type === 1 && focus === "Ban User")
+    else if (acc_type === 1 && focus === "Ban User") //Admin bans user
     {
         alert("User has been banned.");
+        //backend functionality here
     }
-    else if(acc_type !== -1 && focus === "Unban User")
+    else if(acc_type !== -1 && focus === "Unban User") //Admin tried unbanning a user that was not banned
     {
         alert("Cannot unban user. User is already unbanned.")
     }
-    else if(acc_type === -1 && focus === "Unban User")
+    else if(acc_type === -1 && focus === "Unban User") // Admin unbans user
     {
         alert("User has been unbanned.")
+        //backend functionality here
     }
-
-
+    else if(focus === "Remove User" )
+    {
+        alert("User removed.")
+        //backend functionality here
+    }
 }
 
 
