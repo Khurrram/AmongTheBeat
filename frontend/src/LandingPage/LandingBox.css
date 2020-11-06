@@ -42,11 +42,20 @@
     color:white !important;
   }
 
-  .btn-color:hover {
-    background-color:#662C90 !important;
-    color: white !important;
-  }
+.btn-color:hover {
+  background-color:#662C90 !important;
+  color: white !important;
+}
 
-  .btn-pad {
-    margin-left: 30px !important;
-  } 
+.btn-pad {
+   margin-left: 30px !important;
+} 
+
+.bannedText {
+  color: red;
+  text-align:center;
+}
+
+#BannedText {
+  justify-content: center;
+}

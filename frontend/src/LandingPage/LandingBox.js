@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './LandingBox.css';
 import {Row, CardPanel} from 'react-materialize'
 import {Email, AccountCircle, Lock, CheckCircle} from '@material-ui/icons';
-import {TextField, Grid, Button} from '@material-ui/core';
+import {TextField, Grid, Button, Box} from '@material-ui/core';
 import axios from 'axios';
 
 
@@ -69,7 +69,7 @@ function RegisterBox(props) {
         if(pass !== "")
         {
             setForm({
-                email: form.email, password: pass, username: form.email, confirm_password: form.confirm_password
+                email: form.email, password: pass, username: form.username, confirm_password: form.confirm_password
             });
             setError({
                 emailError: errorState.emailError, userError: errorState.userError, passwordError: false, confirmPasswordError: errorState.confirmPasswordError
@@ -79,7 +79,7 @@ function RegisterBox(props) {
         else
         {
             setForm({
-                email: form.email, password: pass, username: form.email, confirm_password: form.confirm_password
+                email: form.email, password: pass, username: form.username, confirm_password: form.confirm_password
             });
             setError({
                 emailError: errorState.emailError, userError: errorState.userError, passwordError: true, confirmPasswordError: errorState.confirmPasswordError
@@ -93,7 +93,7 @@ function RegisterBox(props) {
         if(confirmpass === form.password)
         {
             setForm({
-                email: form.email, password: form.password, username: form.email, confirm_password: confirmpass
+                email: form.email, password: form.password, username: form.username, confirm_password: confirmpass
             });
             setError({
                 emailError: errorState.emailError, userError: errorState.userError, passwordError: errorState.passwordError, confirmPasswordError: false
@@ -102,12 +102,16 @@ function RegisterBox(props) {
         else
         {
             setForm({
-                email: form.email, password: form.password, username: form.email, confirm_password: confirmpass
+                email: form.email, password: form.password, username: form.username, confirm_password: confirmpass
             });
             setError({
                 emailError: errorState.emailError, userError: errorState.userError, passwordError: errorState.passwordError, confirmPasswordError: true
             });
         }
+    }
+
+    function isEmpty() {
+        return (form.email == "" || form.password == "" || form.username == "" || form.confirm_password == "")
     }
     
     function submitRegistration(e, email,username,password) {
@@ -145,7 +149,7 @@ function RegisterBox(props) {
                     <AccountCircle required fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="username" variant="standard" label="Username" fullWidth required error = {errorState.userError} helperText = {errorState.userError ? "Please enter a valid username." : ''} onChange={(e) => userHandler(e.target.value)}/>
+                    <TextField id="username" variant="standard" label="Username" fullWidth required error = {errorState.userError} helperText = {errorState.userError ? "Please enter a valid username." : ''} onBlur={(e) => userHandler(e.target.value)}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -156,7 +160,7 @@ function RegisterBox(props) {
                     <Lock required fontSize="large"  className="icon-color"/>
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="password" variant="standard" label="Password" type="password" fullWidth required error = {errorState.passwordError} helperText = {errorState.passwordError ? "Please enter a valid password." : ''} onChange={(e) => passHandler(e.target.value)}/>
+                    <TextField id="password" variant="standard" label="Password" type="password" fullWidth required error = {errorState.passwordError} helperText = {errorState.passwordError ? "Please enter a valid password." : ''} onBlur={(e) => passHandler(e.target.value)}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -167,7 +171,7 @@ function RegisterBox(props) {
                     <CheckCircle required fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="confirmpassword" variant="standard" label="Confirm Password" type="password" fullWidth required error = {errorState.confirmPasswordError} helperText = {errorState.confirmPasswordError ? "Passwords do not match" : ''} onChange={(e) => confirmpassHandler(e.target.value)}/>
+                    <TextField id="confirmpassword" variant="standard" label="Confirm Password" type="password" fullWidth required error = {errorState.confirmPasswordError} helperText = {errorState.confirmPasswordError ? "Passwords do not match" : ''} onBlur={(e) => confirmpassHandler(e.target.value)}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -177,7 +181,7 @@ function RegisterBox(props) {
             <Row className="gap"/>
             <Row>
             <Grid container spacing={2} alignItems="flex-end" justify="center">
-            <Button variant="contained" className="btn-color" onClick={(e) => submitRegistration(e, form.email,form.username,form.password)} disabled = {(errorState.emailError || errorState.userError || errorState.passwordError || errorState.confirmPasswordError) ? true: false} > Register </Button>
+            <Button variant="contained" className="btn-color" onClick={(e) => submitRegistration(e, form.email,form.username,form.password)} disabled = {(errorState.emailError || errorState.userError || errorState.passwordError || errorState.confirmPasswordError || isEmpty()) ? true: false} > Register </Button>
                 {button}
             </Grid>
             </Row>
@@ -193,6 +197,12 @@ function LoginBox(props) {
         username: "",
         password: "",
     });
+    const [errorState, setError] = useState({
+        userError: false,
+        passwordError: false
+    });
+    const [banned, setBanned] = useState(false);
+    const [invalid, setInvalid] = useState(false);
 
     function submitLogin(e, username, password) {
         e.preventDefault();
@@ -201,24 +211,83 @@ function LoginBox(props) {
         axios.post("http://localhost:5000/api/login", data)
         .then(function(res){
             console.log(res.data);
-            if (res.data != (-1+"")) {
+            if (res.data != "banned" && res.data != "notFound") {
                 console.log("Redirecting");
                 window.location="/home";
+            } else {
+                if (res.data == "banned") {
+                    setBanned(true);
+                } else if (res.data == "notFound") {
+                    setInvalid(true);
+                }
             }
         })
         .catch(err => console.log(err.data))
     }
 
+    function userHandler(user)
+    {
+        if(user !== "")
+        {
+            setForm({
+                password: form.password, username: user
+            });
+            setError({
+                userError: false, passwordError: errorState.passwordError
+            });
+        }
+        else
+        {
+            setForm({
+                password: form.password, username: user
+            });
+            setError({
+                userError: true, passwordError: errorState.passwordError
+            });
+        }
+    }
+
+    function passHandler(pass)
+    {
+        if(pass !== "")
+        {
+            setForm({
+                password: pass, username: form.username
+            });
+            setError({
+                userError: errorState.userError, passwordError: false
+            });
+
+        }
+        else
+        {
+            setForm({
+                password: pass, username: form.username
+            });
+            setError({
+                userError: errorState.userError, passwordError: true
+            });
+
+        }
+    }
+
+    function isEmpty() {
+        return (form.password == "" || form.username == "")
+    }
+
     return (
         <CardPanel className="box-dim hoverable">
             <div class="overlay input-dim">
+            <Row id="BannedText">
+                {banned?<h5 className="bannedText">Account is banned.</h5> : null}
+            </Row>
             <Row>
                 <Grid container spacing={2} alignItems="center" justify="center">
                 <Grid item  className="icon-margin">
                     <AccountCircle required fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="username" variant="standard" label="Username" fullWidth required helperText="" onChange={(e) => setForm({ password: form.password, username: e.target.value})} />
+                    <TextField id="username" variant="standard" label="Username" fullWidth required error={invalid} helperText={invalid? 'Invalid username or password' : ""} onBlur={(e) => userHandler(e.target.value)} />
                 </Grid>
                 </Grid>
             </Row>
@@ -229,7 +298,7 @@ function LoginBox(props) {
                     <Lock required fontSize="large"  className="icon-color"/>
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="password" variant="standard" label="Password" fullWidth required helperText="" onChange={(e) => setForm({ password: e.target.value, username: form.username})}/>
+                    <TextField id="password" variant="standard" label="Password" fullWidth required error={invalid} helperText={invalid? 'Invalid username or password' : ""} onBlur={(e) => passHandler(e.target.value)}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -237,8 +306,10 @@ function LoginBox(props) {
             <Row className="gap"/>
             <Row className="gap"/>
             <Row>
+            <Row>
+            </Row>
             <Grid container spacing={2} alignItems="flex-end" justify="center">
-            <Button variant="contained" className="btn-color" onClick={(e) => submitLogin(e, form.username, form.password)} > Log In </Button>
+            <Button variant="contained" className="btn-color" onClick={(e) => submitLogin(e, form.username, form.password)} disabled = {errorState.userError || errorState.passwordError || isEmpty()} > Log In </Button>
                 {button}
             </Grid>
             </Row>
