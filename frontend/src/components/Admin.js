@@ -7,6 +7,7 @@ import axios from 'axios';
 import styled from 'styled-components'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pro-sidebar/dist/css/styles.css';
+import { get } from 'mongoose';
 
 const Button = styled.button`
     padding: .5em;
@@ -68,9 +69,8 @@ function Admin()
     const [users, setUsers] = useState([]);
     const [currS, setcurrS] = useState("");
     
-    function getData(e,command) {
+    function getData(command) {
         setcurrF(command);
-        e.preventDefault();
         console.log("getData is called");
         let accountType = 0;
         if (command == "Unban") {
@@ -96,6 +96,7 @@ function Admin()
             .then(function(res){
                 console.log(res.data);
                 alert(res.data.username + " has been banned.");
+                getData("Ban");
              })
             .catch(err => console.log(err.data))
     } else if (command === "Unban") {
@@ -103,6 +104,7 @@ function Admin()
         axios.post("http://localhost:5000/api/user/unban", data)
             .then(function(res){
                 alert(res.data.username + " has been unbanned.");
+                getData("Unban");
              })
             .catch(err => console.log(err.data))
     } else {
@@ -110,6 +112,7 @@ function Admin()
         axios.post("http://localhost:5000/api/user/remove", data)
             .then(function(res){
                 alert(res.data.username + " has been removed.");
+                getData("Remove");
              })
             .catch(err => console.log(err.data))
     }
@@ -123,13 +126,13 @@ function Admin()
 
             <div>
                 <Button
-                onClick = {(e) => getData(e,"Ban")}
+                onClick = {(e) => getData("Ban")}
                 >Ban User</Button>
                 <Button
-                onClick = {(e) => getData(e,"Unban")}
+                onClick = {(e) => getData("Unban")}
                 >Unban User</Button>
                 <Button
-                onClick = {(e) => getData(e,"Remove")}
+                onClick = {(e) => getData("Remove")}
                 >Remove User</Button>
                  
                 <CenterPanel>

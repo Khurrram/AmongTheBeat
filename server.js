@@ -25,9 +25,9 @@ app.get("/api/register", (req, res) => {
 });
 
 app.post("/api/register", (req, res) => {
-    console.log(req.body);
+
     userModel.findOne({$or:[{username: req.body.username},{email: req.body.email}]}, function (err, user){
-        console.log(user);
+
         if (user == null) {
             let id = new mongoose.Types.ObjectId();
             userModel.create({
@@ -44,15 +44,15 @@ app.post("/api/register", (req, res) => {
     });
 });
 
+//GET and POST for Logging In
 app.get("/api/login", (req, res) => {
     console.log("GET REQUEST completed");
 });
 
-//GET and POST for Logging In
 app.post("/api/login", (req, res) => {
-    console.log(req.body);
+
     userModel.findOne({username: req.body.username, password: req.body.password}, function (err, user){
-        console.log(user);
+
         if (user != null) {
             if (user.accountType == -1) {
                 res.send("banned");
@@ -71,7 +71,6 @@ app.get("/api/usersList", (req,res) => {
 })
 
 app.post("/api/usersList", (req, res) => {
-    console.log(req.body);
     if (req.body.accountType == 2) {
         userModel.find({$or:[{accountType: 0},{accountType: -1}]}, function(err, users) {
             res.send(users);
@@ -89,10 +88,9 @@ app.get("/api/user/ban", (req,res) => {
 })
 
 app.post("/api/user/ban", (req, res) => {
-    console.log(req.body.id);
     let id = req.body.id;
     userModel.findOneAndUpdate({'_id': id}, {'accountType': -1}, function(err, user) {
-        console.log(user);
+
         res.send(user);
     });
 });
@@ -104,10 +102,9 @@ app.get("/api/user/unban", (req,res) => {
 })
 
 app.post("/api/user/unban", (req, res) => {
-    console.log(req.body.id);
     let id = req.body.id;
     userModel.findOneAndUpdate({'_id': id}, {'accountType': 0}, function(err, user) {
-        console.log(user);
+
         res.send(user);
     });
 });
@@ -119,10 +116,9 @@ app.get("/api/user/remove", (req,res) => {
 })
 
 app.post("/api/user/remove", (req, res) => {
-    console.log(req.body.id);
     let id = req.body.id;
     userModel.findOneAndRemove({'_id': id}, function(err, user) {
-        console.log(user);
+
         res.send(user);
     });
 });
