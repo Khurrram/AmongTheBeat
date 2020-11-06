@@ -106,7 +106,7 @@ function ScreenType(focus)
                 onChange = {(val) => setcurrS(val)}
                 />
                 <ResultsPanel>
-                    {
+                    { //go through database and print out people (excluding admin)
                     userdata.users.map( (user) =>
                     {
                         if((user.username).includes(currS) && user.username !== "Administrator")
@@ -115,7 +115,7 @@ function ScreenType(focus)
                                 <div>
                                     {user.username}
                                     <CButton
-                                    onClick = {() => RB(user.account_type,focus)}
+                                    onClick = {() => RB(user.account_type,focus,user._id)}
                                     >{focus}</CButton>
                                 </div>
 
@@ -130,7 +130,7 @@ function ScreenType(focus)
     }
 }
 
-function RB(acc_type,focus)
+function RB(acc_type,focus,id) //id used to find the user
 {
     if(acc_type !== 1 && focus === "Ban User") //When admin tried to ban an already banned user
     {
