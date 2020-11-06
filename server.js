@@ -1,7 +1,5 @@
 const express = require("express");
-const { fstat } = require("fs");
 const mongoose = require("mongoose");
-const path = require('path');
 var cors = require('cors');
 const userModel = require("./models/userModel.js");
 const app = express();
@@ -55,15 +53,10 @@ app.post("/api/login", (req, res) => {
     console.log(req.body);
     userModel.findOne({username: req.body.username, password: req.body.password}, function (err, user){
         console.log(user);
-        if (user != null) {
+        if (user != null && user.accountType != -1) {
             res.send(user._id + "");
         } else {
             res.send(-1 + "");
         } 
     });
 });
-
-
-// var register = require('./backend/routes/register')
-// app.get('/api/users/register',register.router);
-// app.post('/api/users/register',register.router);
