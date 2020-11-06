@@ -53,11 +53,15 @@ app.post("/api/login", (req, res) => {
     console.log(req.body);
     userModel.findOne({username: req.body.username, password: req.body.password}, function (err, user){
         console.log(user);
-        if (user != null && user.accountType != -1) {
-            res.send(user._id + "");
+        if (user != null) {
+            if (user.accountType == -1) {
+                res.send("banned");
+            } else {
+                res.send(user._id + "");
+            }
         } else {
-            res.send(-1 + "");
-        } 
+            res.send("notFound");
+        }
     });
 });
 
