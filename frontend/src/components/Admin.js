@@ -50,7 +50,7 @@ const CenterPanel = styled.div`
 const ResultsPanel = styled.div`
     color: white;
     margin-top: 3%;
-    margin-left: 3%;
+    margin-left: 10%;
     position: absolute;
     margin-right: 20%;
     font-size: 24px;
@@ -140,6 +140,8 @@ function Admin()
                     { //go through database and print out people (excluding admin)
                     users.map ( (user) =>
                     {
+                        if((user.username).includes(currS))
+                        {
                             return(
                                 <div>
                                     {user.username}
@@ -149,6 +151,7 @@ function Admin()
                                 </div>
 
                             );
+                        }
                     })
                     }
                 </ResultsPanel>
