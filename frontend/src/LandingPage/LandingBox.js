@@ -33,7 +33,6 @@ function RegisterBox(props) {
         });
     }
     else {
-        console.log("error in email");
         setForm({
             email: email, password: form.password, username: form.username, confirm_password: form.confirm_password
         });
@@ -41,6 +40,74 @@ function RegisterBox(props) {
             emailError: true, userError: errorState.userError, passwordError: errorState.passwordError, confirmPasswordError: errorState.confirmPasswordError
         });
     }
+    }
+
+    function userHandler(user)
+    {
+        if(user !== "")
+        {
+            setForm({
+                email: form.email, password: form.password, username: user, confirm_password: form.confirm_password
+            });
+            setError({
+                emailError: errorState.emailError, userError: false, passwordError: errorState.passwordError, confirmPasswordError: errorState.confirmPasswordError
+            });
+        }
+        else
+        {
+            setForm({
+                email: form.email, password: form.password, username: user, confirm_password: form.confirm_password
+            });
+            setError({
+                emailError: errorState.emailError, userError: true, passwordError: errorState.passwordError, confirmPasswordError: errorState.confirmPasswordError
+            });
+        }
+    }
+
+    function passHandler(pass)
+    {
+        if(pass !== "")
+        {
+            setForm({
+                email: form.email, password: pass, username: form.email, confirm_password: form.confirm_password
+            });
+            setError({
+                emailError: errorState.emailError, userError: errorState.userError, passwordError: false, confirmPasswordError: errorState.confirmPasswordError
+            });
+
+        }
+        else
+        {
+            setForm({
+                email: form.email, password: pass, username: form.email, confirm_password: form.confirm_password
+            });
+            setError({
+                emailError: errorState.emailError, userError: errorState.userError, passwordError: true, confirmPasswordError: errorState.confirmPasswordError
+            });
+
+        }
+    }
+
+    function confirmpassHandler(confirmpass)
+    {
+        if(confirmpass === form.password)
+        {
+            setForm({
+                email: form.email, password: form.password, username: form.email, confirm_password: confirmpass
+            });
+            setError({
+                emailError: errorState.emailError, userError: errorState.userError, passwordError: errorState.passwordError, confirmPasswordError: false
+            });
+        }
+        else
+        {
+            setForm({
+                email: form.email, password: form.password, username: form.email, confirm_password: confirmpass
+            });
+            setError({
+                emailError: errorState.emailError, userError: errorState.userError, passwordError: errorState.passwordError, confirmPasswordError: true
+            });
+        }
     }
     
     function submitRegistration(e, email,username,password) {
@@ -67,7 +134,7 @@ function RegisterBox(props) {
                     <Email fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="email" variant="standard" label="Email" type="email" fullWidth required error={setError.emailError} helperText={'Please enter a valid email.'} onBlur={(e) => emailHandler(e.target.value)}/>
+                    <TextField id="email" variant="standard" label="Email" type="email" fullWidth required error={errorState.emailError} helperText={errorState.emailError? "Please enter a valid email." : ''} onBlur={(e) => emailHandler(e.target.value)}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -78,7 +145,7 @@ function RegisterBox(props) {
                     <AccountCircle required fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="username" variant="standard" label="Username" fullWidth required helperText="" onChange={(e) => setForm({ email: form.email, password: form.password, username: e.target.value, confirm_password: form.confirm_password })}/>
+                    <TextField id="username" variant="standard" label="Username" fullWidth required error = {errorState.userError} helperText = {errorState.userError ? "Please enter a valid username." : ''} onChange={(e) => userHandler(e.target.value)}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -89,7 +156,7 @@ function RegisterBox(props) {
                     <Lock required fontSize="large"  className="icon-color"/>
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="password" variant="standard" label="Password" type="password" fullWidth required helperText="" onChange={(e) => setForm({ email: form.email, password: e.target.value, username: form.username, confirm_password: form.confirm_password  })}/>
+                    <TextField id="password" variant="standard" label="Password" type="password" fullWidth required error = {errorState.passwordError} helperText = {errorState.passwordError ? "Please enter a valid password." : ''} onChange={(e) => passHandler(e.target.value)}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -100,7 +167,7 @@ function RegisterBox(props) {
                     <CheckCircle required fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="confirmpassword" variant="standard" label="Confirm Password" type="password" fullWidth required helperText="" onChange={(e) => setForm({ email: form.email, password: form.password, username: form.username, confirm_password: e.target.value })}/>
+                    <TextField id="confirmpassword" variant="standard" label="Confirm Password" type="password" fullWidth required error = {errorState.confirmPasswordError} helperText = {errorState.confirmPasswordError ? "Passwords do not match" : ''} onChange={(e) => confirmpassHandler(e.target.value)}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -110,7 +177,7 @@ function RegisterBox(props) {
             <Row className="gap"/>
             <Row>
             <Grid container spacing={2} alignItems="flex-end" justify="center">
-            <Button variant="contained" className="btn-color" onClick={(e) => submitRegistration(e, form.email,form.username,form.password)}> Register </Button>
+            <Button variant="contained" className="btn-color" onClick={(e) => submitRegistration(e, form.email,form.username,form.password)} disabled = {(errorState.emailError || errorState.userError || errorState.passwordError || errorState.confirmPasswordError) ? true: false} > Register </Button>
                 {button}
             </Grid>
             </Row>
