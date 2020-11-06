@@ -45,9 +45,7 @@ function App() {
         <Route
           path="/admin"
           exact={true}
-          component={AdminPage}
-          onEnter={auth}
-          render={() => (!auth ? <Redirect to="/" /> : <SettingsPage />)}
+          render={() => (!auth ? <Redirect to="/" /> : <AdminPage />)}
         />
       </Switch>
     </Router>
