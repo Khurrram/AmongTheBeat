@@ -141,7 +141,7 @@ function Settings()   {
                 <Button id = "confirm"
                 onClick = {() => handleConfirm(currF.oldpass,currF.newpass,currF.confirmpass)}
                 >Confirm</Button>
-                <Link to = "/land"><Button id = "logout">Log Out</Button></Link>
+                <Link to = "/"><Button id = "logout">Log Out</Button></Link>
               </AccountButtonDiv>
             
             

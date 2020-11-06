@@ -4,7 +4,6 @@ import { Row, CardPanel } from "react-materialize";
 import { Email, AccountCircle, Lock, CheckCircle } from "@material-ui/icons";
 import { TextField, Grid, Button, Box } from "@material-ui/core";
 import axios from "axios";
-import { getSessionCookie, setSessionCookie } from "../CookieHandler";
 
 function RegisterBox(props) {
   const button = props.button;
@@ -20,6 +19,7 @@ function RegisterBox(props) {
     passwordError: false,
     confirmPasswordError: false,
   });
+  const [invalid, setInvalid] = useState(false);
 
   function emailHandler(email) {
     let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -163,6 +163,8 @@ function RegisterBox(props) {
         if (res.data != -1 + "") {
           console.log("Redirecting");
           window.location = "/home";
+        } else {
+          setInvalid(true);
         }
       })
       .catch((err) => console.log(err.data));
@@ -171,6 +173,13 @@ function RegisterBox(props) {
   return (
     <CardPanel className="box-dim hoverable">
       <div class="overlay input-dim">
+        <Row id="BannedText">
+          {invalid ? (
+            <h5 className="bannedText">
+              The email or username are already taken.
+            </h5>
+          ) : null}
+        </Row>
         <Row>
           <Grid
             container
@@ -328,9 +337,7 @@ function LoginBox(props) {
         console.log(res.data);
         if (res.data != "banned" && res.data != "notFound") {
           console.log("Redirecting");
-          setSessionCookie({ username });
-          window.location = "/";
-          //   props.history.push("/");
+          window.location = "/home";
         } else {
           if (res.data == "banned") {
             setBanned(true);
@@ -439,7 +446,6 @@ function LoginBox(props) {
         <Row className="gap" />
         <Row className="gap" />
         <Row>
-          <Row></Row>
           <Grid container spacing={2} alignItems="flex-end" justify="center">
             <Button
               variant="contained"
