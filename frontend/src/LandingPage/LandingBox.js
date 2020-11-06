@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './LandingBox.css';
 import {Row, CardPanel} from 'react-materialize'
-import {Email, AccountCircle, Lock, CheckCircle} from '@material-ui/icons';
+import {Email, AccountCircle, Lock, CheckCircle, FiberNew} from '@material-ui/icons';
 import {TextField, Grid, Button} from '@material-ui/core';
-import {Link} from 'react-router-dom';
-import data from '../data/test.json';
+import {Link, Redirect} from 'react-router-dom';
+import axios from 'axios';
 
 
 function RegisterBox(props) {
     const button = props.button;
+    const [form, setForm] = useState({
+        email: "",
+        username: "",
+        password: "",
+        confirm_password: ""
+    });
     
     return (
         <CardPanel className="box-dim hoverable">
@@ -19,7 +25,9 @@ function RegisterBox(props) {
                     <Email fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="email" variant="standard" label="Email" fullWidth required helperText="" />
+                    <TextField id="email" variant="standard" label="Email" fullWidth required helperText="" onChange={(e) => setForm({
+                        email: e.target.value, password: form.password, username: form.username, confirm_password: form.confirm_password
+                    })}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -30,7 +38,7 @@ function RegisterBox(props) {
                     <AccountCircle required fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="username" variant="standard" label="Username" fullWidth required helperText="" />
+                    <TextField id="username" variant="standard" label="Username" fullWidth required helperText="" onChange={(e) => setForm({ email: form.email, password: form.password, username: e.target.value, confirm_password: form.confirm_password })}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -41,7 +49,7 @@ function RegisterBox(props) {
                     <Lock required fontSize="large"  className="icon-color"/>
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="password" variant="standard" label="Password" fullWidth required helperText="" />
+                    <TextField id="password" variant="standard" label="Password" fullWidth required helperText="" onChange={(e) => setForm({ email: form.email, password: e.target.value, username: form.username, confirm_password: form.confirm_password  })}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -52,7 +60,7 @@ function RegisterBox(props) {
                     <CheckCircle required fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="confirmpassword" variant="standard" label="Confirm Password" fullWidth required helperText=""/>
+                    <TextField id="confirmpassword" variant="standard" label="Confirm Password" fullWidth required helperText="" onChange={(e) => setForm({ email: form.email, password: form.password, username: form.username, confirm_password: e.target.value })}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -62,7 +70,7 @@ function RegisterBox(props) {
             <Row className="gap"/>
             <Row>
             <Grid container spacing={2} alignItems="flex-end" justify="center">
-            <Button variant="contained" className="btn-color" onClick={props.onClick}> Register </Button>
+            <Button variant="contained" className="btn-color" onClick={(e) => submitRegistration(e, form.email,form.username,form.password)}> Register </Button>
                 {button}
             </Grid>
             </Row>
@@ -71,21 +79,49 @@ function RegisterBox(props) {
     );
 }
 
+function submitRegistration(e, email,username,password) {
+    e.preventDefault();
+    let data = {email, username, password};
+    let response;
 
-function confirm_password_handler() {
-    console.log(document.getElementById('confirm_password').value);
-    if (document.getElementById('confirm_password').value !== document.getElementById('password').value) {
-        document.getElementById("confirm_password").classList.remove("valid");
-        document.getElementById("confirm_password").classList.add("invalid");
-    } else {
-        document.getElementById("confirm_password").classList.remove("invalid");
-        document.getElementById("confirm_password").classList.add("valid");
-    }
+    axios.post("http://localhost:5000/api/register", data)
+        .then(function(res){
+            console.log(res.data);
+            if (res.data != (-1+"")) {
+                console.log("Redirecting");
+                window.location="/home";
+            }
+        })
+        .catch(err => console.log(err.data))
+    
+
+    // axios.get("http://localhost:5000/api/register")
+    //     .then(res => console.log(res.data));
 }
 
+function submitLogin(e, username, password) {
+    e.preventDefault();
+    let data = {username, password};
+    
+    axios.post("http://localhost:5000/api/login", data)
+    .then(function(res){
+        console.log(res.data);
+        if (res.data != (-1+"")) {
+            console.log("Redirecting");
+            window.location="/home";
+        }
+    })
+    .catch(err => console.log(err.data))
+
+}
 
 function LoginBox(props) {
     const button = props.button;
+    const [form, setForm] = useState({
+        username: "",
+        password: "",
+    });
+
     return (
         <CardPanel className="box-dim hoverable">
             <div class="overlay input-dim">
@@ -95,7 +131,7 @@ function LoginBox(props) {
                     <AccountCircle required fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="username" variant="standard" label="Username" fullWidth required helperText="" />
+                    <TextField id="username" variant="standard" label="Username" fullWidth required helperText="" onChange={(e) => setForm({ password: form.password, username: e.target.value})} />
                 </Grid>
                 </Grid>
             </Row>
@@ -106,7 +142,7 @@ function LoginBox(props) {
                     <Lock required fontSize="large"  className="icon-color"/>
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="password" variant="standard" label="Password" fullWidth required helperText="" />
+                    <TextField id="password" variant="standard" label="Password" fullWidth required helperText="" onChange={(e) => setForm({ password: e.target.value, username: form.username})}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -115,8 +151,7 @@ function LoginBox(props) {
             <Row className="gap"/>
             <Row>
             <Grid container spacing={2} alignItems="flex-end" justify="center">
-                <Link to="/home">
-            <Button variant="contained" className="btn-color" > Log In </Button></Link>
+            <Button variant="contained" className="btn-color" onClick={(e) => submitLogin(e, form.username, form.password)} > Log In </Button>
                 {button}
             </Grid>
             </Row>
