@@ -60,3 +60,65 @@ app.post("/api/login", (req, res) => {
         } 
     });
 });
+
+//GET and POST for Displaying Users in Admin 
+app.get("/api/usersList", (req,res) => {
+    console.log("GET REQUEST usersList");
+})
+
+app.post("/api/usersList", (req, res) => {
+    console.log(req.body);
+    if (req.body.accountType == 2) {
+        userModel.find({$or:[{accountType: 0},{accountType: -1}]}, function(err, users) {
+            res.send(users);
+        });
+    } else {
+        userModel.find({accountType: req.body.accountType}, function(err, users) {
+            res.send(users);
+        });
+    }
+});
+
+//GET and POST for banning users in Admin
+app.get("/api/user/ban", (req,res) => {
+    console.log("GET REQUEST banUser");
+})
+
+app.post("/api/user/ban", (req, res) => {
+    console.log(req.body.id);
+    let id = req.body.id;
+    userModel.findOneAndUpdate({'_id': id}, {'accountType': -1}, function(err, user) {
+        console.log(user);
+        res.send(user);
+    });
+});
+
+
+//GET and POST for unbanning users in Admin
+app.get("/api/user/unban", (req,res) => {
+    console.log("GET REQUEST usersList");
+})
+
+app.post("/api/user/unban", (req, res) => {
+    console.log(req.body.id);
+    let id = req.body.id;
+    userModel.findOneAndUpdate({'_id': id}, {'accountType': 0}, function(err, user) {
+        console.log(user);
+        res.send(user);
+    });
+});
+
+
+//GET and POST for removing users in Admin
+app.get("/api/user/remove", (req,res) => {
+    console.log("GET REQUEST usersList");
+})
+
+app.post("/api/user/remove", (req, res) => {
+    console.log(req.body.id);
+    let id = req.body.id;
+    userModel.findOneAndRemove({'_id': id}, function(err, user) {
+        console.log(user);
+        res.send(user);
+    });
+});

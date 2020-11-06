@@ -130,7 +130,8 @@ function Home() {
                         {
                             return(
                                 <MenuItem
-                                    onClick = {() => setcurrF(
+                                    onClick = {() => 
+                                    setcurrF(
                                     {
                                         type: "Playlists",
                                         name: playlist.name,
