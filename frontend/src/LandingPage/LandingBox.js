@@ -33,7 +33,6 @@ function RegisterBox(props) {
         });
     }
     else {
-        console.log("error in email");
         setForm({
             email: email, password: form.password, username: form.username, confirm_password: form.confirm_password
         });
@@ -67,7 +66,7 @@ function RegisterBox(props) {
                     <Email fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="email" variant="standard" label="Email" type="email" fullWidth required error={setError.emailError} errorText={setError.emailError ? "Please enter a valid email." : ''} onChange={(e) => emailHandler(e.target.value)}/>
+                    <TextField id="email" variant="standard" label="Email" type="email" fullWidth required error={errorState.emailError} helperText={errorState.emailError? "Please enter a valid email." : ''} onChange={(e) => emailHandler(e.target.value)}/>
                 </Grid>
                 </Grid>
             </Row>
