@@ -73,9 +73,9 @@ function Admin()
         e.preventDefault();
         console.log("getData is called");
         let accountType = 0;
-        if (command == "unban") {
+        if (command == "Unban") {
             accountType = -1;
-        } else if (command == "remove") {
+        } else if (command == "Remove") {
             accountType = 2;
         } 
         let data = {accountType}
@@ -90,7 +90,7 @@ function Admin()
     function UI_Handler(command,id) //id used to find the user
 {
     let data = {id : id};
-    if (command === "ban") {
+    if (command === "Ban") {
         console.log("ban is called");
         axios.post("http://localhost:5000/api/user/ban", data)
             .then(function(res){
@@ -98,7 +98,7 @@ function Admin()
                 alert(res.data.username + " has been banned.");
              })
             .catch(err => console.log(err.data))
-    } else if (command === "unban") {
+    } else if (command === "Unban") {
         console.log("unban is called");
         axios.post("http://localhost:5000/api/user/unban", data)
             .then(function(res){
@@ -123,13 +123,13 @@ function Admin()
 
             <div>
                 <Button
-                onClick = {(e) => getData(e,"ban")}
+                onClick = {(e) => getData(e,"Ban")}
                 >Ban User</Button>
                 <Button
-                onClick = {(e) => getData(e,"unban")}
+                onClick = {(e) => getData(e,"Unban")}
                 >Unban User</Button>
                 <Button
-                onClick = {(e) => getData(e,"remove")}
+                onClick = {(e) => getData(e,"Remove")}
                 >Remove User</Button>
                  
                 <CenterPanel>
