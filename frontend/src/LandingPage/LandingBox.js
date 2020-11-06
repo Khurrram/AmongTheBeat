@@ -67,7 +67,7 @@ function RegisterBox(props) {
                     <Email fontSize="large" className="icon-color" />
                 </Grid>
                 <Grid item xs={5} xl={5} sm={5} md={5} lg={5}>
-                    <TextField id="email" variant="standard" label="Email" type="email" fullWidth required error={setError.emailError} errorText={setError.emailError ? "Please enter a valid email." : ''} onChange={(e) => emailHandler(e.target.value)}/>
+                    <TextField id="email" variant="standard" label="Email" type="email" fullWidth required error={setError.emailError} helperText={'Please enter a valid email.'} onBlur={(e) => emailHandler(e.target.value)}/>
                 </Grid>
                 </Grid>
             </Row>
@@ -197,12 +197,12 @@ function RegisterButton(props) {
 }
 
 function CurrentBox(props) {
-    const isloginclicked = props.isloginclicked;
+    const isregisterclicked = props.isregisterclicked;
     const button = props.button;
-    if (isloginclicked) {
-        return <LoginBox button={button}/>
-    } else {
+    if (isregisterclicked) {
         return <RegisterBox button={button}/>
+    } else {
+        return <LoginBox button={button}/>
     }
 }
 
@@ -210,33 +210,33 @@ class LandingBox extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {isloginclicked: false};
+        this.state = {isregisterclicked: false};
         this.LoginBox_handler = this.LoginBox_handler.bind(this);
         this.RegisterBox_handler = this.RegisterBox_handler.bind(this);
     }
 
     
     LoginBox_handler() {
-        this.setState({isloginclicked : false});
+        this.setState({isregisterclicked : false});
     }
 
     RegisterBox_handler() {
-        this.setState({isloginclicked : true});
+        this.setState({isregisterclicked : true});
     }
 
     render() {
-        const isloginclicked = this.state.isloginclicked;
+        const isregisterclicked = this.state.isregisterclicked;
         let button;
 
-        if (isloginclicked) {
-            button = <LoginButton onClick={this.LoginBox_handler} />
+        if (isregisterclicked) {
+            button = <RegisterButton onClick={this.LoginBox_handler} />
         } else {
-            button = <RegisterButton onClick={this.RegisterBox_handler} /> 
+            button = <LoginButton onClick={this.RegisterBox_handler} /> 
         }
 
         return (
             <div>
-                <CurrentBox isloginclicked={isloginclicked} button={button} />
+                <CurrentBox isregisterclicked={isregisterclicked} button={button} />
             </div>
         )
     }

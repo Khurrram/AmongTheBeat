@@ -1,13 +1,12 @@
 import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
 import './Admin.css';
 import SearchBar from 'material-ui-search-bar';
 import userdata from '../data/admintest.json';
+import axios from 'axios';
 
 import styled from 'styled-components'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pro-sidebar/dist/css/styles.css';
-import { ButtonBase } from '@material-ui/core';
 
 const Button = styled.button`
     padding: .5em;
@@ -75,13 +74,13 @@ function Admin()
 
             <div>
                 <Button
-                onClick = {() => setcurrF("Ban User")}
+                onClick = {() => setcurrF("ban")}
                 >Ban User</Button>
                 <Button
-                onClick = {() => setcurrF("Unban User")}
+                onClick = {() => setcurrF("unban")}
                 >Unban User</Button>
                 <Button
-                onClick = {() => setcurrF("Remove User")}
+                onClick = {() => setcurrF("remove")}
                 >Remove User</Button>
                 
                 {ScreenType(currF)}
@@ -92,45 +91,58 @@ function Admin()
         </CenterDiv>
     );
 }
+
+
+
 function ScreenType(focus)
 {
     const [currS, setcurrS] = useState("");
-
+    let users;
     if (focus === "")
         return <div></div>
     else
     {
-        return(
-            <CenterPanel>
-                <StyledSearch 
-                onChange = {(val) => setcurrS(val)}
-                />
-                <ResultsPanel>
-                    { //go through database and print out people (excluding admin)
-                    userdata.users.map( (user) =>
-                    {
-                        if((user.username).includes(currS) && user.username !== "Administrator")
-                        {
-                            return(
-                                <div>
-                                    {user.username}
-                                    <CButton
-                                    onClick = {() => RB(user.account_type,focus,user._id)}
-                                    >{focus}</CButton>
-                                </div>
+        let accountType = 0;
+        if (focus == "unban") {
+            accountType = -1;
+        } 
+        let data = {accountType}
+        axios.post("http://localhost:5000/api/usersList", data)
+            .then(function(res){
+                console.log(res.data);
+                users = res.data;
+                console.log(users);
+                return(
+                    <CenterPanel>
+                        <StyledSearch 
+                        onChange = {(val) => setcurrS(val)}
+                        />
+                        {console.log("returning")}
+                        <ResultsPanel>
+                            { //go through database and print out people (excluding admin)
+                            users.map ( (user) =>
+                            {
+                                    return(
+                                        <div>
+                                            {console.log("returning inner")}
+                                            {user.username}
+                                            <CButton
+                                            onClick = {() => UI_Handler(user.accountType,focus,user._id)}
+                                            >{focus}</CButton>
+                                        </div>
 
-                            );
-                        }
-                    })
-                    }
-                </ResultsPanel>
-            </CenterPanel>
-    
-        );
+                                    );
+                            })
+                            }
+                        </ResultsPanel>
+                    </CenterPanel>
+                    );
+             })
+            .catch(err => console.log(err.data))
     }
 }
 
-function RB(acc_type,focus,id) //id used to find the user
+function UI_Handler(acc_type,focus,id) //id used to find the user
 {
     if(acc_type !== 1 && focus === "Ban User") //When admin tried to ban an already banned user
     {

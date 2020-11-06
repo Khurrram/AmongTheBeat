@@ -17,7 +17,7 @@ import {
 import "./App.css";
 
 function App() {
-  const [auth, setAuth] = useState(false);
+  const [auth, setAuth] = useState(true);
 
   return (
     <Router>
@@ -25,7 +25,7 @@ function App() {
         <Route
           path="/"
           exact={true}
-          render={() => (auth ? <Redirect to="/home" /> : <LandingPage />)}
+          render={() => (!auth ? <Redirect to="/home" /> : <LandingPage />)}
         />
         <Route
           path="/home"

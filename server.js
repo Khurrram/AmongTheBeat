@@ -60,3 +60,15 @@ app.post("/api/login", (req, res) => {
         } 
     });
 });
+
+//GET and POST for Displaying Users in Admin 
+app.get("/api/usersList", (req,res) => {
+})
+
+app.post("/api/usersList", (req, res) => {
+    console.log(req.body);
+    userModel.find({accountType: req.body.accountType}, function(err, users) {
+        console.log(users);
+        res.send(users);
+    });
+});
