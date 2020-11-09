@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { Image } from "react-bootstrap";
 import logo from "../assets/logo.png";
 import SearchBar from "material-ui-search-bar";
 import test from "../data/test.json";
+import { ViewPage } from "./HomePage";
 import {
   ProSidebar as Sidebar,
   Menu,
@@ -34,6 +35,7 @@ const StyledSearh = styled(SearchBar)`
 `;
 
 function HomeSideBar(props) {
+  const { state, actions } = useContext(ViewPage);
   return (
     <Sidebar>
       <SidebarHeader>
@@ -43,17 +45,13 @@ function HomeSideBar(props) {
       </SidebarHeader>
       <SidebarContent>
         <Menu>
-          <MenuItem id="fontsize">
-            <Link
-              to={{
-                pathname: "/browse",
-                state: {
-                  songs: test.songsgit,
-                },
-              }}
-            >
-              Browse
-            </Link>
+          <MenuItem
+            id="fontsize"
+            onClick={() => {
+              actions.setPage(0);
+            }}
+          >
+            Browse
           </MenuItem>
           <StyledSearh placeholder="Search User" />
         </Menu>

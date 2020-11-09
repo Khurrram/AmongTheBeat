@@ -85,8 +85,10 @@ const Footer = styled.div`
 `;
 
 const StyledAvatar = styled(Avatar)`
-  height: 40px;
-  width: 40px;
+  &&& {
+    max-height: 40px;
+    max-width: 40px;
+  }
 `;
 
 const MiddleContent = styled.div`
@@ -97,34 +99,41 @@ const StyledSettingIcon = styled(SettingsIcon)`
   color: white;
 `;
 
+export const ViewPage = React.createContext();
+
 function HomePage(props) {
   const [page, setPage] = useState(1);
+  const [settings, setSettings] = useState(false);
+  const value = { state: {}, actions: { setPage } };
 
-  var viewPage;
+  let viewPage;
   if (page == 0) {
     viewPage = <BrowseView />;
   } else if (page == 1) {
     viewPage = <PlayListView />;
   } else {
+    setPage(0);
     viewPage = <BrowseView />;
   }
 
   return (
-    <div className="homepage1">
-      <HomeSideBar />
-      <ContentWindow>
-        <Navbar>
-          <StyledAvatar className="AvatarIcon">J</StyledAvatar>
-          <Link to="/settings">
-            <StyledSettingIcon id="margin" />
-          </Link>
-        </Navbar>
-        <MiddleContent>{viewPage}</MiddleContent>
-        <Footer>
-          <PlayNavBar />
-        </Footer>
-      </ContentWindow>
-    </div>
+    <ViewPage.Provider value={value}>
+      <div className="homepage1">
+        <HomeSideBar />
+        <ContentWindow>
+          <Navbar>
+            <StyledAvatar>J</StyledAvatar>
+            <Link to="/settings">
+              <StyledSettingIcon id="margin" />
+            </Link>
+          </Navbar>
+          <MiddleContent>{viewPage}</MiddleContent>
+          <Footer>
+            <PlayNavBar />
+          </Footer>
+        </ContentWindow>
+      </div>
+    </ViewPage.Provider>
   );
 }
 
