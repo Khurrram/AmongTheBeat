@@ -1,106 +1,101 @@
-import React from 'react';
-import styled from 'styled-components';
-import Avatar from '@material-ui/core/Avatar';
-import HeartIcon from '@material-ui/icons/Favorite';
-import TrashIcon from '@material-ui/icons/Delete';
-import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
-import QueueMusicIcon from '@material-ui/icons/QueueMusic';
-import AddIcon from '@material-ui/icons/Add';
-import './Song.css'
+import React from "react";
+import styled from "styled-components";
+import Avatar from "@material-ui/core/Avatar";
+import HeartIcon from "@material-ui/icons/Favorite";
+import TrashIcon from "@material-ui/icons/Delete";
+import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
+import QueueMusicIcon from "@material-ui/icons/QueueMusic";
+import AddIcon from "@material-ui/icons/Add";
+import "./Song.css";
 
 const Container = styled.div`
-    display:flex;
-    height: 3em;
-    align-items: center;
-    margin-top: .5em;
-    margin-bottom: .5em;
-    color: white;
-    border-radius: 5px;
-    
-    &:hover {
-        background-color: #686868;
-    }
+  display: flex;
+  height: 3em;
+  align-items: center;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  color: white;
+  border-radius: 5px;
 
-`
+  &:hover {
+    background-color: #686868;
+  }
+`;
 
 const StyledAvatar = styled(Avatar)`
-    margin-left: .5em;
-`
+  margin-left: 0.5em;
+`;
 
 const SongInfo = styled.div`
-    display: flex;
-    margin-right: auto;
-    align-items: center;
-    margin: 1.5em;
-    width: 100%;
-    color: white;
-
-    $:hover {
-        background-color: black;
-    }
-`
+  display: flex;
+  margin-right: auto;
+  align-items: center;
+  margin: 1.5em;
+  width: 100%;
+  color: white;
+`;
 
 const StyledHeart = styled(HeartIcon)`
-    margin-right: 1rem;
-    color: ${props => props.fav ? "red" : "grey"};
+  margin-right: 1rem;
+  color: ${(props) => (props.fav ? "red" : "grey")};
 
-    &:hover {
-        color: ${props => props.fav ? "grey" : "red"};
-    }
-`
+  &:hover {
+    color: ${(props) => (props.fav ? "grey" : "red")};
+  }
+`;
 
 const StyledQueue = styled(QueueMusicIcon)`
-    margin-right: 1rem;
-`
-
-
+  margin-right: 1rem;
+`;
 
 const SongArtist = styled.span`
-    width: 43rem;
-   
-`
+  width: 43rem;
+`;
 const SongName = styled.span`
-    flex: auto;
-`
+  flex: auto;
+`;
 
 const SongAction = styled.div`
-    display: flex;
-    margin-left: auto;
-    margin-right: 6em;
-    justify-content: space-evenly;
-`
+  display: flex;
+  margin-left: auto;
+  margin-right: 6em;
+  justify-content: space-evenly;
+`;
+const SongTime = styled.span`
+  float: right;
+  padding-right: 2rem;
+`;
 
 function Song(props) {
-    
-    return (
-        <Container >
-            <StyledAvatar variant="rounded" > L </StyledAvatar>
-            <SongInfo>
-               <SongName>{props.name}</SongName>
-               <SongArtist>{props.artist}</SongArtist>
-            </SongInfo>
-            
-            {props.playlist
-                ? <SongAction><AddIcon/></SongAction>
-                : view(props)
-            }
-            
-        </Container>
-    );
+  return (
+    <Container>
+      <StyledAvatar variant="rounded"> L </StyledAvatar>
+      <SongInfo>
+        <SongName>{props.name}</SongName>
+        <SongArtist>{props.artist}</SongArtist>
+        <SongTime>{props.time}</SongTime>
+      </SongInfo>
+
+      {props.playlist ? (
+        <SongAction>
+          <AddIcon />
+        </SongAction>
+      ) : (
+        view(props)
+      )}
+    </Container>
+  );
 }
 
 function view(props) {
-    console.log(props);
-    return (
-        <SongAction>
-            <StyledHeart></StyledHeart>
-            <StyledQueue/>
-                {props.Browse 
-                    ? <PlaylistAddIcon/>
-                    : <TrashIcon/>
-                }
-        </SongAction>
-    );
+  console.log(props);
+  return (
+    <SongAction>
+      <StyledHeart></StyledHeart>
+      <StyledQueue />
+      {props.Browse ? <PlaylistAddIcon /> : <TrashIcon />}
+    </SongAction>
+  );
 }
 
 export default Song;
