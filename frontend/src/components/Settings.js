@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import { Button} from 'react-materialize';
 import Avatar from '@material-ui/core/Avatar';
@@ -78,10 +78,16 @@ const AccountButtonDiv = styled(AccountDiv)`
 
 function Settings()   {
     const classes = useStyles();
+    const [currF, setcurrF] = useState({
+      oldpass: "",
+      newpass: "",
+      confirmpass: ""
+    })
+
     return(
 
         <CenterDiv>
-            <Link to = "/browse"><BackButton><ArrowBackIcon id = "arr"/></BackButton></Link>
+            <Link to = "/home"><BackButton><ArrowBackIcon id = "arr"/></BackButton></Link>
             <AlignTextDiv>
               <AccountDiv>
                 <Avatar id = "av" className= "AvatarIcon">J</Avatar>
@@ -94,7 +100,13 @@ function Settings()   {
                           defaultValue=""
                           variant="outlined"
                           label="Old Password"           
-                          id = "oldp"  />
+                          id = "oldp"  
+                          onChange = { (val) => setcurrF({
+                            oldpass: val.target.value,
+                            newpass: currF.newpass,
+                            confirmpass: currF.confirmpass
+                          })}
+                  />
               </div>
               
               <div id = "newpc">
@@ -102,7 +114,13 @@ function Settings()   {
                           defaultValue=""
                           variant="outlined"
                           label="New Password"           
-                          id = "newp"  />
+                          id = "newp"  
+                          onChange = { (val) => setcurrF({
+                            oldpass: currF.oldpass,
+                            newpass: val.target.value,
+                            confirmpass: currF.confirmpass
+                          })}
+                  />
               </div>
 
               <div id = "newpc">
@@ -110,12 +128,20 @@ function Settings()   {
                           defaultValue=""
                           variant="outlined"
                           label="Confirm Password"           
-                          id = "newp"  />
+                          id = "newp"  
+                          onChange = { (val) => setcurrF({
+                            oldpass: currF.oldpass,
+                            newpass: currF.newpass,
+                            confirmpass: val.target.value
+                          })}
+                          />
               </div>
 
               <AccountButtonDiv>
-                <Button id = "confirm">Confirm</Button>
-                <Link to = "/land"><Button id = "logout">Log Out</Button></Link>
+                <Button id = "confirm"
+                onClick = {() => handleConfirm(currF.oldpass,currF.newpass,currF.confirmpass)}
+                >Confirm</Button>
+                <Link to = "/"><Button id = "logout">Log Out</Button></Link>
               </AccountButtonDiv>
             
             
@@ -124,6 +150,19 @@ function Settings()   {
             
         </CenterDiv>
     );
+
+}
+
+function handleConfirm(oldp,newp,confirmp)
+{
+  if(newp !== confirmp)
+  {
+    alert("New Password does not match for both textfields.")
+  }
+  else{
+    alert("Matches");
+    //add functionality to backend here.
+  }
 
 }
 

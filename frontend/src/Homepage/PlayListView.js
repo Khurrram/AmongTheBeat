@@ -91,6 +91,22 @@ function PlayListView(props) {
       </span>
       {/* <SongDiv>
 
+    return (
+        <StyledDiv>
+            <span>
+                <h1>{props.name} </h1>
+                <StyledButton variant="contained" disableElevation>Share</StyledButton>
+                <StyledTrash fontSize="large"/>
+            </span>
+            <StyledSpan>
+                <Title>Title</Title>
+                <Artist>Artist</Artist>
+            </StyledSpan>
+            <span>
+                <hr/>
+            </span>
+            {/* <SongDiv>
+
             </SongDiv> */}
     </StyledDiv>
   );

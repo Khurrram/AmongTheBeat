@@ -1,19 +1,48 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 import styled from "styled-components";
+import logo from "../assets/logo.png";
+import { Image } from "react-bootstrap";
+import Song from "./Song";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
+import PlayNavBar from "./PlayNavBar";
 import HomeSideBar from "./HomeSideBar";
+import {
+  ProSidebar,
+  Menu,
+  MenuItem,
+  SidebarHeader,
+  SidebarFooter,
+  SidebarContent,
+} from "react-pro-sidebar";
 import { Link, useHistory } from "react-router-dom";
+import PlayingNow from "../components/PlayingNow";
+import PlayListView from "./PlayListView";
+import BrowseView from "./BrowseView";
 import test from "../data/test.json";
-
+import Playlists from "../components/Playlists";
+import Browse from "../components/Browse";
 import PlayIcon from "@material-ui/icons/PlayArrow";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
+import SearchBar from "material-ui-search-bar";
 import RepeatIcon from "@material-ui/icons/Repeat";
-import PlayNavBar from "./PlayNavBar";
-import BrowseView from "./BrowseView";
+
 import "./HomePage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Home } from "@material-ui/icons";
+import "react-pro-sidebar/dist/css/styles.css";
+import { StayCurrentPortrait } from "@material-ui/icons";
+
+const Button = styled.button`
+  padding: 0.5em;
+  color: Black;
+  border-radius: 10px;
+  margin: 0.5em;
+  width: 100%;
+  font-size: 30px;
+  font-family: "Roboto", sans-serif;
+  background-color: light-grey;
+`;
 
 const ContentWindow = styled.div`
   padding: 1.5em 0em 0em 0em;
