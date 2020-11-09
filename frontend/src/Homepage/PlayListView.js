@@ -21,8 +21,13 @@ const StyledDiv = styled.div`
   }
 
   & h1 {
+    padding-right: 2rem;
     color: white;
     font-weight: bold;
+  }
+
+  & #timestamp {
+    font-weight: normal;
   }
 
   & h6 {
@@ -71,16 +76,26 @@ const StyledButton = styled(Button)`
 `;
 
 function PlayListView(props) {
-  let l = useLocation();
+  let { playlistName, playlistTime, playlist } = props;
+  playlist = []; // TESTING PURPOSES
+
+  const shareAction = (e) => {
+    e.preventDefault();
+  };
 
   return (
     <StyledDiv>
       <span>
-        <h1>TEST</h1>
-        <StyledButton variant="contained" disableElevation>
+        <h1>{playlistName}</h1>
+        <h6 id="timestamp">{playlistTime}</h6>
+        <StyledButton
+          variant="contained"
+          disableElevation
+          onClick={shareAction}
+        >
           Share
         </StyledButton>
-        <StyledTrash fontSize="large" />
+        <StyledTrash />
       </span>
       <StyledSpan>
         <Title>Title</Title>
@@ -89,25 +104,13 @@ function PlayListView(props) {
       <span>
         <hr />
       </span>
-      {/* <SongDiv>
-
-    return (
-        <StyledDiv>
-            <span>
-                <h1>{props.name} </h1>
-                <StyledButton variant="contained" disableElevation>Share</StyledButton>
-                <StyledTrash fontSize="large"/>
-            </span>
-            <StyledSpan>
-                <Title>Title</Title>
-                <Artist>Artist</Artist>
-            </StyledSpan>
-            <span>
-                <hr/>
-            </span>
-            {/* <SongDiv>
-
-            </SongDiv> */}
+      <SongDiv>
+        {playlist.map((song) => {
+          return (
+            <Song name={song.name} artist={song.author} type="Playlists" />
+          );
+        })}
+      </SongDiv>
     </StyledDiv>
   );
 }

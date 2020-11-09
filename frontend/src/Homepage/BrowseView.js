@@ -69,22 +69,28 @@ const SongDiv = styled.div`
 `;
 
 function BrowseView(props) {
+  let { playlist, username } = props;
+  playlist = []; // TESTING PURPOSES
   return (
     <StyledDiv>
       <span>
-        <h1>{props.username ? props.username : "Browse"}</h1>
+        <h1>{username ? username : "Browse"}</h1>
 
         <StyledSearch />
       </span>
       <StyledSpan>
         <Title>Title</Title>
-        {props.username ? "" : <Artist>Artist</Artist>}
+        {username ? "" : <Artist>Artist</Artist>}
       </StyledSpan>
       <span>
         <hr />
       </span>
       <SongDiv>
-        <Song name="lol" artist="asd" />
+        {playlist.map((song) => {
+          return (
+            <Song name={song.name} artist={song.author} type="Playlists" />
+          );
+        })}
       </SongDiv>
     </StyledDiv>
   );
