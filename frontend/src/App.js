@@ -34,7 +34,7 @@ function App() {
       <Router history={history}>
         <Switch>
           <Route
-            path="/land"
+            path="/"
             exact={true}
             render={() =>
               !session.username === undefined ? (
@@ -45,10 +45,10 @@ function App() {
             }
           />
           <Route
-            path="/"
+            path="/home"
             exact={true}
             render={() =>
-              session.username === undefined ? (
+              !session.username === undefined ? (
                 <Redirect to="/" />
               ) : (
                 <HomePage />
@@ -59,7 +59,7 @@ function App() {
             path="/mood"
             exact={true}
             render={() =>
-              session.username === undefined ? (
+              !session.username === undefined ? (
                 <Redirect to="/" />
               ) : (
                 <MoodPage />
@@ -70,7 +70,7 @@ function App() {
             path="/settings"
             exact={true}
             render={() =>
-              session.username === undefined ? (
+              !session.username === undefined ? (
                 <Redirect to="/" />
               ) : (
                 <SettingsPage />
@@ -81,7 +81,7 @@ function App() {
             path="/admin"
             exact={true}
             render={() =>
-              session.username === undefined ? (
+              !session.username === undefined ? (
                 <Redirect to="/" />
               ) : (
                 <AdminPage />
