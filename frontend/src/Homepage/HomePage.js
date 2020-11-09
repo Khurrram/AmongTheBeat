@@ -19,10 +19,9 @@ import {
 import { Link, useHistory } from "react-router-dom";
 import PlayingNow from "../components/PlayingNow";
 import PlayListView from "./PlayListView";
-import BrowseView from "./BrowseView";
 import test from "../data/test.json";
+import BrowseView from "./BrowseView";
 import Playlists from "../components/Playlists";
-import Browse from "../components/Browse";
 import PlayIcon from "@material-ui/icons/PlayArrow";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import SearchBar from "material-ui-search-bar";
@@ -99,14 +98,17 @@ const StyledSettingIcon = styled(SettingsIcon)`
 `;
 
 function HomePage(props) {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
 
   var viewPage;
   if (page == 0) {
     viewPage = <BrowseView />;
   } else if (page == 1) {
     viewPage = <PlayListView />;
+  } else {
+    viewPage = <BrowseView />;
   }
+
   return (
     <div className="homepage1">
       <HomeSideBar />
