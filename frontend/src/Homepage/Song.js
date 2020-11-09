@@ -67,16 +67,18 @@ const SongTime = styled.span`
 `;
 
 function Song(props) {
+  const { name, artist, time, playlist } = props;
+
   return (
     <Container>
       <StyledAvatar variant="rounded"> L </StyledAvatar>
       <SongInfo>
-        <SongName>{props.name}</SongName>
-        <SongArtist>{props.artist}</SongArtist>
-        <SongTime>{props.time}</SongTime>
+        <SongName>{name}</SongName>
+        <SongArtist>{artist}</SongArtist>
+        <SongTime>{time}</SongTime>
       </SongInfo>
 
-      {props.playlist ? (
+      {playlist ? (
         <SongAction>
           <AddIcon />
         </SongAction>
@@ -88,7 +90,6 @@ function Song(props) {
 }
 
 function view(props) {
-  console.log(props);
   return (
     <SongAction>
       <StyledHeart></StyledHeart>
