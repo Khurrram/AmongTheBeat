@@ -76,7 +76,7 @@ function PlayListView(props) {
   return (
     <StyledDiv>
       <span>
-        <h1>{l.state.name} </h1>
+        <h1>TEST</h1>
         <StyledButton variant="contained" disableElevation>
           Share
         </StyledButton>

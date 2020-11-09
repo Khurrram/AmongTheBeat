@@ -83,9 +83,7 @@ function BrowseView(props) {
       <span>
         <hr />
       </span>
-      {/* <SongDiv>
-                
-            </SongDiv> */}
+      <SongDiv></SongDiv>
     </StyledDiv>
   );
 }

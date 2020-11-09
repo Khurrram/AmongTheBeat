@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import styled from "styled-components";
 import logo from "../assets/logo.png";
@@ -51,8 +51,9 @@ const ContentWindow = styled.div`
   width: 100%;
   height: 100%;
   align-items: stretch;
-  background: linear-gradient(rgb(46, 0, 48), transparent);
-  background-color: rgb(77, 77, 75);
+    background: rgb(49,22,101);
+background: linear-gradient(160deg, rgba(49,22,101,1) 59%, rgba(127,60,142,1) 100%);
+  );
 `;
 
 const Navbar = styled.div`
@@ -84,6 +85,11 @@ const Footer = styled.div`
   }
 `;
 
+const StyledAvatar = styled(Avatar)`
+  height: 40px;
+  width: 40px;
+`;
+
 const MiddleContent = styled.div`
   order: 1;
 `;
@@ -93,19 +99,25 @@ const StyledSettingIcon = styled(SettingsIcon)`
 `;
 
 function HomePage(props) {
+  const [page, setPage] = useState(0);
+
+  var viewPage;
+  if (page == 0) {
+    viewPage = <BrowseView />;
+  } else if (page == 1) {
+    viewPage = <PlayListView />;
+  }
   return (
     <div className="homepage1">
       <HomeSideBar />
       <ContentWindow>
         <Navbar>
-          <Avatar className="AvatarIcon">J</Avatar>
+          <StyledAvatar className="AvatarIcon">J</StyledAvatar>
           <Link to="/settings">
             <StyledSettingIcon id="margin" />
           </Link>
         </Navbar>
-        <MiddleContent>
-          <BrowseView />
-        </MiddleContent>
+        <MiddleContent>{viewPage}</MiddleContent>
         <Footer>
           <PlayNavBar />
         </Footer>
