@@ -3,7 +3,6 @@ import HomePage from "./Homepage/HomePage";
 import MoodPage from "./MoodPage/MoodPage";
 import PlaylistPage from "./components/Playlists";
 import LandingPage from "./LandingPage/LandingPage";
-import BrowsePage from "./components/Browse";
 import SettingsPage from "./components/Settings";
 import AdminPage from "./components/Admin";
 import {
