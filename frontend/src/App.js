@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import HomePage from "./Homepage/HomePage";
 import MoodPage from "./MoodPage/MoodPage";
-import PlaylistPage from "./components/Playlists";
 import LandingPage from "./LandingPage/LandingPage";
 import SettingsPage from "./components/Settings";
 import AdminPage from "./components/Admin";
@@ -17,7 +16,6 @@ import { createBrowserHistory } from "history";
 import "./App.css";
 import { getSessionCookie } from "./CookieHandler";
 
-const history = createBrowserHistory();
 export const SessionContext = React.createContext(getSessionCookie());
 
 function App() {
@@ -26,12 +24,12 @@ function App() {
 
   useEffect(() => {
     setSession(getSessionCookie());
-    console.log(session);
+    // console.log("app " + JSON.stringify(session));
   }, []);
 
   return (
     <SessionContext.Provider value={session}>
-      <Router history={history}>
+      <Router>
         <Switch>
           <Route
             path="/"
@@ -40,18 +38,18 @@ function App() {
               !session.username === undefined ? (
                 <Redirect to="/" />
               ) : (
-                <LandingPage />
+                <HomePage />
               )
             }
           />
           <Route
-            path="/home"
+            path="/land"
             exact={true}
             render={() =>
               !session.username === undefined ? (
                 <Redirect to="/" />
               ) : (
-                <HomePage />
+                <LandingPage />
               )
             }
           />
