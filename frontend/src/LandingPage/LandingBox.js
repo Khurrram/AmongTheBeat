@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import "./LandingBox.css";
 import { Row, CardPanel } from "react-materialize";
 import { Email, AccountCircle, Lock, CheckCircle } from "@material-ui/icons";
 import { TextField, Grid, Button, Box } from "@material-ui/core";
 import axios from "axios";
+import { getSessionCookie, setSessionCookie } from "../CookieHandler";
+import { AppContext } from "../App";
 
 function RegisterBox(props) {
   const button = props.button;
@@ -159,8 +162,11 @@ function RegisterBox(props) {
     axios
       .post("http://localhost:5000/api/register", data)
       .then(function (res) {
-        console.log(res.data);
+        let id = res.data;
+        // console.log("LOL");
+        // console.log(res.data);
         if (res.data != -1 + "") {
+          setSessionCookie({ id });
           console.log("Redirecting");
           window.location = "/home";
         } else {
@@ -334,9 +340,12 @@ function LoginBox(props) {
     axios
       .post("http://localhost:5000/api/login", data)
       .then(function (res) {
-        console.log(res.data);
+        let id = res.data;
+        // console.log("LOL2");
+        // console.log(res.data);
         if (res.data != "banned" && res.data != "notFound") {
           console.log("Redirecting");
+          setSessionCookie({ id });
           window.location = "/home";
         } else {
           if (res.data == "banned") {

@@ -28,6 +28,8 @@ const StyledDiv = styled.div`
 
   & #timestamp {
     font-weight: normal;
+    margin-right: 2rem;
+    margin-left: 2rem;
   }
 
   & h6 {
@@ -87,7 +89,6 @@ function PlayListView(props) {
     <StyledDiv>
       <span>
         <h1>{playlistName}</h1>
-        <h6 id="timestamp">{playlistTime}</h6>
         <StyledButton
           variant="contained"
           disableElevation
@@ -96,6 +97,11 @@ function PlayListView(props) {
           Share
         </StyledButton>
         <StyledTrash />
+        <h6 id="timestamp">{playlistTime}</h6>
+        <h6>
+          {playlist.length + " "}
+          Songs
+        </h6>
       </span>
       <StyledSpan>
         <Title>Title</Title>
