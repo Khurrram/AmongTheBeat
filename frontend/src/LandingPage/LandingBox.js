@@ -5,7 +5,7 @@ import { Row, CardPanel } from "react-materialize";
 import { Email, AccountCircle, Lock, CheckCircle } from "@material-ui/icons";
 import { TextField, Grid, Button, Box } from "@material-ui/core";
 import axios from "axios";
-import { getSessionCookie, setSessionCookie } from "../";
+import { getSessionCookie, setSessionCookie } from "../CookieHandler";
 import { AppContext } from "../App";
 
 function RegisterBox(props) {

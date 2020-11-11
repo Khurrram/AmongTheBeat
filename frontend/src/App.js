@@ -32,7 +32,7 @@ function App() {
       <Router>
         <Switch>
           <Route
-            path="/"
+            path="/home"
             exact={true}
             render={() =>
               !session.username === undefined ? (
@@ -43,7 +43,7 @@ function App() {
             }
           />
           <Route
-            path="/land"
+            path="/"
             exact={true}
             render={() =>
               !session.username === undefined ? (
