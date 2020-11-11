@@ -25,7 +25,8 @@
     "material-ui-search-bar": "^1.0.0",
     "materialize-css": "^1.0.0-rc.2",
     "mongoose": "^5.10.9",
-    "react-materialize": "^3.9.3"
+    "react-materialize": "^3.9.3",
+    "react-modal": "^3.11.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import Avatar from "@material-ui/core/Avatar";
 import HeartIcon from "@material-ui/icons/Favorite";
@@ -6,6 +6,11 @@ import TrashIcon from "@material-ui/icons/Delete";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
 import AddIcon from "@material-ui/icons/Add";
+import {Button} from 'react-materialize';
+import Modal from 'react-modal';
+
+import test from '../data/test.json'
+
 import "./Song.css";
 
 const Container = styled.div`
@@ -44,6 +49,15 @@ const StyledHeart = styled(HeartIcon)`
   }
 `;
 
+const StyledPlaylistAdd = styled(PlaylistAddIcon)`
+  color: ${"white"};
+
+  &:hover {
+    color: ${"blue"};
+  }
+}
+`;
+
 const StyledQueue = styled(QueueMusicIcon)`
   margin-right: 1rem;
 `;
@@ -66,11 +80,76 @@ const SongTime = styled.span`
   padding-right: 2rem;
 `;
 
+const customStyles = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.75)'
+  },
+  content: {
+    top: '35%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    width: '60%',
+    transform: 'translate(-40%, -10%)',
+    background: 'linear-gradient(160deg, rgba(49,22,101,1) 59%, rgba(127,60,142,1) 100%)',
+    color: 'white',
+  },
+};
+
+const ModalHeader = styled.div`
+  font-size: 24px;
+  padding-bottom: 2em;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+`;
+
+const ModalContent = styled.div`
+  font-size: 15px;
+  padding-bottom: 1em;
+  justify-content: center;
+  align-items:center;
+  display:flex;
+  &:hover {
+    background-color: #686868;
+  }
+`;
+
+Modal.setAppElement("#root");
+
 function Song(props) {
   const { name, artist, time, playlist } = props;
 
+  
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  function toggleModal()
+  {
+    setModalIsOpen(!modalIsOpen);
+  }
+  
   return (
     <Container>
+
+      <Modal isOpen = {modalIsOpen} onRequestClose = {toggleModal} contentLabel = "Test" style = {customStyles}>
+        
+          <ModalHeader>Choose A Playlist To Add To</ModalHeader>
+          
+          {/*  JUST SAMPLE FOR TESTING, THIS IS WHERE DATABASE IMPLEMENTATION NEEDS TO BE ADDED */}
+              {test.playlists.map( (playlist) =>
+              {
+                return(
+                  <ModalContent>
+                    {playlist.name}
+                  </ModalContent>
+                );
+              })}
+          
+        
+      </Modal>
+
+
       <StyledAvatar variant="rounded"> L </StyledAvatar>
       <SongInfo>
         <SongName>{name}</SongName>
@@ -83,18 +162,19 @@ function Song(props) {
           <AddIcon />
         </SongAction>
       ) : (
-        view(props)
+        View(props, toggleModal)
       )}
     </Container>
   );
 }
 
-function view(props) {
+function View(props ,toggleModal) {
+
   return (
     <SongAction>
       <StyledHeart></StyledHeart>
       <StyledQueue />
-      {props.Browse ? <PlaylistAddIcon /> : <TrashIcon />}
+      {!props.Browse ? <StyledPlaylistAdd onClick = {() => toggleModal()}/> : <TrashIcon />}
     </SongAction>
   );
 }

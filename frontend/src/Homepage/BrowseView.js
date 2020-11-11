@@ -1,10 +1,12 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import Song from "./Song";
 import SettingIcon from "@material-ui/icons/Settings";
 import Button from "@material-ui/core/Button";
 import SearchBar from "material-ui-search-bar";
 import { Search } from "@material-ui/icons";
+import testplay from '../data/testsongs.json'
+
 
 const StyledDiv = styled.div`
   padding: 1.5rem;
@@ -68,11 +70,14 @@ const SongDiv = styled.div`
   overflow-y: auto;
 `;
 
+
 function BrowseView(props) {
   let { playlist, username } = props;
-  playlist = []; // TESTING PURPOSES
+  playlist = testplay.songs; // TESTING PURPOSES
+
   return (
     <StyledDiv>
+      
       <span>
         <h1>{username ? username : "Browse"}</h1>
 
@@ -88,7 +93,7 @@ function BrowseView(props) {
       <SongDiv>
         {playlist.map((song) => {
           return (
-            <Song name={song.name} artist={song.author} type="Playlists" />
+            <Song name={song.name} artist={song.author} time = {song.length} type="Browse" />
           );
         })}
       </SongDiv>
