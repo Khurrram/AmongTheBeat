@@ -163,8 +163,6 @@ function RegisterBox(props) {
       .post("http://localhost:5000/api/register", data)
       .then(function (res) {
         let id = res.data;
-        // console.log("LOL");
-        // console.log(res.data);
         if (res.data != -1 + "") {
           setSessionCookie({ id });
           console.log("Redirecting");
@@ -344,7 +342,11 @@ function LoginBox(props) {
         if (res.data != "banned" && res.data != "notFound") {
           console.log("Redirecting");
           setSessionCookie({ id });
+<<<<<<< HEAD
           window.location = "/home";
+=======
+          window.location("/home");
+>>>>>>> master
         } else {
           if (res.data == "banned") {
             setBanned(true);
