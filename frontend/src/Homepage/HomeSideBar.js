@@ -5,6 +5,7 @@ import logo from "../assets/logo.png";
 import SearchBar from "material-ui-search-bar";
 import test from "../data/test.json";
 import { ViewPage } from "./HomePage";
+import { Add } from "@material-ui/icons";
 import {
   ProSidebar as Sidebar,
   Menu,
@@ -57,7 +58,7 @@ function HomeSideBar(props) {
         </Menu>
         <hr width="90%" color="black"></hr>
         <Menu>
-          <MenuItem id="fontlarge">Playlists</MenuItem>
+          <MenuItem id="fontlarge">Playlists <Add /></MenuItem>
           {test.playlists.map((playlist) => {
             let path = "/playlist/" + playlist.name;
             return (

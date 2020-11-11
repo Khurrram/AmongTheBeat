@@ -104,16 +104,16 @@ function HomePage(props) {
     viewPage = <BrowseView />;
   }
 
-  useEffect(() => {
-    let data = { id: session.id };
-    axios
-      .post("http://localhost:5000/api/user/getusername", data)
-      .then(function (res) {
-        let username = res.data;
-        setUser(username);
-      })
-      .catch((err) => console.log(err.data));
-  }, []);
+  // useEffect(() => {
+  //   let data = { id: session.id };
+  //   axios
+  //     .post("http://localhost:5000/api/user/getusername", data)
+  //     .then(function (res) {
+  //       let username = res.data;
+  //       setUser(username);
+  //     })
+  //     .catch((err) => console.log(err.data));
+  // }, []);
 
   return (
     <ViewPage.Provider value={value}>
@@ -121,7 +121,7 @@ function HomePage(props) {
         <HomeSideBar />
         <ContentWindow>
           <Navbar>
-            <StyledAvatar>{username.charAt(0).toUpperCase()}</StyledAvatar>
+            <StyledAvatar>{session.username}</StyledAvatar>
 
             <StyledSettingIcon
               id="margin"

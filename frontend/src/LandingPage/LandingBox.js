@@ -165,6 +165,7 @@ function RegisterBox(props) {
         let id = res.data;
         if (res.data != -1 + "") {
           setSessionCookie({ id });
+          setSessionCookie({ username });
           console.log("Redirecting");
           window.location = "/home";
         } else {
@@ -342,6 +343,7 @@ function LoginBox(props) {
         if (res.data != "banned" && res.data != "notFound") {
           console.log("Redirecting");
           setSessionCookie({ id });
+          setSessionCookie({ username });
           window.location("/home");
         } else {
           if (res.data == "banned") {

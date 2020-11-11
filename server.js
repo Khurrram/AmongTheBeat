@@ -20,9 +20,9 @@ app.listen(port, () => console.log(`Server started on port ${port}` ));
 var conn = mongoose.connection;
 
 //GET and POST for Registering
-app.get("/api/register", (req, res) => {
-    console.log("GET REQUEST completed");
-});
+// app.get("/api/register", (req, res) => {
+//     console.log("GET REQUEST completed");
+// });
 
 app.post("/api/register", (req, res) => {
 
@@ -45,9 +45,9 @@ app.post("/api/register", (req, res) => {
 });
 
 //GET and POST for Logging In
-app.get("/api/login", (req, res) => {
-    console.log("GET REQUEST completed");
-});
+// app.get("/api/login", (req, res) => {
+//     console.log("GET REQUEST completed");
+// });
 
 app.post("/api/login", (req, res) => {
 
@@ -66,9 +66,9 @@ app.post("/api/login", (req, res) => {
 });
 
 //GET and POST for Displaying Users in Admin 
-app.get("/api/usersList", (req,res) => {
-    console.log("GET REQUEST usersList");
-})
+// app.get("/api/usersList", (req,res) => {
+//     console.log("GET REQUEST usersList");
+// })
 
 app.post("/api/usersList", (req, res) => {
     if (req.body.accountType == 2) {
@@ -83,9 +83,9 @@ app.post("/api/usersList", (req, res) => {
 });
 
 //GET and POST for banning users in Admin
-app.get("/api/user/ban", (req,res) => {
-    console.log("GET REQUEST banUser");
-})
+// app.get("/api/user/ban", (req,res) => {
+//     console.log("GET REQUEST banUser");
+// })
 
 app.post("/api/user/ban", (req, res) => {
     let id = req.body.id;
@@ -97,9 +97,9 @@ app.post("/api/user/ban", (req, res) => {
 
 
 //GET and POST for unbanning users in Admin
-app.get("/api/user/unban", (req,res) => {
-    console.log("GET REQUEST usersList");
-})
+// app.get("/api/user/unban", (req,res) => {
+//     console.log("GET REQUEST usersList");
+// })
 
 app.post("/api/user/unban", (req, res) => {
     let id = req.body.id;
@@ -111,9 +111,9 @@ app.post("/api/user/unban", (req, res) => {
 
 
 //GET and POST for removing users in Admin
-app.get("/api/user/remove", (req,res) => {
-    console.log("GET REQUEST usersList");
-})
+// app.get("/api/user/remove", (req,res) => {
+//     console.log("GET REQUEST usersList");
+// })
 
 app.post("/api/user/remove", (req, res) => {
     let id = req.body.id;
@@ -153,6 +153,7 @@ app.post("/api/user/changepass", (req, res) => {
 });
 
 app.post("/api/user/getusername", (req, res) => {
+    console.log("getusername is called");
     let id = req.body.id;
     userModel.findOne({'_id': id}, function(err, user) {
         if (err) {

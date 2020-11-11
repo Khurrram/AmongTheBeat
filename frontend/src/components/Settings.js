@@ -110,21 +110,21 @@ function Settings() {
     }
   }
 
-  useEffect(() => {
-    let data = { id: session.id };
-    axios
-      .post("http://localhost:5000/api/user/getusername", data)
-      .then(function (res) {
-        let username = res.data;
-        setcurrF({
-          oldpass: currF.oldpass,
-          newpass: currF.newpass,
-          confirmpass: currF.confirmpass,
-          username: username,
-        });
-      })
-      .catch((err) => console.log(err.data));
-  });
+  // useEffect(() => {
+  //   let data = { id: session.id };
+  //   axios
+  //     .post("http://localhost:5000/api/user/getusername", data)
+  //     .then(function (res) {
+  //       let username = res.data;
+  //       setcurrF({
+  //         oldpass: currF.oldpass,
+  //         newpass: currF.newpass,
+  //         confirmpass: currF.confirmpass,
+  //         username: username,
+  //       });
+  //     })
+  //     .catch((err) => console.log(err.data));
+  // });
 
   return (
     <CenterDiv>
@@ -136,9 +136,9 @@ function Settings() {
       <AlignTextDiv>
         <AccountDiv>
           <Avatar id="av" className="AvatarIcon">
-            {currF.username.charAt(0).toUpperCase()}
+            {session.username}
           </Avatar>
-          <div id="user">{currF.username}</div>
+          <div id="user">{}</div>
         </AccountDiv>
 
         <div id="newpc">
