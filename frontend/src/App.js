@@ -21,8 +21,8 @@ const history = createBrowserHistory();
 export const SessionContext = React.createContext(getSessionCookie());
 
 function App() {
-  const [auth, setAuth] = useState(true);
   const [session, setSession] = useState(getSessionCookie());
+  let value = { state: { session }, actions: { setSession } };
 
   useEffect(() => {
     setSession(getSessionCookie());
@@ -30,8 +30,8 @@ function App() {
   }, []);
 
   return (
-    <SessionContext.Provider value={session}>
-      <Router history={history}>
+    <SessionContext.Provider value={value}>
+      <Router>
         <Switch>
           <Route
             path="/land"
@@ -48,7 +48,7 @@ function App() {
             path="/"
             exact={true}
             render={() =>
-              session.username === undefined ? (
+              !session.username === undefined ? (
                 <Redirect to="/" />
               ) : (
                 <HomePage />
