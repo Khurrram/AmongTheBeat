@@ -140,12 +140,7 @@ function Settings() {
       </Link>
       <AlignTextDiv>
         <AccountDiv>
-<<<<<<< HEAD
-          <Avatar id="av" className="AvatarIcon">
-            {currF.username.charAt(0).toUpperCase()}
-=======
           <Avatar id="av" className="AvatarIcon">{currF.username.charAt(0).toUpperCase()}
->>>>>>> master
           </Avatar>
           <div id="user">{currF.username}</div>
         </AccountDiv>
