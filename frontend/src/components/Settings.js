@@ -130,6 +130,7 @@ function Settings() {
       .catch((err) => console.log(err.data));
     });
 
+  
 
   return (
     <CenterDiv>
@@ -141,6 +142,7 @@ function Settings() {
       <AlignTextDiv>
         <AccountDiv>
           <Avatar id="av" className="AvatarIcon">
+            {currF.username.charAt(0).toUpperCase()}
           </Avatar>
           <div id="user">{currF.username}</div>
         </AccountDiv>
