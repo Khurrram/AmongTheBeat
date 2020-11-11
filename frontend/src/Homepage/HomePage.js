@@ -10,11 +10,6 @@ import PlayListView from "./PlayListView";
 import test from "../data/test.json";
 import SettingView from "./SettingView";
 import BrowseView from "./BrowseView";
-import Playlists from "../components/Playlists";
-import PlayIcon from "@material-ui/icons/PlayArrow";
-import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
-import SearchBar from "material-ui-search-bar";
-import RepeatIcon from "@material-ui/icons/Repeat";
 import axios from "axios";
 import { SessionContext } from "../App";
 
@@ -92,19 +87,18 @@ const StyledSettingIcon = styled(SettingsIcon)`
 export const ViewPage = React.createContext();
 
 function HomePage(props) {
+  const session = useContext(SessionContext);
+
   const [page, setPage] = useState(2);
   const [settings, setSettings] = useState(false);
   const [username, setUser] = useState("");
-  const value = { state: {}, actions: { setPage } };
-  const session = useContext(SessionContext);
+  const value = { state: { settings }, actions: { setPage, setSettings } };
 
   let viewPage;
   if (page === 0) {
     viewPage = <BrowseView />;
   } else if (page === 1) {
     viewPage = <PlayListView />;
-  } else if (page === 3) {
-    viewPage = <SettingView />;
   } else {
     setPage(0);
     viewPage = <BrowseView />;
@@ -119,7 +113,7 @@ function HomePage(props) {
         setUser(username);
       })
       .catch((err) => console.log(err.data));
-  });
+  }, []);
 
   return (
     <ViewPage.Provider value={value}>
@@ -128,13 +122,17 @@ function HomePage(props) {
         <ContentWindow>
           <Navbar>
             <StyledAvatar>{username.charAt(0).toUpperCase()}</StyledAvatar>
-            <Link to="/settings">
-              <StyledSettingIcon id="margin" />
-            </Link>
+
+            <StyledSettingIcon
+              id="margin"
+              onClick={() => {
+                setSettings(true);
+              }}
+            />
           </Navbar>
           <MiddleContent>
             {viewPage}
-            <SettingView />;
+            {settings && <SettingView />}
           </MiddleContent>
           <Footer>
             <PlayNavBar />

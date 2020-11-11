@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import { Link } from "react-router-dom";
 import { Button } from "react-materialize";
+import { SessionContext } from "../App";
+import { ViewPage } from "./HomePage";
+import axios from "axios";
 
 const SettingDiv = styled.div`
   display: flex;
@@ -34,7 +37,7 @@ const AccountButtonDiv = styled(AccountDiv)`
 const SidebarDiv = styled.div`
   position: absolute;
   right: 0px;
-  top: 8.5%;
+  top: 2rem;
   background-color: rgb(0, 0, 0, 0.7);
   border-radius: 15px 0px 0px 15px;
   backdrop-filter: blur(10px);
@@ -84,6 +87,9 @@ const useStyles = makeStyles({
 });
 
 function SettingView(props) {
+  const { state, actions } = useContext(ViewPage);
+  const session = useContext(SessionContext);
+
   const [test1, setTest1] = useState(false);
   const classes = useStyles();
   const [currF, setcurrF] = useState({
@@ -96,17 +102,53 @@ function SettingView(props) {
     if (newp !== confirmp) {
       alert("New Password does not match for both textfields.");
     } else {
+      let data = { id: session.id, oldpass: oldp, updatedpass: newp };
       alert("Matches");
-      //add functionality to backend here.
+
+      axios
+        .post("http://localhost:5000/api/user/checkpass", data)
+        .then(function (res) {
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err.data));
+
+      axios
+        .post("http://localhost:5000/api/user/changepass", data)
+        .then(function (res) {
+          console.log(res.data);
+          console.log("Password changed");
+        })
+        .catch((err) => console.log(err.data));
     }
   }
 
+  useEffect(() => {
+    let data = { id: session.id };
+    axios
+      .post("http://localhost:5000/api/user/getusername", data)
+      .then(function (res) {
+        let username = res.data;
+        setcurrF({
+          oldpass: currF.oldpass,
+          newpass: currF.newpass,
+          confirmpass: currF.confirmpass,
+          username: username,
+        });
+      })
+      .catch((err) => console.log(err.data));
+  }, []);
+
   return (
     <SidebarDiv>
-      <StyledBackIcon fontSize="large" />
+      <StyledBackIcon
+        fontSize="large"
+        onClick={() => {
+          actions.setSettings(false);
+        }}
+      />
       <SettingDiv>
         <AccountDiv>
-          <h2>12323</h2>
+          <h2>{currF.username}</h2>
         </AccountDiv>
 
         <div id="newpc">
