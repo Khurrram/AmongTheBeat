@@ -118,7 +118,6 @@ function Settings() {
       axios
       .post("http://localhost:5000/api/user/getusername", data)
       .then(function (res) {
-        console.log(res.data);
         let username = res.data;
         setcurrF({
           oldpass: currF.oldpass,
@@ -140,7 +139,7 @@ function Settings() {
       </Link>
       <AlignTextDiv>
         <AccountDiv>
-          <Avatar id="av" className="AvatarIcon">
+          <Avatar id="av" className="AvatarIcon">{currF.username.charAt(0).toUpperCase()}
           </Avatar>
           <div id="user">{currF.username}</div>
         </AccountDiv>

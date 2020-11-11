@@ -26,6 +26,8 @@ import PlayIcon from "@material-ui/icons/PlayArrow";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import SearchBar from "material-ui-search-bar";
 import RepeatIcon from "@material-ui/icons/Repeat";
+import axios from "axios";
+import { SessionContext } from "../App";
 
 import "./HomePage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -104,7 +106,9 @@ export const ViewPage = React.createContext();
 function HomePage(props) {
   const [page, setPage] = useState(1);
   const [settings, setSettings] = useState(false);
+  const [username, setUser] = useState("");
   const value = { state: {}, actions: { setPage } };
+  const session = useContext(SessionContext);
 
   let viewPage;
   if (page == 0) {
@@ -116,13 +120,24 @@ function HomePage(props) {
     viewPage = <BrowseView />;
   }
 
+  useEffect(() => {
+    let data = {id : session.id};
+    axios
+    .post("http://localhost:5000/api/user/getusername", data)
+    .then(function (res) {
+      let username = res.data;
+      setUser(username);
+    })
+    .catch((err) => console.log(err.data));
+  });
+
   return (
     <ViewPage.Provider value={value}>
       <div className="homepage1">
         <HomeSideBar />
         <ContentWindow>
           <Navbar>
-            <StyledAvatar>J</StyledAvatar>
+            <StyledAvatar>{username.charAt(0).toUpperCase()}</StyledAvatar>
             <Link to="/settings">
               <StyledSettingIcon id="margin" />
             </Link>
