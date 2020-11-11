@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import "./LandingBox.css";
 import { Row, CardPanel } from "react-materialize";
 import { Email, AccountCircle, Lock, CheckCircle } from "@material-ui/icons";
@@ -161,10 +162,13 @@ function RegisterBox(props) {
     axios
       .post("http://localhost:5000/api/register", data)
       .then(function (res) {
-        console.log(res.data);
+        let id = res.data;
+        // console.log("LOL");
+        // console.log(res.data);
         if (res.data != -1 + "") {
+          setSessionCookie({ id });
           console.log("Redirecting");
-          window.location = "/home";
+          // window.location = "/home";
         } else {
           setInvalid(true);
         }
@@ -336,10 +340,10 @@ function LoginBox(props) {
     axios
       .post("http://localhost:5000/api/login", data)
       .then(function (res) {
-        console.log(res.data);
+        let id = res.data;
         if (res.data != "banned" && res.data != "notFound") {
           console.log("Redirecting");
-          window.location = "/home";
+          setSessionCookie({ id });
         } else {
           if (res.data == "banned") {
             setBanned(true);
@@ -435,6 +439,7 @@ function LoginBox(props) {
                 id="password"
                 variant="standard"
                 label="Password"
+                type="password"
                 fullWidth
                 required
                 error={invalid}

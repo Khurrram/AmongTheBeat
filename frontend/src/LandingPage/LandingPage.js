@@ -7,11 +7,11 @@ import { SessionContext } from "../App";
 import { Redirect, useHistory } from "react-router-dom";
 
 function LandingPage() {
-  const { state, actions } = useContext(SessionContext);
+  const session = useContext(SessionContext);
   let history = useHistory();
-  if (state.session) {
+  if (session.id) {
     history.push("/home");
-    // return <Redirect to="/home"></Redirect>;
+    return <Redirect to="/home"></Redirect>;
   }
   return (
     <Row className="full-height">

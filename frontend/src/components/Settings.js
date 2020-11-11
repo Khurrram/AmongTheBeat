@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-materialize";
 import Avatar from "@material-ui/core/Avatar";
@@ -8,6 +8,8 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import styled from "styled-components";
+import { SessionContext } from "../App";
+import axios from "axios";
 
 const useStyles = makeStyles({
   root: {
@@ -42,6 +44,10 @@ const useStyles = makeStyles({
 });
 
 const CenterDiv = styled.div`
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(rgb(46, 0, 48), transparent);
+  background-color: rgb(77, 77, 75);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -77,7 +83,30 @@ function Settings() {
     newpass: "",
     confirmpass: "",
   });
+  const session = useContext(SessionContext);
+  function handleConfirm(oldp, newp, confirmp) {
+    if (newp !== confirmp) {
+      alert("New Password does not match for both textfields.");
+    } else {
+      let data = { id: session.id, oldpass: oldp, updatedpass: newp };
+      alert("Matches");
 
+      axios
+        .post("http://localhost:5000/api/user/checkpass", data)
+        .then(function (res) {
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err.data));
+
+      axios
+        .post("http://localhost:5000/api/user/changepass", data)
+        .then(function (res) {
+          console.log(res.data);
+          console.log("Password changed");
+        })
+        .catch((err) => console.log(err.data));
+    }
+  }
   return (
     <CenterDiv>
       <Link to="/home">
@@ -160,15 +189,6 @@ function Settings() {
       </AlignTextDiv>
     </CenterDiv>
   );
-}
-
-function handleConfirm(oldp, newp, confirmp) {
-  if (newp !== confirmp) {
-    alert("New Password does not match for both textfields.");
-  } else {
-    alert("Matches");
-    //add functionality to backend here.
-  }
 }
 
 export default Settings;

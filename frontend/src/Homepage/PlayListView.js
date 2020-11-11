@@ -28,6 +28,8 @@ const StyledDiv = styled.div`
 
   & #timestamp {
     font-weight: normal;
+    margin-right: 2rem;
+    margin-left: 2rem;
   }
 
   & h6 {
