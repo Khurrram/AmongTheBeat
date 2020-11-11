@@ -8,7 +8,9 @@ import HomeSideBar from "./HomeSideBar";
 import { Link, useHistory } from "react-router-dom";
 import PlayListView from "./PlayListView";
 import test from "../data/test.json";
+import SettingView from "./SettingView";
 import BrowseView from "./BrowseView";
+import Settings from "../components/Settings";
 
 import "./HomePage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -84,15 +86,17 @@ const StyledSettingIcon = styled(SettingsIcon)`
 export const ViewPage = React.createContext();
 
 function HomePage(props) {
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(2);
   const [settings, setSettings] = useState(false);
-  const value = { state: {}, actions: { setPage } };
+  const value = { state: { settings }, actions: { setPage, setSettings } };
 
   let viewPage;
   if (page === 0) {
     viewPage = <BrowseView />;
   } else if (page === 1) {
     viewPage = <PlayListView />;
+  } else if (page === 3) {
+    viewPage = <SettingView />;
   } else {
     setPage(0);
     viewPage = <BrowseView />;
@@ -109,7 +113,10 @@ function HomePage(props) {
               <StyledSettingIcon id="margin" />
             </Link>
           </Navbar>
-          <MiddleContent>{viewPage}</MiddleContent>
+          <MiddleContent>
+            {viewPage}
+            <SettingView />;
+          </MiddleContent>
           <Footer>
             <PlayNavBar />
           </Footer>
