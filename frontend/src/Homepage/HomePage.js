@@ -1,36 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
 
 import styled from "styled-components";
-import logo from "../assets/logo.png";
-import { Image } from "react-bootstrap";
-import Song from "./Song";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PlayNavBar from "./PlayNavBar";
 import HomeSideBar from "./HomeSideBar";
-import {
-  ProSidebar,
-  Menu,
-  MenuItem,
-  SidebarHeader,
-  SidebarFooter,
-  SidebarContent,
-} from "react-pro-sidebar";
 import { Link, useHistory } from "react-router-dom";
-import PlayingNow from "../components/PlayingNow";
 import PlayListView from "./PlayListView";
 import test from "../data/test.json";
 import BrowseView from "./BrowseView";
-import Playlists from "../components/Playlists";
-import PlayIcon from "@material-ui/icons/PlayArrow";
-import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
-import SearchBar from "material-ui-search-bar";
-import RepeatIcon from "@material-ui/icons/Repeat";
 
 import "./HomePage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-pro-sidebar/dist/css/styles.css";
-import { StayCurrentPortrait } from "@material-ui/icons";
 
 const Button = styled.button`
   padding: 0.5em;
@@ -71,7 +53,7 @@ const Footer = styled.div`
   margin-top: auto;
   padding-left: 1em;
   height: 7%;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.6);
 
   & span {
     color: white;
@@ -107,9 +89,9 @@ function HomePage(props) {
   const value = { state: {}, actions: { setPage } };
 
   let viewPage;
-  if (page == 0) {
+  if (page === 0) {
     viewPage = <BrowseView />;
-  } else if (page == 1) {
+  } else if (page === 1) {
     viewPage = <PlayListView />;
   } else {
     setPage(0);
