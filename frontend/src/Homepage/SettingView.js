@@ -15,8 +15,15 @@ const SettingDiv = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: 45vw;
+  width: 30vw;
   color: white;
+`;
+
+const StyledTextField = styled(TextField)`
+  &&& {
+    margin-top: 1.5rem;
+  }
+  width: 450px;
 `;
 
 const AccountDiv = styled.div`
@@ -31,7 +38,7 @@ const AccountButtonDiv = styled(AccountDiv)`
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  width: 30%;
+  width: 80%;
 `;
 
 const SidebarDiv = styled.div`
@@ -151,56 +158,48 @@ function SettingView(props) {
           <h2>{currF.username}</h2>
         </AccountDiv>
 
-        <div id="newpc">
-          <TextField
-            className={classes.root}
-            defaultValue=""
-            variant="outlined"
-            label="Old Password"
-            id="oldp"
-            onChange={(val) =>
-              setcurrF({
-                oldpass: val.target.value,
-                newpass: currF.newpass,
-                confirmpass: currF.confirmpass,
-              })
-            }
-          />
-        </div>
+        <StyledTextField
+          className={classes.root}
+          defaultValue=""
+          variant="outlined"
+          label="Old Password"
+          onChange={(val) =>
+            setcurrF({
+              oldpass: val.target.value,
+              newpass: currF.newpass,
+              confirmpass: currF.confirmpass,
+            })
+          }
+        />
 
-        <div id="newpc">
-          <TextField
-            className={classes.root}
-            defaultValue=""
-            variant="outlined"
-            label="New Password"
-            id="newp"
-            onChange={(val) =>
-              setcurrF({
-                oldpass: currF.oldpass,
-                newpass: val.target.value,
-                confirmpass: currF.confirmpass,
-              })
-            }
-          />
-        </div>
+        <StyledTextField
+          className={classes.root}
+          defaultValue=""
+          variant="outlined"
+          label="New Password"
+          onChange={(val) =>
+            setcurrF({
+              oldpass: currF.oldpass,
+              newpass: val.target.value,
+              confirmpass: currF.confirmpass,
+            })
+          }
+        />
 
-        <div id="newpc">
-          <TextField
-            className={classes.root}
-            defaultValue=""
-            variant="outlined"
-            label="Confirm Password"
-            id="newp"
-            onChange={(val) =>
-              setcurrF({
-                oldpass: currF.oldpass,
-                newpass: currF.newpass,
-                confirmpass: val.target.value,
-              })
-            }
-          />
-        </div>
+        <StyledTextField
+          className={classes.root}
+          defaultValue=""
+          variant="outlined"
+          label="Confirm Password"
+          id="width"
+          onChange={(val) =>
+            setcurrF({
+              oldpass: currF.oldpass,
+              newpass: currF.newpass,
+              confirmpass: val.target.value,
+            })
+          }
+        />
 
         <AccountButtonDiv>
           <Button
@@ -211,9 +210,8 @@ function SettingView(props) {
           >
             Confirm
           </Button>
-          <Link to="/">
-            <Button id="logout">Log Out</Button>
-          </Link>
+
+          <Button id="logout">Log Out</Button>
         </AccountButtonDiv>
       </SettingDiv>
     </SidebarDiv>
