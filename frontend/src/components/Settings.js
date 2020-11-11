@@ -1,9 +1,8 @@
-import React, { useState , useContext } from "react";
+import React, { useState , useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-materialize";
 import Avatar from "@material-ui/core/Avatar";
 import "./Settings.css";
-import test from "../data/test.json";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -83,8 +82,11 @@ function Settings() {
     oldpass: "",
     newpass: "",
     confirmpass: "",
+    username: ""
   });
+
   const session = useContext(SessionContext);
+
   function handleConfirm(oldp, newp, confirmp) {
 
     if (newp !== confirmp) {
@@ -110,6 +112,25 @@ function Settings() {
 
     }
   }
+
+  useEffect(() => {
+      let data = {id : session.id};
+      axios
+      .post("http://localhost:5000/api/user/getusername", data)
+      .then(function (res) {
+        console.log(res.data);
+        let username = res.data;
+        setcurrF({
+          oldpass: currF.oldpass,
+          newpass: currF.newpass,
+          confirmpass: currF.confirmpass,
+          username: username
+        });
+      })
+      .catch((err) => console.log(err.data));
+    });
+
+
   return (
     <CenterDiv>
       <Link to="/home">
@@ -120,9 +141,8 @@ function Settings() {
       <AlignTextDiv>
         <AccountDiv>
           <Avatar id="av" className="AvatarIcon">
-            J
           </Avatar>
-          <div id="user">{test.username}</div>
+          <div id="user">{currF.username}</div>
         </AccountDiv>
 
         <div id="newpc">
@@ -137,6 +157,7 @@ function Settings() {
                 oldpass: val.target.value,
                 newpass: currF.newpass,
                 confirmpass: currF.confirmpass,
+                username: currF.username
               })
             }
           />
@@ -154,6 +175,7 @@ function Settings() {
                 oldpass: currF.oldpass,
                 newpass: val.target.value,
                 confirmpass: currF.confirmpass,
+                username: currF.username
               })
             }
           />
@@ -171,6 +193,7 @@ function Settings() {
                 oldpass: currF.oldpass,
                 newpass: currF.newpass,
                 confirmpass: val.target.value,
+                username: currF.username
               })
             }
           />

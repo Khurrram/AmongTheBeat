@@ -151,3 +151,14 @@ app.post("/api/user/changepass", (req, res) => {
         res.send("Password updated");
     });
 });
+
+app.post("/api/user/getusername", (req, res) => {
+    let id = req.body.id;
+    userModel.findOne({'_id': id}, function(err, user) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send(user.username);
+        }
+    });
+});
