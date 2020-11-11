@@ -122,3 +122,32 @@ app.post("/api/user/remove", (req, res) => {
         res.send(user);
     });
 });
+
+
+//GET and POST for changing password
+
+app.post("/api/user/checkpass", (req, res) => {
+    let id = req.body.id;
+    let oldpass = req.body.oldpass;
+    let updatedpass = req.body.updatedpass;
+
+    userModel.findOne({'_id': id, 'password': oldpass}, function(err, user) {
+        if (err) {
+            console.log(err);
+            res.send("Invalid old password");
+        } else {
+            res.send("Correct password");
+        }
+    });
+});
+
+app.post("/api/user/changepass", (req, res) => {
+    let id = req.body.id;
+    let updatedpass = req.body.updatedpass;
+    userModel.findOneAndUpdate({'_id': id}, {'password': updatedpass}, function(err, user) {
+        if (err) {
+            console.log(err);
+        }
+        res.send("Password updated");
+    });
+});
