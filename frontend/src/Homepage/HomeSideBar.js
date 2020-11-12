@@ -15,6 +15,8 @@ import {
   SidebarContent,
 } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
+import { getSessionCookie } from "../CookieHandler";
+import axios from 'axios';
 
 import "react-pro-sidebar/dist/css/styles.css";
 
@@ -37,6 +39,25 @@ const StyledSearh = styled(SearchBar)`
 
 function HomeSideBar(props) {
   const { state, actions } = useContext(ViewPage);
+  const session = getSessionCookie();
+
+  function createPlaylist(e) {
+    e.preventDefault();
+    console.log("attempted to create a new playlist");
+
+    let data = {id : session.id};
+
+    axios
+    .post("http://localhost:5000/api/playlist/createPlaylist", data)
+    .then(function (res) {
+      let id = res.data;
+      console.log("res: " + res.data);
+    })
+    .catch((err) => console.log(err));
+
+  }
+
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -58,7 +79,7 @@ function HomeSideBar(props) {
         </Menu>
         <hr width="90%" color="black"></hr>
         <Menu>
-          <MenuItem id="fontlarge">Playlists <Add /></MenuItem>
+          <MenuItem id="fontlarge">Playlists <Add onClick={(e) => createPlaylist(e)} /></MenuItem>
           {test.playlists.map((playlist) => {
             let path = "/playlist/" + playlist.name;
             return (

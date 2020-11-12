@@ -8,6 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import styled from "styled-components";
 import axios from "axios";
+import { getSessionCookie } from "../CookieHandler";
 
 const useStyles = makeStyles({
   root: {
@@ -106,22 +107,6 @@ function Settings() {
     }
   }
 
-  useEffect(() => {
-    let data = { id: session.id };
-    axios
-      .post("http://localhost:5000/api/user/getusername", data)
-      .then(function (res) {
-        let username = res.data;
-        setcurrF({
-          oldpass: currF.oldpass,
-          newpass: currF.newpass,
-          confirmpass: currF.confirmpass,
-          username: username,
-        });
-      })
-      .catch((err) => console.log(err.data));
-  });
-
   return (
     <CenterDiv>
       <Link to="/home">
@@ -134,7 +119,7 @@ function Settings() {
           <Avatar id="av" className="AvatarIcon">
             {session.username}
           </Avatar>
-          <div id="user">{currF.username}</div>
+          <div id="user">{session.username}</div>
         </AccountDiv>
 
         <div id="newpc">
@@ -148,8 +133,7 @@ function Settings() {
               setcurrF({
                 oldpass: val.target.value,
                 newpass: currF.newpass,
-                confirmpass: currF.confirmpass,
-                username: currF.username,
+                confirmpass: currF.confirmpass
               })
             }
           />
@@ -166,8 +150,7 @@ function Settings() {
               setcurrF({
                 oldpass: currF.oldpass,
                 newpass: val.target.value,
-                confirmpass: currF.confirmpass,
-                username: currF.username,
+                confirmpass: currF.confirmpass
               })
             }
           />
@@ -184,8 +167,7 @@ function Settings() {
               setcurrF({
                 oldpass: currF.oldpass,
                 newpass: currF.newpass,
-                confirmpass: val.target.value,
-                username: currF.username,
+                confirmpass: val.target.value
               })
             }
           />

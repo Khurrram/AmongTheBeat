@@ -2,10 +2,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 var cors = require("cors");
 const userModel = require("./models/userModel.js");
+const playlistModel = require("./models/playlistModel.js");
 const app = express();
-var passport = require("passport"),
-  SpotifyStrategy = require("passport-spotify").Strategy;
-require("dotenv").config();
+// var passport = require("passport"),
+//   SpotifyStrategy = require("passport-spotify").Strategy;
+// require("dotenv").config();
 
 app.use(express.json());
 app.use(cors());
@@ -22,40 +23,40 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server started on port ${port}`));
 var conn = mongoose.connection;
 
-passport.use(
-  new SpotifyStrategy(
-    {
-      clientID: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "http://localhost:" + port + "/auth/spotify/callback",
-    },
-    function (accessToken, refreshToken, expires_in, profile, done) {}
-  )
-);
+// passport.use(
+//   new SpotifyStrategy(
+//     {
+//       clientID: process.env.CLIENT_ID,
+//       clientSecret: process.env.CLIENT_SECRET,
+//       callbackURL: "http://localhost:" + port + "/auth/spotify/callback",
+//     },
+//     function (accessToken, refreshToken, expires_in, profile, done) {}
+//   )
+// );
 
-app.get("/auth/spotify", passport.authenticate("spotify"));
+// app.get("/auth/spotify", passport.authenticate("spotify"));
 
-app.get(
-  "/auth/spotify/callback",
-  passport.authenticate("spotify", {
-    failureRedirect: "/login",
-    scope: [
-      "user-read-email",
-      "user-read-private",
-      "user-read-recently-played",
-      "user-read-playback-state",
-      "user-top-read",
-      "user-read-currently-playing",
-      "user-follow-read",
-      "user-library-read",
-      "streaming",
-    ],
-  }),
-  function (req, res) {
-    // Successful authentication, redirect home.
-    res.redirect("/");
-  }
-);
+// app.get(
+//   "/auth/spotify/callback",
+//   passport.authenticate("spotify", {
+//     failureRedirect: "/login",
+//     scope: [
+//       "user-read-email",
+//       "user-read-private",
+//       "user-read-recently-played",
+//       "user-read-playback-state",
+//       "user-top-read",
+//       "user-read-currently-playing",
+//       "user-follow-read",
+//       "user-library-read",
+//       "streaming",
+//     ],
+//   }),
+//   function (req, res) {
+//     // Successful authentication, redirect home.
+//     res.redirect("/");
+//   }
+// );
 
 
 app.post("/api/register", (req, res) => {
@@ -81,6 +82,7 @@ app.post("/api/register", (req, res) => {
 
 
 app.post("/api/login", (req, res) => {
+    console.log(req.body.username);
   userModel.findOne(
     { username: req.body.username, password: req.body.password },
     function (err, user) {
@@ -174,4 +176,26 @@ app.post("/api/user/getusername", (req, res) => {
             res.send(user.username);
         }
     });
+});
+
+//POST for creating new playlist
+app.post("/api/playlist/createPlaylist", (req, res) => {
+    let owner_id = req.body.id;
+    let playlist_id = new mongoose.Types.ObjectId();
+    playlistModel.create({
+        _id: playlist_id,
+        playlist_name: "Untitled",
+        owner_id: owner_id,
+        private: 0
+      });
+      
+      userModel.findOneAndUpdate({ _id: owner_id}, { $push: {playlists : playlist_id}}, function (
+        err,
+        user
+      ) {
+        if (err) {
+            console.log(err);
+        } 
+      });
+    res.send(playlist_id);
 });
