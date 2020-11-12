@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 var cors = require("cors");
 const userModel = require("./models/userModel.js");
 const app = express();
-var passport = require("passport"),
-  SpotifyStrategy = require("passport-spotify").Strategy;
-require("dotenv").config();
+// var passport = require("passport"),
+//   SpotifyStrategy = require("passport-spotify").Strategy;
+// require("dotenv").config();
 
 app.use(express.json());
 app.use(cors());
@@ -22,40 +22,40 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server started on port ${port}`));
 var conn = mongoose.connection;
 
-passport.use(
-  new SpotifyStrategy(
-    {
-      clientID: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "http://localhost:" + port + "/auth/spotify/callback",
-    },
-    function (accessToken, refreshToken, expires_in, profile, done) {}
-  )
-);
+// passport.use(
+//   new SpotifyStrategy(
+//     {
+//       clientID: process.env.CLIENT_ID,
+//       clientSecret: process.env.CLIENT_SECRET,
+//       callbackURL: "http://localhost:" + port + "/auth/spotify/callback",
+//     },
+//     function (accessToken, refreshToken, expires_in, profile, done) {}
+//   )
+// );
 
-app.get("/auth/spotify", passport.authenticate("spotify"));
+// app.get("/auth/spotify", passport.authenticate("spotify"));
 
-app.get(
-  "/auth/spotify/callback",
-  passport.authenticate("spotify", {
-    failureRedirect: "/login",
-    scope: [
-      "user-read-email",
-      "user-read-private",
-      "user-read-recently-played",
-      "user-read-playback-state",
-      "user-top-read",
-      "user-read-currently-playing",
-      "user-follow-read",
-      "user-library-read",
-      "streaming",
-    ],
-  }),
-  function (req, res) {
-    // Successful authentication, redirect home.
-    res.redirect("/");
-  }
-);
+// app.get(
+//   "/auth/spotify/callback",
+//   passport.authenticate("spotify", {
+//     failureRedirect: "/login",
+//     scope: [
+//       "user-read-email",
+//       "user-read-private",
+//       "user-read-recently-played",
+//       "user-read-playback-state",
+//       "user-top-read",
+//       "user-read-currently-playing",
+//       "user-follow-read",
+//       "user-library-read",
+//       "streaming",
+//     ],
+//   }),
+//   function (req, res) {
+//     // Successful authentication, redirect home.
+//     res.redirect("/");
+//   }
+// );
 
 //GET and POST for Registering
 app.get("/api/register", (req, res) => {
@@ -84,11 +84,12 @@ app.post("/api/register", (req, res) => {
 });
 
 //GET and POST for Logging In
-app.get("/api/login", (req, res) => {
-  console.log("GET REQUEST completed");
-});
+// app.get("/api/login", (req, res) => {
+//   console.log("GET REQUEST completed");
+// });
 
 app.post("/api/login", (req, res) => {
+  console.log(req.body.username);
   userModel.findOne(
     { username: req.body.username, password: req.body.password },
     function (err, user) {
@@ -202,6 +203,7 @@ app.post("/api/user/changepass", (req, res) => {
 });
 
 app.post("/api/user/getusername", (req, res) => {
+  console.log("id: " + req.body.id);
   let id = req.body.id;
   userModel.findOne({ _id: id }, function (err, user) {
     if (err) {
