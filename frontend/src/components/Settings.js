@@ -7,7 +7,6 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import styled from "styled-components";
-import { SessionContext } from "../App";
 import axios from "axios";
 
 const useStyles = makeStyles({
@@ -84,7 +83,7 @@ function Settings() {
     username: "",
   });
 
-  const session = useContext(SessionContext);
+  const session = getSessionCookie();
 
   function handleConfirm(oldp, newp, confirmp) {
     if (newp !== confirmp) {

@@ -9,6 +9,7 @@ import { getSessionCookie, setSessionCookie } from "../CookieHandler";
 import { AppContext } from "../App";
 
 function RegisterBox(props) {
+  let history = useHistory();
   const button = props.button;
   const [form, setForm] = useState({
     email: "",
@@ -164,10 +165,9 @@ function RegisterBox(props) {
       .then(function (res) {
         let id = res.data;
         if (res.data != -1 + "") {
-          setSessionCookie({ id });
-          setSessionCookie({ username });
+          setSessionCookie({ id: id, username: username });
           console.log("Redirecting");
-          window.location = "/home";
+          history.push("/home");
         } else {
           setInvalid(true);
         }
@@ -320,6 +320,7 @@ function RegisterBox(props) {
 }
 
 function LoginBox(props) {
+  const history = useHistory();
   const button = props.button;
   const [form, setForm] = useState({
     username: "",
@@ -335,15 +336,18 @@ function LoginBox(props) {
   function submitLogin(e, username, password) {
     e.preventDefault();
     let data = { username, password };
+    console.log("subm " + username);
 
     axios
       .post("http://localhost:5000/api/login", data)
       .then(function (res) {
         let id = res.data;
+        console.log("res: " + res.data);
         if (res.data != "banned" && res.data != "notFound") {
           console.log("Redirecting");
-          setSessionCookie({ id });
-          window.location("/home");
+          setSessionCookie({ id: id, username: username });
+          // console.log("right after: " + getSessionCookie().id);
+          history.push("/home");
         } else {
           if (res.data == "banned") {
             setBanned(true);
@@ -352,7 +356,7 @@ function LoginBox(props) {
           }
         }
       })
-      .catch((err) => console.log(err.data));
+      .catch((err) => console.log(err));
   }
 
   function userHandler(user) {

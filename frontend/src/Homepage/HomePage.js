@@ -12,7 +12,7 @@ import SettingView from "./SettingView";
 import BrowseView from "./BrowseView";
 import axios from "axios";
 import { SessionContext } from "../App";
-
+import { getSessionCookie } from "../CookieHandler";
 import "./HomePage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-pro-sidebar/dist/css/styles.css";
@@ -86,8 +86,8 @@ const StyledSettingIcon = styled(SettingsIcon)`
 
 export const ViewPage = React.createContext();
 
-function HomePage(props) {
-  const session = useContext(SessionContext);
+function HomePage() {
+  const session = getSessionCookie();
 
   const [page, setPage] = useState(2);
   const [settings, setSettings] = useState(false);
@@ -104,24 +104,15 @@ function HomePage(props) {
     viewPage = <BrowseView />;
   }
 
-  useEffect(() => {
-    let data = { id: session.id };
-    axios
-      .post("http://localhost:5000/api/user/getusername", data)
-      .then(function (res) {
-        let username = res.data;
-        setUser(username);
-      })
-      .catch((err) => console.log(err.data));
-  });
-
   return (
     <ViewPage.Provider value={value}>
       <div className="homepage1">
         <HomeSideBar />
         <ContentWindow>
           <Navbar>
-            <StyledAvatar>{username.charAt(0).toUpperCase()}</StyledAvatar>
+            <StyledAvatar>
+              {session.username.charAt(0).toUpperCase()}
+            </StyledAvatar>
 
             <StyledSettingIcon
               id="margin"
