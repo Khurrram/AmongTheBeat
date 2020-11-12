@@ -6,8 +6,6 @@ const playlistModel = require("./models/playlistModel.js");
 const app = express();
 const passport = require("passport"),
   SpotifyStrategy = require("passport-spotify").Strategy;
-require('./passport');
-require("dotenv").config();
 
 app.use(express.json());
 app.use(cors());
@@ -42,6 +40,7 @@ passport.use(
       function (accessToken, refreshToken, expires_in, profile, done) {
         // asynchronous verification, for effect...
         process.nextTick(function () {
+            console.log(profile);
             console.log("accessToken: " + accessToken);
             console.log("refreshToken: " + refreshToken);
             console.log("expires_in: " + expires_in);
@@ -213,18 +212,6 @@ app.post("/api/user/changepass", (req, res) => {
   });
 });
 
-app.post("/api/user/getusername", (req, res) => {
-    console.log("getusername is called");
-    let id = req.body.id;
-    userModel.findOne({'_id': id}, function(err, user) {
-        if (err) {
-            console.log(err);
-        } else {
-            res.send(user.username);
-        }
-    });
-});
-
 //POST for creating new playlist
 app.post("/api/playlist/createPlaylist", (req, res) => {
     let owner_id = req.body.id;
@@ -247,6 +234,8 @@ app.post("/api/playlist/createPlaylist", (req, res) => {
     res.send(playlist_id);
 });
 
+
+//POST for getting playlists of a specific user
 app.post("/api/playlist/getplaylists", (req, res) => {
     let owner_id = req.body.id;
 

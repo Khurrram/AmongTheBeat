@@ -41,22 +41,23 @@ const StyledSearh = styled(SearchBar)`
 function HomeSideBar(props) {
   const { state, actions } = useContext(ViewPage);
   // const [ playlists, setPlaylists] = useState([]);
+  const playlists = props.playlists;
   const toggle = false;
   const [disabled, setDisabled] = useState(true);
   const session = getSessionCookie();
-  var playlists = [];
+  // var playlists = [];
+
+  let data = { id: session.id };
 
   function createPlaylist(e) {
     e.preventDefault();
-
-    let data = {id : session.id};
 
     axios
     .post("http://localhost:5000/api/playlist/createPlaylist", data)
     .then(function (res) {
       let id = res.data;
       console.log("res: " + res.data);
-      toggle = !toggle;
+      // toggle = !toggle;
     })
     .catch((err) => console.log(err));
 
@@ -66,22 +67,6 @@ function HomeSideBar(props) {
     e.preventDefault();
 
   }
-
-  useEffect(() => {
-    console.log("useEffect is called");
-    let data = { id: session.id };
-    axios
-      .post("http://localhost:5000/api/playlist/getplaylists", data)
-      .then(function (res) {
-        playlists = res.data;
-        console.log("Playlists: " + playlists);
-      })
-      .catch((err) => console.log(err));
-  }, [playlists]);
-
-  useEffect(() => {
-  }, []);
-
 
   return (
     <Sidebar>

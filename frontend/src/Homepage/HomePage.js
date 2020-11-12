@@ -91,8 +91,19 @@ function HomePage() {
 
   const [page, setPage] = useState(2);
   const [settings, setSettings] = useState(false);
+  const [playlists, setPlaylists] = useState([]);
   const [username, setUser] = useState("");
   const value = { state: { settings }, actions: { setPage, setSettings } };
+
+  let data = {id: session.id};
+
+  axios
+  .post("http://localhost:5000/api/playlist/getplaylists", data)
+  .then(function (res) {
+    setPlaylists(res.data);
+    console.log("Playlists: " + playlists);
+  })
+  .catch((err) => console.log(err));
 
   let viewPage;
   if (page === 0) {
@@ -107,7 +118,7 @@ function HomePage() {
   return (
     <ViewPage.Provider value={value}>
       <div className="homepage1">
-        <HomeSideBar />
+        <HomeSideBar playlists={playlists} />
         <ContentWindow>
           <Navbar>
             <StyledAvatar>
