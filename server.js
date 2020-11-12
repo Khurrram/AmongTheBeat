@@ -4,9 +4,10 @@ var cors = require("cors");
 const userModel = require("./models/userModel.js");
 const playlistModel = require("./models/playlistModel.js");
 const app = express();
-// var passport = require("passport"),
-//   SpotifyStrategy = require("passport-spotify").Strategy;
-// require("dotenv").config();
+const passport = require("passport"),
+  SpotifyStrategy = require("passport-spotify").Strategy;
+require('./passport');
+require("dotenv").config();
 
 app.use(express.json());
 app.use(cors());
@@ -21,43 +22,89 @@ mongoose
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
-var conn = mongoose.connection;
+var authCallbackPath = "/auth/spotify/callback";
 
-// passport.use(
-//   new SpotifyStrategy(
-//     {
-//       clientID: process.env.CLIENT_ID,
-//       clientSecret: process.env.CLIENT_SECRET,
-//       callbackURL: "http://localhost:" + port + "/auth/spotify/callback",
-//     },
-//     function (accessToken, refreshToken, expires_in, profile, done) {}
-//   )
-// );
+passport.serializeUser(function (user, done) {
+    done(null, user);
+  });
+  
+  passport.deserializeUser(function (obj, done) {
+    done(null, obj);
+  });
 
-// app.get("/auth/spotify", passport.authenticate("spotify"));
+passport.use(
+    new SpotifyStrategy(
+      {
+        clientID: "6e6168bb4f424095b42f948f1e303b69",
+        clientSecret: "d0083b4ff5b743f5888468fe02c2ba9c",
+        callbackURL: "http://localhost:5000/auth/spotify/callback"
+      },
+      function (accessToken, refreshToken, expires_in, profile, done) {
+        // asynchronous verification, for effect...
+        process.nextTick(function () {
+            console.log("accessToken: " + accessToken);
+            console.log("refreshToken: " + refreshToken);
+            console.log("expires_in: " + expires_in);
+          // To keep the example simple, the user's spotify profile is returned to
+          // represent the logged-in user. In a typical application, you would want
+          // to associate the spotify account with a user record in your database,
+          // and return that user instead.
+          return done(null, profile);
+        });
+      }
+    )
+  );
 
-// app.get(
-//   "/auth/spotify/callback",
-//   passport.authenticate("spotify", {
-//     failureRedirect: "/login",
-//     scope: [
-//       "user-read-email",
-//       "user-read-private",
-//       "user-read-recently-played",
-//       "user-read-playback-state",
-//       "user-top-read",
-//       "user-read-currently-playing",
-//       "user-follow-read",
-//       "user-library-read",
-//       "streaming",
-//     ],
-//   }),
-//   function (req, res) {
-//     // Successful authentication, redirect home.
-//     res.redirect("/");
+  app.use(passport.initialize());
+  app.use(passport.session());
+  
+  app.get(
+    "/auth/spotify",
+    passport.authenticate("spotify", {
+      scope: [      
+      "user-read-email",
+      "user-read-private",
+      "user-read-recently-played",
+      "user-read-playback-state",
+      "user-top-read",
+      "user-read-currently-playing",
+      "user-follow-read",
+      "user-library-read",
+      "streaming"
+    ],
+      showDialog: true,
+    })
+  );
+
+app.get(
+  "/auth/spotify/callback",
+  passport.authenticate("spotify", {
+    failureRedirect: "/",
+    scope: [
+      "user-read-email",
+      "user-read-private",
+      "user-read-recently-played",
+      "user-read-playback-state",
+      "user-top-read",
+      "user-read-currently-playing",
+      "user-follow-read",
+      "user-library-read",
+      "streaming"
+    ],
+  }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    // res.send(req);
+    res.redirect("http://localhost:3000/home");
+  }
+);
+
+// function ensureAuthenticated(req, res, next) {
+//   if (req.isAuthenticated()) {
+//     return next();
 //   }
-// );
-
+//   res.redirect("/");
+// }
 
 app.post("/api/register", (req, res) => {
   userModel.findOne(
@@ -82,7 +129,7 @@ app.post("/api/register", (req, res) => {
 
 
 app.post("/api/login", (req, res) => {
-    console.log(req.body.username);
+    // console.log(req.body.username);
   userModel.findOne(
     { username: req.body.username, password: req.body.password },
     function (err, user) {

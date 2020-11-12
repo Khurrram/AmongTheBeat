@@ -6,6 +6,7 @@ import SearchBar from "material-ui-search-bar";
 import test from "../data/test.json";
 import { ViewPage } from "./HomePage";
 import { Add } from "@material-ui/icons";
+import { TextField } from "@material-ui/core";
 import {
   ProSidebar as Sidebar,
   Menu,
@@ -39,13 +40,14 @@ const StyledSearh = styled(SearchBar)`
 
 function HomeSideBar(props) {
   const { state, actions } = useContext(ViewPage);
-  const [ playlists, setPlaylists] = useState([]);
+  // const [ playlists, setPlaylists] = useState([]);
+  const toggle = false;
+  const [disabled, setDisabled] = useState(true);
   const session = getSessionCookie();
-  // const playlists = [];
+  var playlists = [];
 
   function createPlaylist(e) {
     e.preventDefault();
-    console.log("attempted to create a new playlist");
 
     let data = {id : session.id};
 
@@ -54,21 +56,32 @@ function HomeSideBar(props) {
     .then(function (res) {
       let id = res.data;
       console.log("res: " + res.data);
+      toggle = !toggle;
     })
     .catch((err) => console.log(err));
 
   }
 
+  function changeName(e) {
+    e.preventDefault();
+
+  }
+
   useEffect(() => {
+    console.log("useEffect is called");
     let data = { id: session.id };
     axios
       .post("http://localhost:5000/api/playlist/getplaylists", data)
       .then(function (res) {
-        setPlaylists(res.data);
-        console.log(res.data);
+        playlists = res.data;
+        console.log("Playlists: " + playlists);
       })
       .catch((err) => console.log(err));
-  });
+  }, [playlists]);
+
+  useEffect(() => {
+  }, []);
+
 
   return (
     <Sidebar>
@@ -95,7 +108,7 @@ function HomeSideBar(props) {
           {playlists.map((playlist) => {
             // let path = "/playlist/" + playlist.name;
             return (
-              <MenuItem>
+              <MenuItem >
                 {/* <Link
                   to={{
                     pathname: path,
@@ -106,7 +119,15 @@ function HomeSideBar(props) {
                   }}
                 > */}
                   {" "}
+                  {console.log(playlist)}
+                <TextField
+                variant="standard"
+                fullWidth
+                onDoubleClick={setDisabled(false)} 
+                onBlur={setDisabled(true)}
+                >
                   {playlist.playlist_name}{" "}
+                </TextField>
                 {/* </Link> */}
               </MenuItem>
             );
