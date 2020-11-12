@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 var cors = require("cors");
 const userModel = require("./models/userModel.js");
+const playlistModel = require("./models/playlistModel.js");
 const app = express();
 // var passport = require("passport"),
 //   SpotifyStrategy = require("passport-spotify").Strategy;
@@ -57,11 +58,6 @@ var conn = mongoose.connection;
 //   }
 // );
 
-//GET and POST for Registering
-app.get("/api/register", (req, res) => {
-  console.log("GET REQUEST completed");
-});
-
 app.post("/api/register", (req, res) => {
   userModel.findOne(
     { $or: [{ username: req.body.username }, { email: req.body.email }] },
@@ -106,11 +102,6 @@ app.post("/api/login", (req, res) => {
   );
 });
 
-//GET and POST for Displaying Users in Admin
-app.get("/api/usersList", (req, res) => {
-  console.log("GET REQUEST usersList");
-});
-
 app.post("/api/usersList", (req, res) => {
   if (req.body.accountType == 2) {
     userModel.find(
@@ -129,11 +120,6 @@ app.post("/api/usersList", (req, res) => {
   }
 });
 
-//GET and POST for banning users in Admin
-app.get("/api/user/ban", (req, res) => {
-  console.log("GET REQUEST banUser");
-});
-
 app.post("/api/user/ban", (req, res) => {
   let id = req.body.id;
   userModel.findOneAndUpdate({ _id: id }, { accountType: -1 }, function (
@@ -142,11 +128,6 @@ app.post("/api/user/ban", (req, res) => {
   ) {
     res.send(user);
   });
-});
-
-//GET and POST for unbanning users in Admin
-app.get("/api/user/unban", (req, res) => {
-  console.log("GET REQUEST usersList");
 });
 
 app.post("/api/user/unban", (req, res) => {
@@ -159,10 +140,7 @@ app.post("/api/user/unban", (req, res) => {
   });
 });
 
-//GET and POST for removing users in Admin
-app.get("/api/user/remove", (req, res) => {
-  console.log("GET REQUEST usersList");
-});
+//POST for removing users in Admin
 
 app.post("/api/user/remove", (req, res) => {
   let id = req.body.id;
@@ -171,45 +149,68 @@ app.post("/api/user/remove", (req, res) => {
   });
 });
 
-//GET and POST for changing password
-
-app.post("/api/user/checkpass", (req, res) => {
-  let id = req.body.id;
-  let oldpass = req.body.oldpass;
-  let updatedpass = req.body.updatedpass;
-
-  userModel.findOne({ _id: id, password: oldpass }, function (err, user) {
-    if (err) {
-      console.log(err);
-      res.send("Invalid old password");
-    } else {
-      res.send("Correct password");
-    }
-  });
-});
+//POST for checking and changing password
 
 app.post("/api/user/changepass", (req, res) => {
   let id = req.body.id;
   let updatedpass = req.body.updatedpass;
-  userModel.findOneAndUpdate({ _id: id }, { password: updatedpass }, function (
-    err,
-    user
-  ) {
-    if (err) {
-      console.log(err);
+  userModel.findOneAndUpdate(
+    { _id: id, password: oldpass },
+    { password: updatedpass },
+    function (err, user) {
+      if (err) {
+        console.log(err);
+        res.send("invalid pass");
+      } else {
+        res.send("Password updated");
+      }
     }
-    res.send("Password updated");
-  });
+  );
 });
 
 app.post("/api/user/getusername", (req, res) => {
-  console.log("id: " + req.body.id);
+  console.log("getusername is called");
   let id = req.body.id;
   userModel.findOne({ _id: id }, function (err, user) {
     if (err) {
       console.log(err);
     } else {
       res.send(user.username);
+    }
+  });
+});
+
+//POST for creating new playlist
+app.post("/api/playlist/createPlaylist", (req, res) => {
+  let owner_id = req.body.id;
+  let playlist_id = new mongoose.Types.ObjectId();
+  playlistModel.create({
+    _id: playlist_id,
+    playlist_name: "Untitled",
+    owner_id: owner_id,
+    private: 0,
+  });
+
+  userModel.findOneAndUpdate(
+    { _id: owner_id },
+    { $push: { playlists: playlist_id } },
+    function (err, user) {
+      if (err) {
+        console.log(err);
+      }
+    }
+  );
+  res.send(playlist_id);
+});
+
+app.post("/api/playlist/getplaylists", (req, res) => {
+  let owner_id = req.body.id;
+
+  playlistModel.find({ owner_id: owner_id }, function (err, playlists) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(playlists);
     }
   });
 });

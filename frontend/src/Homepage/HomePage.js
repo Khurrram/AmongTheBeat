@@ -86,7 +86,7 @@ const StyledSettingIcon = styled(SettingsIcon)`
 
 export const ViewPage = React.createContext();
 
-function HomePage(props) {
+function HomePage() {
   const session = getSessionCookie();
 
   const [page, setPage] = useState(2);
