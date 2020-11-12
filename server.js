@@ -57,10 +57,6 @@ app.get(
   }
 );
 
-//GET and POST for Registering
-// app.get("/api/register", (req, res) => {
-//     console.log("GET REQUEST completed");
-// });
 
 app.post("/api/register", (req, res) => {
   userModel.findOne(
@@ -83,10 +79,6 @@ app.post("/api/register", (req, res) => {
   );
 });
 
-//GET and POST for Logging In
-// app.get("/api/login", (req, res) => {
-//     console.log("GET REQUEST completed");
-// });
 
 app.post("/api/login", (req, res) => {
   userModel.findOne(
@@ -104,11 +96,6 @@ app.post("/api/login", (req, res) => {
     }
   );
 });
-
-//GET and POST for Displaying Users in Admin 
-// app.get("/api/usersList", (req,res) => {
-//     console.log("GET REQUEST usersList");
-// })
 
 app.post("/api/usersList", (req, res) => {
   if (req.body.accountType == 2) {
@@ -128,10 +115,6 @@ app.post("/api/usersList", (req, res) => {
   }
 });
 
-//GET and POST for banning users in Admin
-// app.get("/api/user/ban", (req,res) => {
-//     console.log("GET REQUEST banUser");
-// })
 
 app.post("/api/user/ban", (req, res) => {
   let id = req.body.id;
@@ -143,11 +126,6 @@ app.post("/api/user/ban", (req, res) => {
   });
 });
 
-//GET and POST for unbanning users in Admin
-// app.get("/api/user/unban", (req,res) => {
-//     console.log("GET REQUEST usersList");
-// })
-
 app.post("/api/user/unban", (req, res) => {
   let id = req.body.id;
   userModel.findOneAndUpdate({ _id: id }, { accountType: 0 }, function (
@@ -158,10 +136,8 @@ app.post("/api/user/unban", (req, res) => {
   });
 });
 
-//GET and POST for removing users in Admin
-// app.get("/api/user/remove", (req,res) => {
-//     console.log("GET REQUEST usersList");
-// })
+//POST for removing users in Admin
+
 
 app.post("/api/user/remove", (req, res) => {
   let id = req.body.id;
@@ -170,34 +146,21 @@ app.post("/api/user/remove", (req, res) => {
   });
 });
 
-//GET and POST for changing password
-
-app.post("/api/user/checkpass", (req, res) => {
-  let id = req.body.id;
-  let oldpass = req.body.oldpass;
-  let updatedpass = req.body.updatedpass;
-
-  userModel.findOne({ _id: id, password: oldpass }, function (err, user) {
-    if (err) {
-      console.log(err);
-      res.send("Invalid old password");
-    } else {
-      res.send("Correct password");
-    }
-  });
-});
+//POST for checking and changing password
 
 app.post("/api/user/changepass", (req, res) => {
   let id = req.body.id;
   let updatedpass = req.body.updatedpass;
-  userModel.findOneAndUpdate({ _id: id }, { password: updatedpass }, function (
+  userModel.findOneAndUpdate({ _id: id, password: oldpass }, { password: updatedpass }, function (
     err,
     user
   ) {
     if (err) {
-      console.log(err);
+        console.log(err);
+        res.send("invalid pass")
+    } else {
+        res.send("Password updated");
     }
-    res.send("Password updated");
   });
 });
 

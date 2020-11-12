@@ -94,17 +94,14 @@ function Settings() {
       alert("Matches");
 
       axios
-        .post("http://localhost:5000/api/user/checkpass", data)
-        .then(function (res) {
-          console.log(res.data);
-        })
-        .catch((err) => console.log(err.data));
-
-      axios
         .post("http://localhost:5000/api/user/changepass", data)
         .then(function (res) {
           console.log(res.data);
-          console.log("Password changed");
+          if (res.data === "invalid pass") {
+            alert("Invalid password");
+          } else {
+            console.log("Password changed");
+          }
         })
         .catch((err) => console.log(err.data));
     }
