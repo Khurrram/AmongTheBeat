@@ -343,7 +343,6 @@ function LoginBox(props) {
         if (res.data != "banned" && res.data != "notFound") {
           console.log("Redirecting");
           setSessionCookie({ id });
-          setSessionCookie({ username });
           window.location("/home");
         } else {
           if (res.data == "banned") {
