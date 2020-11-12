@@ -188,7 +188,7 @@ app.post("/api/playlist/createPlaylist", (req, res) => {
         owner_id: owner_id,
         private: 0
       });
-      
+
       userModel.findOneAndUpdate({ _id: owner_id}, { $push: {playlists : playlist_id}}, function (
         err,
         user
@@ -199,3 +199,18 @@ app.post("/api/playlist/createPlaylist", (req, res) => {
       });
     res.send(playlist_id);
 });
+
+app.post("/api/playlist/getplaylists", (req, res) => {
+    let owner_id = req.body.id;
+
+      playlistModel.find({ owner_id : owner_id }, function (
+        err,
+        playlists
+      ) {
+          if (err) {
+              console.log(err);
+          } else {
+            res.send(playlists);
+          }
+      });
+  });
