@@ -93,7 +93,7 @@ function BrowseView(props) {
       <SongDiv>
         {playlist.map((song) => {
           return (
-            <Song name={song.name} artist={song.author} time = {song.length} type="Browse" />
+            <Song name={song.name} artist={song.author} time = {song.length} Browse = {true} />
           );
         })}
       </SongDiv>
