@@ -8,6 +8,8 @@ import QueueMusicIcon from "@material-ui/icons/QueueMusic";
 import AddIcon from "@material-ui/icons/Add";
 import { Button } from "react-materialize";
 import Modal from "react-modal";
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 
 import test from "../data/test.json";
 
@@ -50,6 +52,15 @@ const StyledHeart = styled(HeartIcon)`
 `;
 
 const StyledPlaylistAdd = styled(PlaylistAddIcon)`
+  color: ${"white"};
+
+  &:hover {
+    color: ${"blue"};
+  }
+}
+`;
+
+const StyledTrashCan = styled(TrashIcon)`
   color: ${"white"};
 
   &:hover {
@@ -123,10 +134,20 @@ function Song(props) {
   const { name, artist, time, playlist } = props;
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   function toggleModal() {
     setModalIsOpen(!modalIsOpen);
   }
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Container>
@@ -144,6 +165,17 @@ function Song(props) {
         })}
       </Modal>
 
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem>Confirm</MenuItem>
+        <MenuItem onClick = {() => handleClose()}>Cancel</MenuItem>
+      </Menu>
+
       <StyledAvatar variant="rounded"> L </StyledAvatar>
       <SongInfo>
         <SongName>{name}</SongName>
@@ -156,21 +188,24 @@ function Song(props) {
           <AddIcon />
         </SongAction>
       ) : (
-        View(props, toggleModal)
+        View(props, toggleModal, handleClick)
       )}
     </Container>
   );
 }
 
-function View(props, toggleModal) {
+function View(props, toggleModal, handleClick) {
   return (
     <SongAction>
       <StyledHeart></StyledHeart>
       <StyledQueue />
-      {!props.Browse ? (
+      {props.Browse ? (
         <StyledPlaylistAdd onClick={() => toggleModal()} />
       ) : (
-        <TrashIcon />
+        <StyledTrashCan aria-label="more"
+                   aria-controls="long-menu"
+                   aria-haspopup="true"
+                   onClick={(e) => handleClick(e)} />
       )}
     </SongAction>
   );

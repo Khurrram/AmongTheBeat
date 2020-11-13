@@ -10,6 +10,10 @@ const passport = require("passport"),
 app.use(express.json());
 app.use(cors());
 
+const SpotifyWebApi = require('spotify-web-api-node');
+const spotifyApi = new SpotifyWebApi();
+
+
 const db = require("./config/keys.js").mongoURI;
 
 mongoose
@@ -44,6 +48,9 @@ passport.use(
             console.log("accessToken: " + accessToken);
             console.log("refreshToken: " + refreshToken);
             console.log("expires_in: " + expires_in);
+
+            
+            spotifyApi.setAccessToken(accessToken);
           return done(null, profile);
         });
       }
@@ -91,6 +98,19 @@ app.get(
     res.redirect("http://localhost:3000/home");
   }
 );
+
+app.post("/api/browse", (req, res) => {
+
+  spotifyApi.getNewReleases({ limit : 15, offset: 0, country: 'US' })
+    .then(function(data) {
+      console.log(data.body);
+        res.send(data.body);
+        done();
+      }, function(err) {
+        console.log("Something went wrong!", err);
+      });
+});
+
 
 app.post("/api/register", (req, res) => {
   userModel.findOne(
@@ -149,7 +169,6 @@ app.post("/api/usersList", (req, res) => {
   }
 });
 
-
 app.post("/api/user/ban", (req, res) => {
   let id = req.body.id;
   userModel.findOneAndUpdate({ _id: id }, { accountType: -1 }, function (
@@ -172,7 +191,6 @@ app.post("/api/user/unban", (req, res) => {
 
 //POST for removing users in Admin
 
-
 app.post("/api/user/remove", (req, res) => {
   let id = req.body.id;
   userModel.findOneAndRemove({ _id: id }, function (err, user) {
@@ -185,39 +203,41 @@ app.post("/api/user/remove", (req, res) => {
 app.post("/api/user/changepass", (req, res) => {
   let id = req.body.id;
   let updatedpass = req.body.updatedpass;
-  userModel.findOneAndUpdate({ _id: id, password: oldpass }, { password: updatedpass }, function (
-    err,
-    user
-  ) {
-    if (err) {
+  userModel.findOneAndUpdate(
+    { _id: id, password: oldpass },
+    { password: updatedpass },
+    function (err, user) {
+      if (err) {
         console.log(err);
-        res.send("invalid pass")
-    } else {
+        res.send("invalid pass");
+      } else {
         res.send("Password updated");
+      }
     }
-  });
+  );
 });
 
 //POST for creating new playlist
 app.post("/api/playlist/createPlaylist", (req, res) => {
-    let owner_id = req.body.id;
-    let playlist_id = new mongoose.Types.ObjectId();
-    playlistModel.create({
-        _id: playlist_id,
-        playlist_name: "Untitled",
-        owner_id: owner_id,
-        private: 0
-      });
+  let owner_id = req.body.id;
+  let playlist_id = new mongoose.Types.ObjectId();
+  playlistModel.create({
+    _id: playlist_id,
+    playlist_name: "Untitled",
+    owner_id: owner_id,
+    private: 0,
+  });
 
-      userModel.findOneAndUpdate({ _id: owner_id}, { $push: {playlists : playlist_id}}, function (
-        err,
-        user
-      ) {
-        if (err) {
-            console.log(err);
-        } 
-      });
-    res.send(playlist_id);
+  userModel.findOneAndUpdate(
+    { _id: owner_id },
+    { $push: { playlists: playlist_id } },
+    function (err, user) {
+      if (err) {
+        console.log(err);
+      }
+    }
+  );
+  res.send(playlist_id);
 });
 
 //POST for editing playlist name
