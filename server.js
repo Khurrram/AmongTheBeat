@@ -4,8 +4,14 @@ var cors = require("cors");
 const userModel = require("./models/userModel.js");
 const playlistModel = require("./models/playlistModel.js");
 const app = express();
+<<<<<<< HEAD
 const passport = require("passport"),
   SpotifyStrategy = require("passport-spotify").Strategy;
+=======
+// var passport = require("passport"),
+//   SpotifyStrategy = require("passport-spotify").Strategy;
+// require("dotenv").config();
+>>>>>>> master
 
 app.use(express.json());
 app.use(cors());
@@ -35,6 +41,7 @@ passport.serializeUser(function (user, done) {
     done(null, obj);
   });
 
+<<<<<<< HEAD
 passport.use(
     new SpotifyStrategy(
       {
@@ -106,6 +113,42 @@ app.get(
     res.redirect("http://localhost:3000/home");
   }
 );
+=======
+// passport.use(
+//   new SpotifyStrategy(
+//     {
+//       clientID: process.env.CLIENT_ID,
+//       clientSecret: process.env.CLIENT_SECRET,
+//       callbackURL: "http://localhost:" + port + "/auth/spotify/callback",
+//     },
+//     function (accessToken, refreshToken, expires_in, profile, done) {}
+//   )
+// );
+
+// app.get("/auth/spotify", passport.authenticate("spotify"));
+
+// app.get(
+//   "/auth/spotify/callback",
+//   passport.authenticate("spotify", {
+//     failureRedirect: "/login",
+//     scope: [
+//       "user-read-email",
+//       "user-read-private",
+//       "user-read-recently-played",
+//       "user-read-playback-state",
+//       "user-top-read",
+//       "user-read-currently-playing",
+//       "user-follow-read",
+//       "user-library-read",
+//       "streaming",
+//     ],
+//   }),
+//   function (req, res) {
+//     // Successful authentication, redirect home.
+//     res.redirect("/");
+//   }
+// );
+>>>>>>> master
 
 app.post("/api/browse", (req, res) => {
 
@@ -146,9 +189,19 @@ app.post("/api/register", (req, res) => {
   );
 });
 
+<<<<<<< HEAD
 
 app.post("/api/login", (req, res) => {
     // console.log(req.body.username);
+=======
+//GET and POST for Logging In
+// app.get("/api/login", (req, res) => {
+//   console.log("GET REQUEST completed");
+// });
+
+app.post("/api/login", (req, res) => {
+  console.log(req.body.username);
+>>>>>>> master
   userModel.findOne(
     { username: req.body.username, password: req.body.password },
     function (err, user) {
@@ -232,6 +285,7 @@ app.post("/api/user/changepass", (req, res) => {
   });
 });
 
+<<<<<<< HEAD
 //POST for creating new playlist
 app.post("/api/playlist/createPlaylist", (req, res) => {
     let owner_id = req.body.id;
@@ -256,6 +310,10 @@ app.post("/api/playlist/createPlaylist", (req, res) => {
 
 //POST for editing playlist name
 app.post("/api/playlist/editname", (req, res) => {
+=======
+app.post("/api/user/getusername", (req, res) => {
+  console.log("id: " + req.body.id);
+>>>>>>> master
   let id = req.body.id;
   let updatedname = req.body.updatedname;
   console.log("updatedname: " + updatedname);
