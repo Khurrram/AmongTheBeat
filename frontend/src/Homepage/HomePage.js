@@ -96,7 +96,7 @@ function HomePage() {
   const [currentplaylist, setPlaylist] = useState();
   let viewPage;
   if (page === 0) {
-    viewPage = <BrowseView />;
+    viewPage = <BrowseView session = {session}/>;
   } else if (page === 1) {
     viewPage = <PlayListView />;
   } else {

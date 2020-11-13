@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import Song from "./Song";
 import SettingIcon from "@material-ui/icons/Settings";
@@ -6,6 +7,8 @@ import Button from "@material-ui/core/Button";
 import SearchBar from "material-ui-search-bar";
 import { Search } from "@material-ui/icons";
 import testplay from '../data/testsongs.json'
+import axios from "axios";
+import { session } from "passport";
 
 
 const StyledDiv = styled.div`
@@ -70,11 +73,29 @@ const SongDiv = styled.div`
   overflow-y: auto;
 `;
 
-
 function BrowseView(props) {
+  const [currPlay, setcurrPlay] = useState([]);
+  const [load, setLoad] = useState(false);
+  const [filler, setFiller] = useState(false);
+
   let { playlist, username } = props;
   playlist = testplay.songs; // TESTING PURPOSES
 
+  let data = {id: session.id}
+  
+  useEffect(() =>
+  {
+    const fetchData = async () =>
+    {
+      setLoad(true);
+      const result = await axios.post("http://localhost:5000/api/browse", data);
+      setcurrPlay(result.data);
+      setLoad(false);
+    }
+    fetchData();
+  }, []);
+
+  console.log(currPlay);
   return (
     <StyledDiv>
       
@@ -91,11 +112,29 @@ function BrowseView(props) {
         <hr />
       </span>
       <SongDiv>
-        {playlist.map((song) => {
-          return (
-            <Song name={song.name} artist={song.author} time = {song.length} Browse = {true} />
-          );
-        })}
+        {load ? 
+        <p>Loading...</p>
+        :
+        (
+          currPlay.map((album) => {
+            // if(album.album_type === "single")
+            // {
+            //   let authors= "";
+  
+            //   for( var i = 0; i < album.artists.length; i++)
+            //   {
+            //     authors += album.artists[i].name + ", ";
+            //   }
+  
+            //   return (
+            //     <Song name={album.name} artist={authors} images = {album.images} Browse = {true} />
+            //   );
+            // }
+          <p>a</p>
+
+          })
+        )}
+  
       </SongDiv>
     </StyledDiv>
   );

@@ -10,6 +10,9 @@ const passport = require("passport"),
 app.use(express.json());
 app.use(cors());
 
+const SpotifyWebApi = require('spotify-web-api-node');
+const spotifyApi = new SpotifyWebApi();
+
 const db = require("./config/keys.js").mongoURI;
 
 mongoose
@@ -21,6 +24,8 @@ const port = process.env.PORT || 5000;
 mongoose.set('useFindAndModify', false);
 app.listen(port, () => console.log(`Server started on port ${port}`));
 var authCallbackPath = "/auth/spotify/callback";
+
+var accessTokenv;
 
 passport.serializeUser(function (user, done) {
     done(null, user);
@@ -42,6 +47,9 @@ passport.use(
         process.nextTick(function () {
             console.log(profile);
             console.log("accessToken: " + accessToken);
+
+            spotifyApi.setAccessToken(accessToken);
+
             console.log("refreshToken: " + refreshToken);
             console.log("expires_in: " + expires_in);
           // To keep the example simple, the user's spotify profile is returned to
@@ -53,6 +61,7 @@ passport.use(
       }
     )
   );
+
 
   app.use(passport.initialize());
   app.use(passport.session());
@@ -97,6 +106,16 @@ app.get(
     res.redirect("http://localhost:3000/home");
   }
 );
+
+app.post("/api/browse", (req, res) => {
+
+    spotifyApi.getNewReleases({ limit : 15, offset: 0, country: 'US' })
+      .then(function(data) {
+          res.send(data.body);
+        }, function(err) {
+          console.log("Something went wrong!", err);
+        });
+});
 
 
 // function ensureAuthenticated(req, res, next) {
