@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+
+import React, {useState, useEffect, Suspense} from "react";
 import styled from "styled-components";
 import Song from "./Song";
 import SettingIcon from "@material-ui/icons/Settings";
@@ -6,6 +7,8 @@ import Button from "@material-ui/core/Button";
 import SearchBar from "material-ui-search-bar";
 import { Search } from "@material-ui/icons";
 import testplay from '../data/testsongs.json'
+import axios from "axios";
+import { session } from "passport";
 
 
 const StyledDiv = styled.div`
@@ -70,10 +73,44 @@ const SongDiv = styled.div`
   overflow-y: auto;
 `;
 
-
 function BrowseView(props) {
+  const [currPlay, setcurrPlay] = useState();
+  const [load, setLoad] = useState(false);
+  const [filler, setFiller] = useState(false);
+
   let { playlist, username } = props;
   playlist = testplay.songs; // TESTING PURPOSES
+
+  let data = {id: session.id}
+  const fetchData1 = async () =>
+    {
+      setLoad(true);
+      const result = await axios.post("http://localhost:5000/api/browse", data);
+      console.log("IN HERE");
+      setcurrPlay(result.data);
+      setLoad(false);
+    }
+
+    async function clicklol() {
+      let a =  await fetchData1();
+      console.log(a);
+    }
+  
+  useEffect(() =>
+  {
+    const fetchData = async () =>
+    {
+      setLoad(true);
+      const result = await axios.post("http://localhost:5000/api/browse", data);
+      console.log("IN HERE");
+      setcurrPlay(result.data);
+      // console.log("end end end  "+JSON.parse(result.data));
+      console.log("end end end  "+JSON.stringify(result.data));
+      setLoad(false);
+      return result.data;
+    }
+    fetchData().then(u => {console.log("u  "+ JSON.stringify(u));setcurrPlay(u)});
+  }, []);
 
   return (
     <StyledDiv>
@@ -84,21 +121,53 @@ function BrowseView(props) {
         <StyledSearch />
       </span>
       <StyledSpan>
-        <Title>Title</Title>
+        <Title onClick={()=>{clicklol()}}>Title</Title>
         {username ? "" : <Artist>Artist</Artist>}
       </StyledSpan>
       <span>
         <hr />
       </span>
       <SongDiv>
-        {playlist.map((song) => {
-          return (
-            <Song name={song.name} artist={song.author} time = {song.length} Browse = {true} />
-          );
-        })}
+        {/* <Suspense><ExtraDiv testing={currPlay}/></Suspense> */}
+        
+        {currPlay ? 
+        currPlay.albums.items.map((album)=>{
+          if(album.album_type === "single")
+              {
+                let authors= ""; 
+
+                
+                for( var i = 0; i < album.artists.length; i++)
+                {
+                  if(i === album.artists.length-1){authors += album.artists[i].name;}
+                  else{authors += album.artists[i].name + ", ";}
+                }
+
+                return (
+                  <Song name={album.name} artist={authors} images = {album.images} Browse = {true} />
+                );
+              }
+        }
+        )
+        :
+        ( <p>Loading...</p>
+        )}
+  
       </SongDiv>
     </StyledDiv>
   );
+}
+
+
+function ExtraDiv(props) {
+
+  useEffect(()=>{
+    console.log("extradiv: "+JSON.stringify(props.currPlay));
+  },[])
+
+  return(<div>
+    extra div
+  </div>);
 }
 
 export default BrowseView;

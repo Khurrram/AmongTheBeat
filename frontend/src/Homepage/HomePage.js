@@ -97,7 +97,7 @@ function HomePage() {
 
   let viewPage;
   if (page === 0) {
-    viewPage = <BrowseView />;
+    viewPage = <BrowseView session = {session}/>;
   } else if (page === 1) {
     console.log(currentplaylist.playlist_name);
     viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0}/>;

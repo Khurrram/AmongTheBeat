@@ -10,6 +10,10 @@ const passport = require("passport"),
 app.use(express.json());
 app.use(cors());
 
+const SpotifyWebApi = require('spotify-web-api-node');
+const spotifyApi = new SpotifyWebApi();
+
+
 const db = require("./config/keys.js").mongoURI;
 
 mongoose
@@ -44,6 +48,9 @@ passport.use(
             console.log("accessToken: " + accessToken);
             console.log("refreshToken: " + refreshToken);
             console.log("expires_in: " + expires_in);
+
+            
+            spotifyApi.setAccessToken(accessToken);
           return done(null, profile);
         });
       }
@@ -91,6 +98,19 @@ app.get(
     res.redirect("http://localhost:3000/home");
   }
 );
+
+app.post("/api/browse", (req, res) => {
+
+  spotifyApi.getNewReleases({ limit : 15, offset: 0, country: 'US' })
+    .then(function(data) {
+      console.log(data.body);
+        res.send(data.body);
+        done();
+      }, function(err) {
+        console.log("Something went wrong!", err);
+      });
+});
+
 
 app.post("/api/register", (req, res) => {
   userModel.findOne(

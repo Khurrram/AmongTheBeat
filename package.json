@@ -29,7 +29,8 @@
     "passport": "^0.4.1",
     "passport-spotify": "^1.1.0",
     "react-materialize": "^3.9.3",
-    "react-modal": "^3.11.2"
+    "react-modal": "^3.11.2",
+    "spotify-web-api-node": "^5.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
