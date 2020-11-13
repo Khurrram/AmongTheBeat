@@ -5,12 +5,17 @@ const userModel = require("./models/userModel.js");
 const playlistModel = require("./models/playlistModel.js");
 const app = express();
 <<<<<<< HEAD
+<<<<<<< HEAD
 const passport = require("passport"),
   SpotifyStrategy = require("passport-spotify").Strategy;
 =======
 // var passport = require("passport"),
 //   SpotifyStrategy = require("passport-spotify").Strategy;
 // require("dotenv").config();
+>>>>>>> master
+=======
+const passport = require("passport"),
+  SpotifyStrategy = require("passport-spotify").Strategy;
 >>>>>>> master
 
 app.use(express.json());
@@ -27,9 +32,10 @@ mongoose
   .catch((err) => console.log(err));
 
 const port = process.env.PORT || 5000;
+
 mongoose.set('useFindAndModify', false);
+
 app.listen(port, () => console.log(`Server started on port ${port}`));
-var authCallbackPath = "/auth/spotify/callback";
 
 var accessTokenv;
 
@@ -42,6 +48,9 @@ passport.serializeUser(function (user, done) {
   });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> master
 passport.use(
     new SpotifyStrategy(
       {
@@ -50,7 +59,6 @@ passport.use(
         callbackURL: "http://localhost:5000/auth/spotify/callback"
       },
       function (accessToken, refreshToken, expires_in, profile, done) {
-        // asynchronous verification, for effect...
         process.nextTick(function () {
             console.log(profile);
             console.log("accessToken: " + accessToken);
@@ -59,10 +67,6 @@ passport.use(
 
             console.log("refreshToken: " + refreshToken);
             console.log("expires_in: " + expires_in);
-          // To keep the example simple, the user's spotify profile is returned to
-          // represent the logged-in user. In a typical application, you would want
-          // to associate the spotify account with a user record in your database,
-          // and return that user instead.
           return done(null, profile);
         });
       }
@@ -108,11 +112,10 @@ app.get(
     ],
   }),
   function (req, res) {
-    // Successful authentication, redirect home.
-    // res.send(req);
     res.redirect("http://localhost:3000/home");
   }
 );
+<<<<<<< HEAD
 =======
 // passport.use(
 //   new SpotifyStrategy(
@@ -167,6 +170,8 @@ app.post("/api/browse", (req, res) => {
 //   }
 //   res.redirect("/");
 // }
+=======
+>>>>>>> master
 
 app.post("/api/register", (req, res) => {
   userModel.findOne(
@@ -190,6 +195,7 @@ app.post("/api/register", (req, res) => {
 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 app.post("/api/login", (req, res) => {
     // console.log(req.body.username);
@@ -201,6 +207,11 @@ app.post("/api/login", (req, res) => {
 
 app.post("/api/login", (req, res) => {
   console.log(req.body.username);
+>>>>>>> master
+=======
+
+app.post("/api/login", (req, res) => {
+    // console.log(req.body.username);
 >>>>>>> master
   userModel.findOne(
     { username: req.body.username, password: req.body.password },
@@ -236,7 +247,6 @@ app.post("/api/usersList", (req, res) => {
   }
 });
 
-
 app.post("/api/user/ban", (req, res) => {
   let id = req.body.id;
   userModel.findOneAndUpdate({ _id: id }, { accountType: -1 }, function (
@@ -259,7 +269,6 @@ app.post("/api/user/unban", (req, res) => {
 
 //POST for removing users in Admin
 
-
 app.post("/api/user/remove", (req, res) => {
   let id = req.body.id;
   userModel.findOneAndRemove({ _id: id }, function (err, user) {
@@ -272,47 +281,55 @@ app.post("/api/user/remove", (req, res) => {
 app.post("/api/user/changepass", (req, res) => {
   let id = req.body.id;
   let updatedpass = req.body.updatedpass;
-  userModel.findOneAndUpdate({ _id: id, password: oldpass }, { password: updatedpass }, function (
-    err,
-    user
-  ) {
-    if (err) {
+  userModel.findOneAndUpdate(
+    { _id: id, password: oldpass },
+    { password: updatedpass },
+    function (err, user) {
+      if (err) {
         console.log(err);
-        res.send("invalid pass")
-    } else {
+        res.send("invalid pass");
+      } else {
         res.send("Password updated");
+      }
     }
-  });
+  );
 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> master
 //POST for creating new playlist
 app.post("/api/playlist/createPlaylist", (req, res) => {
-    let owner_id = req.body.id;
-    let playlist_id = new mongoose.Types.ObjectId();
-    playlistModel.create({
-        _id: playlist_id,
-        playlist_name: "Untitled",
-        owner_id: owner_id,
-        private: 0
-      });
+  let owner_id = req.body.id;
+  let playlist_id = new mongoose.Types.ObjectId();
+  playlistModel.create({
+    _id: playlist_id,
+    playlist_name: "Untitled",
+    owner_id: owner_id,
+    private: 0,
+  });
 
-      userModel.findOneAndUpdate({ _id: owner_id}, { $push: {playlists : playlist_id}}, function (
-        err,
-        user
-      ) {
-        if (err) {
-            console.log(err);
-        } 
-      });
-    res.send(playlist_id);
+  userModel.findOneAndUpdate(
+    { _id: owner_id },
+    { $push: { playlists: playlist_id } },
+    function (err, user) {
+      if (err) {
+        console.log(err);
+      }
+    }
+  );
+  res.send(playlist_id);
 });
 
 //POST for editing playlist name
 app.post("/api/playlist/editname", (req, res) => {
+<<<<<<< HEAD
 =======
 app.post("/api/user/getusername", (req, res) => {
   console.log("id: " + req.body.id);
+>>>>>>> master
+=======
 >>>>>>> master
   let id = req.body.id;
   let updatedname = req.body.updatedname;
@@ -331,6 +348,43 @@ app.post("/api/user/getusername", (req, res) => {
   });
 });
 
+//POST for deleting playlist
+app.post("/api/playlist/delete", (req, res) => {
+  let playlist_id = req.body.id;
+  let owner_id = req.body.owner;
+
+  // playlistModel.findOneAndRemove({ _id: playlist_id }, function (err, playlist) {
+  //   console.log("Delete playlist from playlists collection.");
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  // });
+
+  console.log("owner_id: " + owner_id);
+  console.log("playlist id: " + playlist_id);
+  userModel.findById({ _id: owner_id}, function (
+    err,
+    user
+  ) {
+    console.log(user.playlists);
+    const playlists = user.playlists;
+    var index = playlists.indexOf(playlist_id+"");
+    playlists.splice(index,1)
+    userModel.findByIdAndUpdate({ _id: owner_id}, { playlists: playlists }, function (
+      err,
+      playlist
+    ) {
+      if (err) {
+          console.log(err);
+      } else {
+        console.log("Playlist deleted");
+      }
+    });
+    if (err) {
+        console.log(err);
+    } 
+  });
+})
 
 //POST for getting playlists of a specific user
 app.post("/api/playlist/getplaylists", (req, res) => {

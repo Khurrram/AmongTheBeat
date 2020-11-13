@@ -92,13 +92,15 @@ function HomePage() {
   const [page, setPage] = useState(2);
   const [settings, setSettings] = useState(false);
   const [username, setUser] = useState("");
-  const value = { state: { settings }, actions: { setPage, setSettings } };
-  const [currentplaylist, setPlaylist] = useState();
+  const [currentplaylist, setPlaylist] = useState({});
+  const value = { state: { settings }, actions: { setPage, setSettings, setPlaylist } };
+
   let viewPage;
   if (page === 0) {
     viewPage = <BrowseView session = {session}/>;
   } else if (page === 1) {
-    viewPage = <PlayListView />;
+    console.log(currentplaylist.playlist_name);
+    viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0}/>;
   } else {
     setPage(0);
     viewPage = <BrowseView />;
@@ -107,7 +109,7 @@ function HomePage() {
   return (
     <ViewPage.Provider value={value}>
       <div className="homepage1">
-        <HomeSideBar currentplaylist={currentplaylist} />
+        <HomeSideBar />
         <ContentWindow>
           <Navbar>
             <StyledAvatar>
