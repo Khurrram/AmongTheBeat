@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import Avatar from "@material-ui/core/Avatar";
 import HeartIcon from "@material-ui/icons/Favorite";
@@ -12,6 +12,7 @@ import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
+import { ViewPage } from "./HomePage";
 
 import "./Song.css";
 
@@ -131,13 +132,13 @@ const ModalContent = styled.div`
 Modal.setAppElement("#root");
 
 function Song(props) {
-  const { name, artist, time, playlist, uri } = props;
+  const { name, artist, time, playlist, uri, id, playlist_id, update } = props;
   const session = getSessionCookie();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [playlists, setPlaylists] = useState([]);
   const [currSong, setCurrSong] = useState();
-  
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const { state, actions } = useContext(ViewPage);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   function toggleModal() {
     setModalIsOpen(!modalIsOpen);
@@ -151,12 +152,13 @@ function Song(props) {
       setCurrSong(res.data.song);
       console.log(res.data);
     })
-    .catch((err) => console.log(err.data));
+    .catch((err) => console.log(err));
   }
   }
 
-  const handleClick = (event) => {
+  function handleClick(event){
     setAnchorEl(event.currentTarget);
+    // console.log(id);
   };
 
   const handleClose = () => {
@@ -165,16 +167,27 @@ function Song(props) {
 
   function addtoPlaylist(e, playlistid, uri) {
     e.preventDefault();
-    console.log(playlistid);
     let data = { id: playlistid, song_uri: uri}
     axios
     .post("http://localhost:5000/api/song/addtoplaylist", data)
     .then(function (res) {
-      // setPlaylists(res.data);
-      console.log("added to playlist: " + res.data);
       setModalIsOpen(!modalIsOpen);
     })
-    .catch((err) => console.log(err.data));
+    .catch((err) => console.log(err));
+  }
+
+  function removeSong(e, song) {
+    e.preventDefault();
+    let data = { id: playlist_id, song: song}
+    axios
+    .post("http://localhost:5000/api/song/removefromplaylist", data)
+    .then(function (res) {
+      actions.setPlaylist(res.data);
+      actions.setPage(1);
+      console.log("song is removed");
+      setAnchorEl(null);
+    })
+    .catch((err) => console.log(err));
   }
 
   return (
@@ -200,7 +213,7 @@ function Song(props) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem>Confirm</MenuItem>
+        <MenuItem onClick={(e) => removeSong(e, id)}>Confirm</MenuItem>
         <MenuItem onClick = {() => handleClose()}>Cancel</MenuItem>
       </Menu>
 
@@ -224,7 +237,7 @@ function Song(props) {
 
 function View(props, toggleModal, handleClick) {
   return (
-    <SongAction>
+    <SongAction >
       <StyledHeart></StyledHeart>
       <StyledQueue />
       {props.Browse ? (
@@ -233,7 +246,8 @@ function View(props, toggleModal, handleClick) {
         <StyledTrashCan aria-label="more"
                    aria-controls="long-menu"
                    aria-haspopup="true"
-                   onClick={(e) => handleClick(e)} />
+                   onClick={(e) => handleClick(e)}
+                    />
       )}
     </SongAction>
   );
