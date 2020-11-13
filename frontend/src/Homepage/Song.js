@@ -13,8 +13,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
 
-import test from "../data/test.json";
-
 import "./Song.css";
 
 const Container = styled.div`

@@ -393,6 +393,24 @@ app.post("/api/song/addtoplaylist", (req, res) => {
   });
 });
 
+app.post("/api/song/updateplaylist", (req, res) => {
+  let playlist_id = req.body.id;
+  let newsong_ids= req.body.songs_ids;
+
+    playlistModel.findOneAndUpdate(
+      { _id: playlist_id },
+      {songs_ids: newsong_ids},
+      function (err, playlist) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send(playlist);
+        }
+        console.log(playlist);
+      }
+    );
+});
+
 
 //POST for adding song to playlist
 app.post("/api/playlist/getsongs", (req, res) => {
