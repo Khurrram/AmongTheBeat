@@ -18,7 +18,7 @@ mongoose
   .catch((err) => console.log(err));
 
 const port = process.env.PORT || 5000;
-
+mongoose.set('useFindAndModify', false);
 app.listen(port, () => console.log(`Server started on port ${port}`));
 var authCallbackPath = "/auth/spotify/callback";
 
@@ -97,6 +97,7 @@ app.get(
     res.redirect("http://localhost:3000/home");
   }
 );
+
 
 // function ensureAuthenticated(req, res, next) {
 //   if (req.isAuthenticated()) {
@@ -232,6 +233,25 @@ app.post("/api/playlist/createPlaylist", (req, res) => {
         } 
       });
     res.send(playlist_id);
+});
+
+//POST for editing playlist name
+app.post("/api/playlist/editname", (req, res) => {
+  let id = req.body.id;
+  let updatedname = req.body.updatedname;
+  console.log("updatedname: " + updatedname);
+  console.log("editname is called");
+  playlistModel.findByIdAndUpdate({ _id: id}, { playlist_name: updatedname }, function (
+    err,
+    playlist
+  ) {
+    if (err) {
+        console.log(err);
+    } else {
+      console.log("Name processed");
+        res.send("Name updated");
+    }
+  });
 });
 
 

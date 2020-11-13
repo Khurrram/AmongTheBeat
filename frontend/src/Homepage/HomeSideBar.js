@@ -7,6 +7,7 @@ import test from "../data/test.json";
 import { ViewPage } from "./HomePage";
 import { Add } from "@material-ui/icons";
 import { TextField } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 import {
   ProSidebar as Sidebar,
   Menu,
@@ -38,36 +39,97 @@ const StyledSearh = styled(SearchBar)`
   margin-right: 1em;
 `;
 
-function HomeSideBar(props) {
-  const { state, actions } = useContext(ViewPage);
+const DisabledTextName = withStyles({
+  root: {
+    "& .MuiInputBase-root.Mui-disabled": {
+      color: "#BDBDBD" // (default alpha is 0.38)
+    },
+    "& .MuiInput-underline.Mui-disabled:before" : {
+      borderBottomStyle: 'none'
+    },
+    "& .MuiInputBase-root" : {
+      color: "#EE276A"
+    }
+  }
+})(TextField);
+
+class HomeSideBar extends React.Component {
+  // const { state, actions } = useContext(ViewPage);
   // const [ playlists, setPlaylists] = useState([]);
-  const playlists = props.playlists;
-  const toggle = false;
-  const [disabled, setDisabled] = useState(true);
-  const session = getSessionCookie();
+
+  constructor(props) {
+    super(props);
+    this.state = {session : '', toggle : true, playlists: [], enabled : ''};
+    this.createPlaylist = this.createPlaylist.bind(this);
+    this.doubleclicked = this.doubleclicked.bind(this);
+    this.onblurHandler = this.onblurHandler.bind(this);
+  }
+  
+  // toggle = false;
+  // const [disabled, setDisabled] = useState(true);
+  // const session = getSessionCookie();
   // var playlists = [];
 
-  let data = { id: session.id };
-
-  function createPlaylist(e) {
+  createPlaylist(e) {
     e.preventDefault();
-
+    let data = { id: this.state.session.id };
+    let self = this;
     axios
     .post("http://localhost:5000/api/playlist/createPlaylist", data)
     .then(function (res) {
-      let id = res.data;
       console.log("res: " + res.data);
-      // toggle = !toggle;
+      self.setState({toggle : true});
     })
     .catch((err) => console.log(err));
-
   }
 
-  function changeName(e) {
+  componentDidMount() {
+    console.log("HomePage Side Bar is mounted");
+    let session = getSessionCookie();
+    this.setState({session: session});
+    console.log("session in homepage_k: " + this.state.session);
+    let data = {id: session.id};
+    let self = this;
+    axios
+    .post("http://localhost:5000/api/playlist/getplaylists", data)
+    .then(function (res) {
+      self.setState({playlists : res.data, toggle : false});
+      console.log("Playlists: " + self.state.playlists);
+    })
+    .catch((err) => console.log(err));
+  }
+
+  shouldComponentUpdate() {
+    console.log("shouldComponent")
+    return this.state.toggle;
+  }
+
+  doubleclicked(e, playlist_id) {
     e.preventDefault();
-
+    this.setState({enabled: playlist_id, toggle: true});
+    console.log("double clicked");
   }
-
+  
+  // editingName(e, playlist_id) {
+  //   e.preventDefault();
+  //   this.setState({enabled: '', toggle: true});
+  // }
+  
+  onblurHandler(e, playlist_id) {
+    e.preventDefault();
+    let data = {id : playlist_id, updatedname: e.target.value};
+    let self = this;
+    axios
+    .post("http://localhost:5000/api/playlist/editname", data)
+    .then(function (res) {
+      self.setState({enabled: '', toggle: true});
+    })
+    .catch((err) => console.log(err));
+  }
+  
+  render() {
+    const playlists = this.state.playlists;
+    const enabled = this.state.enabled;
   return (
     <Sidebar>
       <SidebarHeader>
@@ -79,9 +141,9 @@ function HomeSideBar(props) {
         <Menu>
           <MenuItem
             id="fontsize"
-            onClick={() => {
-              actions.setPage(0);
-            }}
+            // onClick={() => {
+            //   actions.setPage(0);
+            // }}
           >
             Browse
           </MenuItem>
@@ -89,9 +151,9 @@ function HomeSideBar(props) {
         </Menu>
         <hr width="90%" color="black"></hr>
         <Menu>
-          <MenuItem id="fontlarge">Playlists <Add onClick={(e) => createPlaylist(e)} /></MenuItem>
+          <MenuItem id="fontlarge">Playlists <Add onClick={(e) => this.createPlaylist(e)} /></MenuItem>
           {playlists.map((playlist) => {
-            // let path = "/playlist/" + playlist.name;
+            let path = "http://localhost:5000/playlist/" + playlist.name;
             return (
               <MenuItem >
                 {/* <Link
@@ -105,14 +167,19 @@ function HomeSideBar(props) {
                 > */}
                   {" "}
                   {console.log(playlist)}
-                <TextField
+                  {/* <Button href={path} > */}
+                <DisabledTextName
                 variant="standard"
                 fullWidth
-                onDoubleClick={setDisabled(false)} 
-                onBlur={setDisabled(true)}
-                >
-                  {playlist.playlist_name}{" "}
-                </TextField>
+                disabled={enabled !== playlist._id}
+                onDoubleClick={(e) => this.doubleclicked(e, playlist._id)} 
+                onClick={console.log("on click")}
+                onBlur={(e) => this.onblurHandler(e, playlist._id)}
+                defaultValue={playlist.playlist_name}
+                />
+                {/* </Button> */}
+                  {/* {playlist.playlist_name}{" "} */}
+                {/* </TextField> */}
                 {/* </Link> */}
               </MenuItem>
             );
@@ -124,6 +191,7 @@ function HomeSideBar(props) {
       </SidebarFooter>
     </Sidebar>
   );
+        }
 }
 
 export default HomeSideBar;
