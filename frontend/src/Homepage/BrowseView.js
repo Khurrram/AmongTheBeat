@@ -93,6 +93,7 @@ function BrowseView(props) {
       setLoad(false);
     }
     fetchData();
+    console.log(currPlay);
   }, []);
 
   console.log(currPlay);
@@ -130,7 +131,7 @@ function BrowseView(props) {
             //     <Song name={album.name} artist={authors} images = {album.images} Browse = {true} />
             //   );
             // }
-          <p>a</p>
+          console.log(album);
 
           })
         )}

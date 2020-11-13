@@ -4,25 +4,15 @@ var cors = require("cors");
 const userModel = require("./models/userModel.js");
 const playlistModel = require("./models/playlistModel.js");
 const app = express();
-<<<<<<< HEAD
-<<<<<<< HEAD
 const passport = require("passport"),
   SpotifyStrategy = require("passport-spotify").Strategy;
-=======
-// var passport = require("passport"),
-//   SpotifyStrategy = require("passport-spotify").Strategy;
-// require("dotenv").config();
->>>>>>> master
-=======
-const passport = require("passport"),
-  SpotifyStrategy = require("passport-spotify").Strategy;
->>>>>>> master
 
 app.use(express.json());
 app.use(cors());
 
 const SpotifyWebApi = require('spotify-web-api-node');
 const spotifyApi = new SpotifyWebApi();
+
 
 const db = require("./config/keys.js").mongoURI;
 
@@ -37,8 +27,6 @@ mongoose.set('useFindAndModify', false);
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
 
-var accessTokenv;
-
 passport.serializeUser(function (user, done) {
     done(null, user);
   });
@@ -47,10 +35,6 @@ passport.serializeUser(function (user, done) {
     done(null, obj);
   });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> master
 passport.use(
     new SpotifyStrategy(
       {
@@ -62,17 +46,16 @@ passport.use(
         process.nextTick(function () {
             console.log(profile);
             console.log("accessToken: " + accessToken);
-
-            spotifyApi.setAccessToken(accessToken);
-
             console.log("refreshToken: " + refreshToken);
             console.log("expires_in: " + expires_in);
+
+            
+            spotifyApi.setAccessToken(accessToken);
           return done(null, profile);
         });
       }
     )
   );
-
 
   app.use(passport.initialize());
   app.use(passport.session());
@@ -115,63 +98,17 @@ app.get(
     res.redirect("http://localhost:3000/home");
   }
 );
-<<<<<<< HEAD
-=======
-// passport.use(
-//   new SpotifyStrategy(
-//     {
-//       clientID: process.env.CLIENT_ID,
-//       clientSecret: process.env.CLIENT_SECRET,
-//       callbackURL: "http://localhost:" + port + "/auth/spotify/callback",
-//     },
-//     function (accessToken, refreshToken, expires_in, profile, done) {}
-//   )
-// );
-
-// app.get("/auth/spotify", passport.authenticate("spotify"));
-
-// app.get(
-//   "/auth/spotify/callback",
-//   passport.authenticate("spotify", {
-//     failureRedirect: "/login",
-//     scope: [
-//       "user-read-email",
-//       "user-read-private",
-//       "user-read-recently-played",
-//       "user-read-playback-state",
-//       "user-top-read",
-//       "user-read-currently-playing",
-//       "user-follow-read",
-//       "user-library-read",
-//       "streaming",
-//     ],
-//   }),
-//   function (req, res) {
-//     // Successful authentication, redirect home.
-//     res.redirect("/");
-//   }
-// );
->>>>>>> master
 
 app.post("/api/browse", (req, res) => {
 
-    spotifyApi.getNewReleases({ limit : 15, offset: 0, country: 'US' })
-      .then(function(data) {
-          res.send(data.body);
-        }, function(err) {
-          console.log("Something went wrong!", err);
-        });
+  spotifyApi.getNewReleases({ limit : 15, offset: 0, country: 'US' })
+    .then(function(data) {
+        res.send(data.body);
+      }, function(err) {
+        console.log("Something went wrong!", err);
+      });
 });
 
-
-// function ensureAuthenticated(req, res, next) {
-//   if (req.isAuthenticated()) {
-//     return next();
-//   }
-//   res.redirect("/");
-// }
-=======
->>>>>>> master
 
 app.post("/api/register", (req, res) => {
   userModel.findOne(
@@ -194,25 +131,9 @@ app.post("/api/register", (req, res) => {
   );
 });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 app.post("/api/login", (req, res) => {
     // console.log(req.body.username);
-=======
-//GET and POST for Logging In
-// app.get("/api/login", (req, res) => {
-//   console.log("GET REQUEST completed");
-// });
-
-app.post("/api/login", (req, res) => {
-  console.log(req.body.username);
->>>>>>> master
-=======
-
-app.post("/api/login", (req, res) => {
-    // console.log(req.body.username);
->>>>>>> master
   userModel.findOne(
     { username: req.body.username, password: req.body.password },
     function (err, user) {
@@ -295,10 +216,6 @@ app.post("/api/user/changepass", (req, res) => {
   );
 });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> master
 //POST for creating new playlist
 app.post("/api/playlist/createPlaylist", (req, res) => {
   let owner_id = req.body.id;
@@ -324,13 +241,6 @@ app.post("/api/playlist/createPlaylist", (req, res) => {
 
 //POST for editing playlist name
 app.post("/api/playlist/editname", (req, res) => {
-<<<<<<< HEAD
-=======
-app.post("/api/user/getusername", (req, res) => {
-  console.log("id: " + req.body.id);
->>>>>>> master
-=======
->>>>>>> master
   let id = req.body.id;
   let updatedname = req.body.updatedname;
   console.log("updatedname: " + updatedname);
