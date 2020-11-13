@@ -347,13 +347,8 @@ function LoginBox(props) {
         console.log("res: " + res.data);
         if (res.data != "banned" && res.data != "notFound") {
           console.log("Redirecting");
-<<<<<<< HEAD
-          setSessionCookie({ id });
-          window.location = "/home";
-=======
           setSessionCookie({ id: id, username: username });
           isloggedinhandler();
->>>>>>> master
         } else {
           if (res.data == "banned") {
             setBanned(true);

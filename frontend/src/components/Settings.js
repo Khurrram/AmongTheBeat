@@ -107,7 +107,6 @@ function Settings() {
     }
   }
 
-<<<<<<< HEAD
   useEffect(() => {
       let data = {id : session.id};
       axios
@@ -126,8 +125,6 @@ function Settings() {
 
   
 
-=======
->>>>>>> master
   return (
     <CenterDiv>
       <Link to="/home">
