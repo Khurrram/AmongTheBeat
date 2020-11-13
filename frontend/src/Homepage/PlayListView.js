@@ -7,6 +7,7 @@ import axios from "axios";
 import { ViewPage } from "./HomePage";
 import { withStyles } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
+import EditIcon from '@material-ui/icons/Edit';
 import { Link, useHistory, useLocation } from "react-router-dom";
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -98,11 +99,11 @@ const DisabledTextName = withStyles({
 })(TextField);
 
 
-
 function PlayListView(props) {
   let { playlistName, playlistTime, playlist, songs } = props;
   const { state, actions } = useContext(ViewPage);
   const [editing, setEdit] = useState(false);
+
   console.log(playlist._id);
   let id = playlist._id;
   let owner = playlist.owner_id;
@@ -158,11 +159,13 @@ function PlayListView(props) {
   
   function onblurHandler(e, playlist_id) {
     e.preventDefault();
+    console.log(e.target.value);
     let data = {id : playlist_id, updatedname: e.target.value};
     axios
     .post("http://localhost:5000/api/playlist/editname", data)
     .then(function (res) {
       setEdit(false);
+      actions.setPage(1);
     })
     .catch((err) => console.log(err));
   }
@@ -174,7 +177,7 @@ function PlayListView(props) {
     axios
     .post("http://localhost:5000/api/playlist/delete", data)
     .then(function (res) {
-      console.log("Deleted playlist");
+      console.log("playlist has been deleted");
       actions.setPage(0);
     })
     .catch((err) => console.log(err));
@@ -184,17 +187,19 @@ function PlayListView(props) {
   return (
     <StyledDiv>
       <span>
-        <h1>
-              {/* <DisabledTextName
+              {editing?
+              <h1>
+              <DisabledTextName
               variant="standard"
-              fullWidth
-              disabled={editing == true}
-              onDoubleClick={(e) => doubleclicked(e, id)} 
+              // onChange={(e) => doubleclicked(e, id)} 
               onBlur={(e) => onblurHandler(e, id)}
               defaultValue={playlistName}
-              /> */}
+              />
+              </h1> : 
+              <h1>
               {playlistName}
-        </h1>
+              <EditIcon onClick={(e) => doubleclicked(e, id)}/>
+              </h1>}
         <StyledButton
           variant="contained"
           disableElevation
