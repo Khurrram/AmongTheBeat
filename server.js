@@ -45,10 +45,10 @@ passport.use(
       },
       function (accessToken, refreshToken, expires_in, profile, done) {
         process.nextTick(function () {
-            console.log(profile);
-            console.log("accessToken: " + accessToken);
-            console.log("refreshToken: " + refreshToken);
-            console.log("expires_in: " + expires_in);
+            // console.log(profile);
+            // console.log("accessToken: " + accessToken);
+            // console.log("refreshToken: " + refreshToken);
+            // console.log("expires_in: " + expires_in);
 
             
             spotifyApi.setAccessToken(accessToken);
@@ -104,7 +104,7 @@ app.post("/api/browse", (req, res) => {
 
   spotifyApi.getNewReleases({ limit : 15, offset: 0, country: 'US' })
     .then(function(data) {
-      console.log(data.body);
+      // console.log(data.body);
         res.send(data.body);
       }, function(err) {
         console.log("Something went wrong!", err);
@@ -356,8 +356,8 @@ app.post("/api/song/getplaylists", (req, res) => {
                   }
                 }
               }
-              console.log(playlists);
-              console.log(songHold._id);
+              // console.log(playlists);
+              // console.log(songHold._id);
               let data = {playlists : playlists, song: songHold._id};
               res.send(data);
             });
@@ -397,29 +397,52 @@ app.post("/api/song/addtoplaylist", (req, res) => {
 //POST for adding song to playlist
 app.post("/api/playlist/getsongs", (req, res) => {
   let playlist_id = req.body.id;
-  let songs = [];
 
   console.log("add to playlist is called");
     playlistModel.findOne({ _id: playlist_id },
       function (err, playlist) {
         if (err) {
           console.log(err);
-        } else {
-          // for (let i = 0; i < playlist.songs_ids.length; i++) {
-            // console.log("inside for loop: " + playlist.songs_ids[i]);
+        } 
             songModel.find({_id: { $in: playlist.songs_ids} }, function(err,song){
-              console.log(song);
+              // console.log(song);
               if (err) {
                 console.log(err);
-              } else {
+              } 
                 res.send(song);
-              }
-            })
-          // }
-          // console.log(songs);
-          // res.send(songs);
-        }
-        // console.log(songs);
+            });
       }
     );
+});
+
+//POST for removing song from playlist
+app.post("/api/song/removefromplaylist", (req, res) => {
+  let playlist_id = req.body.id;
+  let song_id = req.body.song;
+  console.log("song id: " + song_id);
+    playlistModel.findById({ _id: playlist_id}, function (
+    err,
+    playlist
+  ) {
+    const songs = playlist.songs_ids;
+    var index = songs.indexOf(song_id+"");
+    console.log("index : " + index);
+    songs.splice(index,1);
+    console.log("before " + songs);
+    res.send(playlist);
+    playlistModel.findByIdAndUpdate({ _id: playlist_id}, { songs_ids: songs }, function (
+      err,
+      playlist
+    ) {
+      if (err) {
+          console.log(err);
+      } else {
+        console.log("after " + playlist.songs_ids);
+        // res.send(playlist);
+      }
+    });
+    if (err) {
+        console.log(err);
+    } 
+  });
 });
