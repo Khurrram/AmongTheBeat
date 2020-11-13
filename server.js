@@ -103,7 +103,9 @@ app.post("/api/browse", (req, res) => {
 
   spotifyApi.getNewReleases({ limit : 15, offset: 0, country: 'US' })
     .then(function(data) {
+      console.log(data.body);
         res.send(data.body);
+        done();
       }, function(err) {
         console.log("Something went wrong!", err);
       });

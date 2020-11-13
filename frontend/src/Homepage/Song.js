@@ -199,7 +199,7 @@ function View(props, toggleModal, handleClick) {
     <SongAction>
       <StyledHeart></StyledHeart>
       <StyledQueue />
-      {!props.Browse ? (
+      {props.Browse ? (
         <StyledPlaylistAdd onClick={() => toggleModal()} />
       ) : (
         <StyledTrashCan aria-label="more"
