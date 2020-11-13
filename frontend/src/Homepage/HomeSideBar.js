@@ -17,9 +17,10 @@ import {
 } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
 import { getSessionCookie } from "../CookieHandler";
-import axios from 'axios';
+import axios from "axios";
 
 import "react-pro-sidebar/dist/css/styles.css";
+import { set } from "js-cookie";
 
 const Button = styled.button`
   padding: 0.5em;
@@ -40,32 +41,39 @@ const StyledSearh = styled(SearchBar)`
 
 function HomeSideBar(props) {
   const { state, actions } = useContext(ViewPage);
-  // const [ playlists, setPlaylists] = useState([]);
-  const playlists = props.playlists;
-  const toggle = false;
-  const [disabled, setDisabled] = useState(true);
+  const [playlists, setPlaylists] = useState([]);
+  const [createNew, setCreateNew] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const session = getSessionCookie();
-  // var playlists = [];
 
   let data = { id: session.id };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const result = await axios.post(
+        "http://localhost:5000/api/playlist/getplaylists",
+        data
+      );
+      // console.log("RESULTS " + JSON.stringify(result.data));
+      setPlaylists(result.data);
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [createNew]);
+
   function createPlaylist(e) {
     e.preventDefault();
-
     axios
-    .post("http://localhost:5000/api/playlist/createPlaylist", data)
-    .then(function (res) {
-      let id = res.data;
-      console.log("res: " + res.data);
-      // toggle = !toggle;
-    })
-    .catch((err) => console.log(err));
-
+      .post("http://localhost:5000/api/playlist/createPlaylist", data)
+      .then(function (res) {
+        setCreateNew(!createNew);
+      })
+      .catch((err) => console.log(err));
   }
 
   function changeName(e) {
     e.preventDefault();
-
   }
 
   return (
@@ -89,34 +97,14 @@ function HomeSideBar(props) {
         </Menu>
         <hr width="90%" color="black"></hr>
         <Menu>
-          <MenuItem id="fontlarge">Playlists <Add onClick={(e) => createPlaylist(e)} /></MenuItem>
-          {playlists.map((playlist) => {
-            // let path = "/playlist/" + playlist.name;
-            return (
-              <MenuItem >
-                {/* <Link
-                  to={{
-                    pathname: path,
-                    state: {
-                      name: playlist.name,
-                      songs: playlist.songs,
-                    },
-                  }}
-                > */}
-                  {" "}
-                  {console.log(playlist)}
-                <TextField
-                variant="standard"
-                fullWidth
-                onDoubleClick={setDisabled(false)} 
-                onBlur={setDisabled(true)}
-                >
-                  {playlist.playlist_name}{" "}
-                </TextField>
-                {/* </Link> */}
-              </MenuItem>
-            );
-          })}
+          <MenuItem id="fontlarge" onClick={(e) => createPlaylist(e)}>
+            New Playlist <Add />
+          </MenuItem>
+          {isLoading ? (
+            <p>loading...</p>
+          ) : (
+            playlists.map((e) => <MenuItem>{e.playlist_name}</MenuItem>)
+          )}
         </Menu>
       </SidebarContent>
       <SidebarFooter id="center">
