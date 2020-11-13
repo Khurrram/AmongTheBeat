@@ -1,10 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Image } from "react-bootstrap";
 import logo from "../assets/logo.png";
 import SearchBar from "material-ui-search-bar";
 import test from "../data/test.json";
 import { ViewPage } from "./HomePage";
+import { Add } from "@material-ui/icons";
+
+
 import {
   ProSidebar as Sidebar,
   Menu,
@@ -14,8 +17,11 @@ import {
   SidebarContent,
 } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
+import { getSessionCookie } from "../CookieHandler";
+import axios from "axios";
 
 import "react-pro-sidebar/dist/css/styles.css";
+import { set } from "js-cookie";
 
 const Button = styled.button`
   padding: 0.5em;
@@ -36,6 +42,57 @@ const StyledSearh = styled(SearchBar)`
 
 function HomeSideBar(props) {
   const { state, actions } = useContext(ViewPage);
+  const [playlists, setPlaylists] = useState([]);
+  const [createNew, setCreateNew] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const session = getSessionCookie();
+  console.log(props.setPlaylist);
+  const setPlaylist = props.setPlaylist;
+
+  let data = { id: session.id };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const result = await axios.post(
+        "http://localhost:5000/api/playlist/getplaylists",
+        data
+      );
+      // console.log("RESULTS " + JSON.stringify(result.data));
+      setPlaylists(result.data);
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [createNew]);
+
+  function createPlaylist(e) {
+    e.preventDefault();
+    axios
+      .post("http://localhost:5000/api/playlist/createPlaylist", data)
+      .then(function (res) {
+        setCreateNew(!createNew);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function currentplaylist(playlist) {
+    console.log("in current playlist");
+    let data = {id: playlist._id};
+
+    axios
+      .post("http://localhost:5000/api/playlist/getsongs", data)
+      .then(function (res) {
+        console.log("songs " + res.data);
+        actions.setSongs(res.data);
+        actions.setPlaylist(playlist);
+        actions.setPage(1);
+      })
+      .catch((err) => console.log(err));
+
+    console.log("current playlist: " + playlist.playlist_name);
+  }
+
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -57,26 +114,18 @@ function HomeSideBar(props) {
         </Menu>
         <hr width="90%" color="black"></hr>
         <Menu>
-          <MenuItem id="fontlarge">Playlists</MenuItem>
-          {test.playlists.map((playlist) => {
-            let path = "/playlist/" + playlist.name;
-            return (
-              <MenuItem>
-                <Link
-                  to={{
-                    pathname: path,
-                    state: {
-                      name: playlist.name,
-                      songs: playlist.songs,
-                    },
-                  }}
-                >
-                  {" "}
-                  {playlist.name}{" "}
-                </Link>
+          <MenuItem id="fontlarge" onClick={(e) => createPlaylist(e)}>
+            New Playlist <Add />
+          </MenuItem>
+          {isLoading ? (
+            <p>loading...</p>
+          ) : (
+            playlists.map((playlist) => (
+              <MenuItem key={playlist._id} onClick={() => currentplaylist(playlist)} >               
+                {playlist.playlist_name} 
               </MenuItem>
-            );
-          })}
+            ))
+          )}
         </Menu>
       </SidebarContent>
       <SidebarFooter id="center">

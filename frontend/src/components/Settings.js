@@ -1,4 +1,4 @@
-import React, { useState , useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-materialize";
 import Avatar from "@material-ui/core/Avatar";
@@ -7,9 +7,8 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import styled from "styled-components";
-import { SessionContext } from "../App";
 import axios from "axios";
-
+import { getSessionCookie } from "../CookieHandler";
 
 const useStyles = makeStyles({
   root: {
@@ -54,7 +53,7 @@ const CenterDiv = styled.div`
 `;
 
 const BackButton = styled.div`
-  position: absolute;
+  position: relative;
   top: 1rem;
   left: 1rem;
 `;
@@ -82,37 +81,33 @@ function Settings() {
     oldpass: "",
     newpass: "",
     confirmpass: "",
-    username: ""
+    username: "",
   });
 
-  const session = useContext(SessionContext);
+  const session = getSessionCookie();
 
   function handleConfirm(oldp, newp, confirmp) {
-
     if (newp !== confirmp) {
       alert("New Password does not match for both textfields.");
     } else {
-      let data = {id : session.id, oldpass: oldp, updatedpass : newp};
+      let data = { id: session.id, oldpass: oldp, updatedpass: newp };
       alert("Matches");
 
       axios
-      .post("http://localhost:5000/api/user/checkpass", data)
-      .then(function (res) {
-        console.log(res.data);
-      })
-      .catch((err) => console.log(err.data));
-
-      axios
-      .post("http://localhost:5000/api/user/changepass", data)
-      .then(function (res) {
-        console.log(res.data);
-        console.log("Password changed");
-      })
-      .catch((err) => console.log(err.data));
-
+        .post("http://localhost:5000/api/user/changepass", data)
+        .then(function (res) {
+          console.log(res.data);
+          if (res.data === "invalid pass") {
+            alert("Invalid password");
+          } else {
+            console.log("Password changed");
+          }
+        })
+        .catch((err) => console.log(err.data));
     }
   }
 
+<<<<<<< HEAD
   useEffect(() => {
       let data = {id : session.id};
       axios
@@ -131,6 +126,8 @@ function Settings() {
 
   
 
+=======
+>>>>>>> master
   return (
     <CenterDiv>
       <Link to="/home">
@@ -140,9 +137,10 @@ function Settings() {
       </Link>
       <AlignTextDiv>
         <AccountDiv>
-          <Avatar id="av" className="AvatarIcon">{currF.username.charAt(0).toUpperCase()}
+          <Avatar id="av" className="AvatarIcon">
+            {session.username}
           </Avatar>
-          <div id="user">{currF.username}</div>
+          <div id="user">{session.username}</div>
         </AccountDiv>
 
         <div id="newpc">
@@ -156,8 +154,7 @@ function Settings() {
               setcurrF({
                 oldpass: val.target.value,
                 newpass: currF.newpass,
-                confirmpass: currF.confirmpass,
-                username: currF.username
+                confirmpass: currF.confirmpass
               })
             }
           />
@@ -174,8 +171,7 @@ function Settings() {
               setcurrF({
                 oldpass: currF.oldpass,
                 newpass: val.target.value,
-                confirmpass: currF.confirmpass,
-                username: currF.username
+                confirmpass: currF.confirmpass
               })
             }
           />
@@ -192,8 +188,7 @@ function Settings() {
               setcurrF({
                 oldpass: currF.oldpass,
                 newpass: currF.newpass,
-                confirmpass: val.target.value,
-                username: currF.username
+                confirmpass: val.target.value
               })
             }
           />
@@ -216,6 +211,5 @@ function Settings() {
     </CenterDiv>
   );
 }
-
 
 export default Settings;

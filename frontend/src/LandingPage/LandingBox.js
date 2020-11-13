@@ -9,7 +9,9 @@ import { getSessionCookie, setSessionCookie } from "../CookieHandler";
 import { AppContext } from "../App";
 
 function RegisterBox(props) {
+  let history = useHistory();
   const button = props.button;
+  const isloggedinhandler = props.isloggedinhandler;
   const [form, setForm] = useState({
     email: "",
     username: "",
@@ -164,9 +166,9 @@ function RegisterBox(props) {
       .then(function (res) {
         let id = res.data;
         if (res.data != -1 + "") {
-          setSessionCookie({ id });
+          setSessionCookie({ id: id, username: username });
           console.log("Redirecting");
-          window.location = "/home";
+          isloggedinhandler();
         } else {
           setInvalid(true);
         }
@@ -319,7 +321,9 @@ function RegisterBox(props) {
 }
 
 function LoginBox(props) {
+  const history = useHistory();
   const button = props.button;
+  const isloggedinhandler = props.isloggedinhandler;
   const [form, setForm] = useState({
     username: "",
     password: "",
@@ -334,15 +338,22 @@ function LoginBox(props) {
   function submitLogin(e, username, password) {
     e.preventDefault();
     let data = { username, password };
+    console.log("subm " + username);
 
     axios
       .post("http://localhost:5000/api/login", data)
       .then(function (res) {
         let id = res.data;
+        console.log("res: " + res.data);
         if (res.data != "banned" && res.data != "notFound") {
           console.log("Redirecting");
+<<<<<<< HEAD
           setSessionCookie({ id });
           window.location = "/home";
+=======
+          setSessionCookie({ id: id, username: username });
+          isloggedinhandler();
+>>>>>>> master
         } else {
           if (res.data == "banned") {
             setBanned(true);
@@ -351,7 +362,7 @@ function LoginBox(props) {
           }
         }
       })
-      .catch((err) => console.log(err.data));
+      .catch((err) => console.log(err));
   }
 
   function userHandler(user) {
@@ -456,6 +467,7 @@ function LoginBox(props) {
             <Button
               variant="contained"
               className="btn-color"
+              href='http://localhost:5000/auth/spotify'
               onClick={(e) => submitLogin(e, form.username, form.password)}
               disabled={
                 errorState.userError || errorState.passwordError || isEmpty()
@@ -465,6 +477,30 @@ function LoginBox(props) {
               Log In{" "}
             </Button>
             {button}
+          </Grid>
+        </Row>
+      </div>
+    </CardPanel>
+  );
+}
+
+function SpotifyBox(props) {
+  return (
+    <CardPanel className="box-dim hoverable">
+      <div class="overlay input-dim">
+        <Row className="gap" />
+        <Row className="gap" />
+        <Row className="gap" />
+        <Row>
+          <Grid container spacing={2} alignItems="flex-end" justify="center">
+            <Button
+              variant="contained"
+              className="btn-color"
+              href='http://localhost:5000/auth/spotify'
+            >
+              {" "}
+              Log In Through Spotify{" "}
+            </Button>
           </Grid>
         </Row>
       </div>
@@ -499,19 +535,26 @@ function RegisterButton(props) {
 function CurrentBox(props) {
   const isregisterclicked = props.isregisterclicked;
   const button = props.button;
-  if (isregisterclicked) {
-    return <RegisterBox button={button} />;
+  const isloggedinhandler = props.isloggedinhandler;
+  const isloggedin = props.isloggedin;
+  if (isloggedin) {
+    return <SpotifyBox />
   } else {
-    return <LoginBox button={button} />;
+  if (isregisterclicked) {
+    return <RegisterBox button={button} isloggedinhandler={isloggedinhandler} />;
+  } else {
+    return <LoginBox button={button}  isloggedinhandler={isloggedinhandler}/>;
+  }
   }
 }
 
 class LandingBox extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isregisterclicked: false };
+    this.state = { isregisterclicked: false, isloggedin: false };
     this.LoginBox_handler = this.LoginBox_handler.bind(this);
     this.RegisterBox_handler = this.RegisterBox_handler.bind(this);
+    this.LoggedIn_handler = this.LoggedIn_handler.bind(this);
   }
 
   LoginBox_handler() {
@@ -522,8 +565,13 @@ class LandingBox extends React.Component {
     this.setState({ isregisterclicked: true });
   }
 
+  LoggedIn_handler() {
+    this.setState({ isloggedin: true});
+  }
+
   render() {
     const isregisterclicked = this.state.isregisterclicked;
+    const isloggedin = this.state.isloggedin;
     let button;
 
     if (isregisterclicked) {
@@ -534,7 +582,7 @@ class LandingBox extends React.Component {
 
     return (
       <div>
-        <CurrentBox isregisterclicked={isregisterclicked} button={button} />
+        <CurrentBox isregisterclicked={isregisterclicked} isloggedinhandler={this.LoggedIn_handler} isloggedin={isloggedin} button={button} />
       </div>
     );
   }

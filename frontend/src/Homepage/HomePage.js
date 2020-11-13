@@ -1,38 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
 
 import styled from "styled-components";
-import logo from "../assets/logo.png";
-import { Image } from "react-bootstrap";
-import Song from "./Song";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PlayNavBar from "./PlayNavBar";
 import HomeSideBar from "./HomeSideBar";
-import {
-  ProSidebar,
-  Menu,
-  MenuItem,
-  SidebarHeader,
-  SidebarFooter,
-  SidebarContent,
-} from "react-pro-sidebar";
 import { Link, useHistory } from "react-router-dom";
-import PlayingNow from "../components/PlayingNow";
 import PlayListView from "./PlayListView";
 import test from "../data/test.json";
+import SettingView from "./SettingView";
 import BrowseView from "./BrowseView";
-import Playlists from "../components/Playlists";
-import PlayIcon from "@material-ui/icons/PlayArrow";
-import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
-import SearchBar from "material-ui-search-bar";
-import RepeatIcon from "@material-ui/icons/Repeat";
 import axios from "axios";
 import { SessionContext } from "../App";
-
+import { getSessionCookie } from "../CookieHandler";
 import "./HomePage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-pro-sidebar/dist/css/styles.css";
-import { StayCurrentPortrait } from "@material-ui/icons";
 
 const Button = styled.button`
   padding: 0.5em;
@@ -73,7 +56,7 @@ const Footer = styled.div`
   margin-top: auto;
   padding-left: 1em;
   height: 7%;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.6);
 
   & span {
     color: white;
@@ -103,33 +86,26 @@ const StyledSettingIcon = styled(SettingsIcon)`
 
 export const ViewPage = React.createContext();
 
-function HomePage(props) {
-  const [page, setPage] = useState(1);
+function HomePage() {
+  const session = getSessionCookie();
+
+  const [page, setPage] = useState(2);
   const [settings, setSettings] = useState(false);
   const [username, setUser] = useState("");
-  const value = { state: {}, actions: { setPage } };
-  const session = useContext(SessionContext);
+  const [currentplaylist, setPlaylist] = useState({});
+  const [currentsongs, setSongs] = useState([]);
+  const value = { state: { settings }, actions: { setPage, setSettings, setPlaylist, setSongs } };
 
   let viewPage;
-  if (page == 0) {
-    viewPage = <BrowseView />;
-  } else if (page == 1) {
-    viewPage = <PlayListView />;
+  if (page === 0) {
+    viewPage = <BrowseView session = {session}/>;
+  } else if (page === 1) {
+    console.log(currentplaylist.playlist_name);
+    viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0} songs={currentsongs}/>;
   } else {
     setPage(0);
     viewPage = <BrowseView />;
   }
-
-  useEffect(() => {
-    let data = {id : session.id};
-    axios
-    .post("http://localhost:5000/api/user/getusername", data)
-    .then(function (res) {
-      let username = res.data;
-      setUser(username);
-    })
-    .catch((err) => console.log(err.data));
-  });
 
   return (
     <ViewPage.Provider value={value}>
@@ -137,12 +113,21 @@ function HomePage(props) {
         <HomeSideBar />
         <ContentWindow>
           <Navbar>
-            <StyledAvatar>{username.charAt(0).toUpperCase()}</StyledAvatar>
-            <Link to="/settings">
-              <StyledSettingIcon id="margin" />
-            </Link>
+            <StyledAvatar>
+              {session.username.charAt(0).toUpperCase()}
+            </StyledAvatar>
+
+            <StyledSettingIcon
+              id="margin"
+              onClick={() => {
+                setSettings(true);
+              }}
+            />
           </Navbar>
-          <MiddleContent>{viewPage}</MiddleContent>
+          <MiddleContent>
+            {viewPage}
+            {settings && <SettingView />}
+          </MiddleContent>
           <Footer>
             <PlayNavBar />
           </Footer>

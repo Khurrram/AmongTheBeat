@@ -21,8 +21,8 @@ import { getSessionCookie } from "./CookieHandler";
 export const SessionContext = React.createContext(getSessionCookie());
 
 function App() {
-  const [auth, setAuth] = useState(true);
   const [session, setSession] = useState(getSessionCookie());
+  let value = { state: { session }, actions: { setSession } };
 
   useEffect(() => {
     setSession(getSessionCookie());

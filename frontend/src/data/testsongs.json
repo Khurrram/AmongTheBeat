@@ -1,0 +1,56 @@
+{
+    "songs":
+    [
+        {
+            "name": "The Box",
+            "author": "Roddy Rich",
+            "album": "Please Excuse Me For Being Antisocial",
+            "length": "3:16"
+        },
+        {
+            "name": "WHATS POPPIN",
+            "author": "Jack Harlow",
+            "album": "Sweet Action",
+            "length": "2:19"
+        },
+        {
+            "name": "Take You Dancing",
+            "author": "Jason Derulo",
+            "album": "Take You Dancing",
+            "length": "3:10"
+        },
+        {
+            "name": "Dynamite",
+            "author": "BTS",
+            "album": "Dynamite",
+            "length": "3:19"
+        },
+        {
+            "name": "WAP (feat. Megan Thee Stallion)",
+            "author": "Cardi B, Megan Thee Stallion",
+            "album": "WAP (feat. Megan Thee Stallion)",
+            "length": "3:07"
+        },
+        {
+            "name": "MEGATRON",
+            "author": "Nicki Minaj",
+            "album": "MEGATRON",
+            "length": "3:10"
+        },
+        {
+            "name": "OK Not To Be OK",
+            "author": "Marshmello, Demi Lovato",
+            "album": "OK Not To Be Ok",
+            "length": "2:40"
+        },
+        {
+            "name": "Your Man",
+            "author": "Joji",
+            "album": "Nectar",
+            "length": "2:44"
+        }
+
+    ]
+
+
+}

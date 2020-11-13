@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
 import LandingBox from "./LandingBox";
-import { useHistory } from "react-router-dom";
 import "./LandingPage.css";
 import AtBtext from "./LandingPage_assets/atb.gif";
 import { Row, Col } from "react-materialize";
 import { SessionContext } from "../App";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 
 function LandingPage() {
   const session = useContext(SessionContext);
