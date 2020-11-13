@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Song from "./Song";
 import TrashIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
+import axios from "axios";
 import { Link, useHistory, useLocation } from "react-router-dom";
 
 const StyledDiv = styled.div`
@@ -79,11 +80,29 @@ const StyledButton = styled(Button)`
 
 function PlayListView(props) {
   let { playlistName, playlistTime, playlist } = props;
+  console.log(playlist._id);
+  let id = playlist._id;
+  let owner = playlist.owner_id;
+  console.log(owner);
+  let history = useHistory();
   playlist = []; // TESTING PURPOSES
 
   const shareAction = (e) => {
     e.preventDefault();
   };
+
+  function deletePlaylist(e, id, owner) {
+    e.preventDefault();
+    let data = {id: id, owner: owner};
+    axios
+    .post("http://localhost:5000/api/playlist/delete", data)
+    .then(function (res) {
+      console.log("Deleted playlist");
+      // window.location("/home");
+    })
+    .catch((err) => console.log(err));
+
+}
 
   return (
     <StyledDiv>
@@ -96,7 +115,7 @@ function PlayListView(props) {
         >
           Share
         </StyledButton>
-        <StyledTrash />
+        <StyledTrash onClick={(e) => deletePlaylist(e, id, owner)}/>
         <h6 id="timestamp">{playlistTime}</h6>
         <h6>
           {playlist.length + " "}
@@ -120,5 +139,7 @@ function PlayListView(props) {
     </StyledDiv>
   );
 }
+
+
 
 export default PlayListView;

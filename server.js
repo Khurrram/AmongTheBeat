@@ -18,9 +18,10 @@ mongoose
   .catch((err) => console.log(err));
 
 const port = process.env.PORT || 5000;
+
 mongoose.set('useFindAndModify', false);
+
 app.listen(port, () => console.log(`Server started on port ${port}`));
-var authCallbackPath = "/auth/spotify/callback";
 
 passport.serializeUser(function (user, done) {
     done(null, user);
@@ -38,16 +39,11 @@ passport.use(
         callbackURL: "http://localhost:5000/auth/spotify/callback"
       },
       function (accessToken, refreshToken, expires_in, profile, done) {
-        // asynchronous verification, for effect...
         process.nextTick(function () {
             console.log(profile);
             console.log("accessToken: " + accessToken);
             console.log("refreshToken: " + refreshToken);
             console.log("expires_in: " + expires_in);
-          // To keep the example simple, the user's spotify profile is returned to
-          // represent the logged-in user. In a typical application, you would want
-          // to associate the spotify account with a user record in your database,
-          // and return that user instead.
           return done(null, profile);
         });
       }
@@ -92,19 +88,9 @@ app.get(
     ],
   }),
   function (req, res) {
-    // Successful authentication, redirect home.
-    // res.send(req);
     res.redirect("http://localhost:3000/home");
   }
 );
-
-
-// function ensureAuthenticated(req, res, next) {
-//   if (req.isAuthenticated()) {
-//     return next();
-//   }
-//   res.redirect("/");
-// }
 
 app.post("/api/register", (req, res) => {
   userModel.findOne(
@@ -254,6 +240,43 @@ app.post("/api/playlist/editname", (req, res) => {
   });
 });
 
+//POST for deleting playlist
+app.post("/api/playlist/delete", (req, res) => {
+  let playlist_id = req.body.id;
+  let owner_id = req.body.owner;
+
+  // playlistModel.findOneAndRemove({ _id: playlist_id }, function (err, playlist) {
+  //   console.log("Delete playlist from playlists collection.");
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  // });
+
+  console.log("owner_id: " + owner_id);
+  console.log("playlist id: " + playlist_id);
+  userModel.findById({ _id: owner_id}, function (
+    err,
+    user
+  ) {
+    console.log(user.playlists);
+    const playlists = user.playlists;
+    var index = playlists.indexOf(playlist_id+"");
+    playlists.splice(index,1)
+    userModel.findByIdAndUpdate({ _id: owner_id}, { playlists: playlists }, function (
+      err,
+      playlist
+    ) {
+      if (err) {
+          console.log(err);
+      } else {
+        console.log("Playlist deleted");
+      }
+    });
+    if (err) {
+        console.log(err);
+    } 
+  });
+})
 
 //POST for getting playlists of a specific user
 app.post("/api/playlist/getplaylists", (req, res) => {
