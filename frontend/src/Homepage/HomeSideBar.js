@@ -103,7 +103,9 @@ function HomeSideBar(props) {
           {isLoading ? (
             <p>loading...</p>
           ) : (
-            playlists.map((e) => <MenuItem>{e.playlist_name}</MenuItem>)
+            playlists.map((e) => (
+              <MenuItem key={e._id}>{e.playlist_name}</MenuItem>
+            ))
           )}
         </Menu>
       </SidebarContent>
