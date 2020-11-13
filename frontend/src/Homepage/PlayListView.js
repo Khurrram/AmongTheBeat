@@ -10,8 +10,6 @@ import { TextField } from "@material-ui/core";
 import EditIcon from '@material-ui/icons/Edit';
 import { Link, useHistory, useLocation } from "react-router-dom";
 
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-
 const StyledDiv = styled.div`
   padding: 1.5rem;
   margin-right: 1rem;
@@ -109,43 +107,9 @@ function PlayListView(props) {
   let owner = playlist.owner_id;
   console.log(owner);
   let history = useHistory();
+  // playlist = []; // TESTING PURPOSES
 
-  const [updatedsongs, updateSongs] = useState(songs);
-
-  function handleOnDragEnd(result)
-    {
-
-        if (!result.destination) return;
-
-        const ObjectId = (m = Math, d = Date, h = 16, s = s => m.floor(s).toString(h)) =>
-        s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h))
-
-        var id = ObjectId();
-        console.log("Hi", id.toString());
-
-        const items = Array.from(updatedsongs);
-        const [reordereditem] = items.splice(result.source.index,1);
-        items.splice(result.destination.index, 0 , reordereditem);
-
-        updateSongs(items);
-        // console.log(items);
-        // let songids = []
-        // for(var i = 0; i< items.length; i++)
-        // {
-        //   songids.push(items[i]._id);
-        // }
-
-        // console.log(songids);
-        // let data = { id: id, song_ids: songids} //playlist id
-        // axios
-        //   .post("https://localhost:5000/api/song/updateplaylist",data)
-        //   .then(function(res)
-        //   {
-        //     console.log("Updated playlist! ", res.data)
-        //   })
-        //   .catch((err) => console.log("Damn", err.data));
-    }
-
+  console.log(songs);
 
   const shareAction = (e) => {
     e.preventDefault();
@@ -222,35 +186,11 @@ function PlayListView(props) {
         <hr />
       </span>
       <SongDiv>
-      <DragDropContext onDragEnd = {handleOnDragEnd}>
-          <Droppable droppableId = "songs">
-          {( provided) => (
-          <div id = "inside" {...provided.droppableProps} ref = {provided.innerRef}>
-          {updatedsongs.map(({song_name,artist_name}, index) => 
-          {
-              return(
-                  <Draggable key = {song_name} draggableId = {song_name} index = {index}>
-                      {(provided) => (
-                      <li
-                      {...provided.draggableProps}
-                      ref = {provided.innerRef}
-                      {...provided.dragHandleProps}
-                      >
-                      <Song 
-                      name  = {song_name}
-                      artist = {artist_name}
-                      type = "Playlists"
-                      />
-                      </li>
-                      )}
-                  </Draggable>
-              );
-          })}
-          {provided.placeholder}
-          </div>
-          )}
-          </Droppable>
-      </DragDropContext>
+        {songs.map((song) => {
+          return (
+            <Song name={song.song_name} artist={song.artist_name} type="Playlists" />
+          );
+        })}
       </SongDiv>
     </StyledDiv>
   );
