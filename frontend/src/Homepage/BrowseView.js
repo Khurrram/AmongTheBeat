@@ -136,7 +136,7 @@ function BrowseView(props) {
               {
                 let authors= ""; 
 
-                
+                console.log(album);
                 for( var i = 0; i < album.artists.length; i++)
                 {
                   if(i === album.artists.length-1){authors += album.artists[i].name;}
@@ -144,7 +144,7 @@ function BrowseView(props) {
                 }
 
                 return (
-                  <Song name={album.name} artist={authors} images = {album.images} Browse = {true} />
+                  <Song name={album.name} artist={authors} images = {album.images} uri = {album.uri} Browse = {true} />
                 );
               }
         }

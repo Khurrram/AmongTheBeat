@@ -98,7 +98,7 @@ const DisabledTextName = withStyles({
 
 
 function PlayListView(props) {
-  let { playlistName, playlistTime, playlist } = props;
+  let { playlistName, playlistTime, playlist, songs } = props;
   const { state, actions } = useContext(ViewPage);
   const [editing, setEdit] = useState(false);
   console.log(playlist._id);
@@ -106,7 +106,9 @@ function PlayListView(props) {
   let owner = playlist.owner_id;
   console.log(owner);
   let history = useHistory();
-  playlist = []; // TESTING PURPOSES
+  // playlist = []; // TESTING PURPOSES
+
+  console.log(songs);
 
   const shareAction = (e) => {
     e.preventDefault();
@@ -179,9 +181,9 @@ function PlayListView(props) {
         <hr />
       </span>
       <SongDiv>
-        {playlist.map((song) => {
+        {songs.map((song) => {
           return (
-            <Song name={song.name} artist={song.author} type="Playlists" />
+            <Song name={song.song_name} artist={song.artist_name} type="Playlists" />
           );
         })}
       </SongDiv>

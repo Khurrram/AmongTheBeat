@@ -45,7 +45,6 @@ function HomeSideBar(props) {
   const [playlists, setPlaylists] = useState([]);
   const [createNew, setCreateNew] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [enabled, setEnabled] = useState();
   const session = getSessionCookie();
   console.log(props.setPlaylist);
   const setPlaylist = props.setPlaylist;
@@ -77,8 +76,19 @@ function HomeSideBar(props) {
   }
 
   function currentplaylist(playlist) {
-    actions.setPlaylist(playlist);
-    actions.setPage(1);
+    console.log("in current playlist");
+    let data = {id: playlist._id};
+
+    axios
+      .post("http://localhost:5000/api/playlist/getsongs", data)
+      .then(function (res) {
+        console.log("songs " + res.data);
+        actions.setSongs(res.data);
+        actions.setPlaylist(playlist);
+        actions.setPage(1);
+      })
+      .catch((err) => console.log(err));
+
     console.log("current playlist: " + playlist.playlist_name);
   }
 

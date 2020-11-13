@@ -93,14 +93,15 @@ function HomePage() {
   const [settings, setSettings] = useState(false);
   const [username, setUser] = useState("");
   const [currentplaylist, setPlaylist] = useState({});
-  const value = { state: { settings }, actions: { setPage, setSettings, setPlaylist } };
+  const [currentsongs, setSongs] = useState([]);
+  const value = { state: { settings }, actions: { setPage, setSettings, setPlaylist, setSongs } };
 
   let viewPage;
   if (page === 0) {
     viewPage = <BrowseView session = {session}/>;
   } else if (page === 1) {
     console.log(currentplaylist.playlist_name);
-    viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0}/>;
+    viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0} songs={currentsongs}/>;
   } else {
     setPage(0);
     viewPage = <BrowseView />;

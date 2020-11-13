@@ -10,6 +10,8 @@ import { Button } from "react-materialize";
 import Modal from "react-modal";
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
+import axios from "axios";
+import { getSessionCookie } from "../CookieHandler";
 
 import test from "../data/test.json";
 
@@ -131,14 +133,28 @@ const ModalContent = styled.div`
 Modal.setAppElement("#root");
 
 function Song(props) {
-  const { name, artist, time, playlist } = props;
-
+  const { name, artist, time, playlist, uri } = props;
+  const session = getSessionCookie();
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [playlists, setPlaylists] = useState([]);
+  const [currSong, setCurrSong] = useState();
   
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   function toggleModal() {
     setModalIsOpen(!modalIsOpen);
+    if (!modalIsOpen) {
+    let data = {id: session.id, song_name : name, artist_name: artist, uri: uri};
+
+    axios
+    .post("http://localhost:5000/api/song/getplaylists", data)
+    .then(function (res) {
+      setPlaylists(res.data.playlists);
+      setCurrSong(res.data.song);
+      console.log(res.data);
+    })
+    .catch((err) => console.log(err.data));
+  }
   }
 
   const handleClick = (event) => {
@@ -148,6 +164,20 @@ function Song(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  function addtoPlaylist(e, playlistid, uri) {
+    e.preventDefault();
+    console.log(playlistid);
+    let data = { id: playlistid, song_uri: uri}
+    axios
+    .post("http://localhost:5000/api/song/addtoplaylist", data)
+    .then(function (res) {
+      // setPlaylists(res.data);
+      console.log("added to playlist: " + res.data);
+      setModalIsOpen(!modalIsOpen);
+    })
+    .catch((err) => console.log(err.data));
+  }
 
   return (
     <Container>
@@ -160,8 +190,8 @@ function Song(props) {
         <ModalHeader>Choose A Playlist To Add To</ModalHeader>
 
         {/*  JUST SAMPLE FOR TESTING, THIS IS WHERE DATABASE IMPLEMENTATION NEEDS TO BE ADDED */}
-        {test.playlists.map((playlist) => {
-          return <ModalContent>{playlist.name}</ModalContent>;
+        {playlists.map((playlist) => {
+          return <ModalContent onClick={(e) => addtoPlaylist(e, playlist._id, uri)}>{playlist.playlist_name}</ModalContent>;
         })}
       </Modal>
 

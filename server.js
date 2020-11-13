@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 var cors = require("cors");
 const userModel = require("./models/userModel.js");
 const playlistModel = require("./models/playlistModel.js");
+const songModel = require("./models/songModel.js");
 const app = express();
 const passport = require("passport"),
   SpotifyStrategy = require("passport-spotify").Strategy;
@@ -105,7 +106,6 @@ app.post("/api/browse", (req, res) => {
     .then(function(data) {
       console.log(data.body);
         res.send(data.body);
-        done();
       }, function(err) {
         console.log("Something went wrong!", err);
       });
@@ -312,3 +312,114 @@ app.post("/api/playlist/getplaylists", (req, res) => {
           }
       });
   });
+
+//POST for getting valid playlists when adding songs
+app.post("/api/song/getplaylists", (req, res) => {
+  let owner_id = req.body.id;
+  let song_name = req.body.song_name;
+  let artist_name = req.body.artist_name;
+  let uri = req.body.uri;
+  let id = new mongoose.Types.ObjectId();
+  let songHold;
+
+  playlistModel.find({ owner_id : owner_id }, function (
+    err,
+    playlists
+  ) {
+      if (err) {
+          console.log(err);
+      } else {
+        songModel.findOne({SpotifyURI : uri}, function (err, song) {
+          // console.log(song);
+          songHold = song;
+          if (song == null) {
+            songModel.create({
+              _id: id,
+              song_name: song_name,
+              artist_name: artist_name,
+              SpotifyURI : uri
+            });
+            let data = {playlists : playlists, song: id};
+            res.send(data);
+          } else {
+            playlistModel.find({songs_ids : song._id}, function (err, playlist){
+              if (err) { console.log(err); }
+              // console.log(playlists);
+              // console.log(playlist);
+              for (let i = 0; i < playlists.length; i++) {
+                for (let j = 0; j < playlist.length; j++) {
+                  console.log("playlist id: " + playlist[j]._id);
+                  console.log("playlists id: " +playlists[i]._id);
+                  if (playlists[i]._id+"" === playlist[j]._id+"") {
+                    console.log("playlist found");
+                    playlists.splice(i,1);
+                  }
+                }
+              }
+              console.log(playlists);
+              console.log(songHold._id);
+              let data = {playlists : playlists, song: songHold._id};
+              res.send(data);
+            });
+
+          }
+        })
+
+      }
+  });
+});
+
+
+//POST for adding song to playlist
+app.post("/api/song/addtoplaylist", (req, res) => {
+  let playlist_id = req.body.id;
+  let uri = req.body.song_uri;
+
+  console.log("add to playlist is called");
+  songModel.findOne({SpotifyURI : uri}, function (err, song) {
+    console.log(song._id);
+    playlistModel.findOneAndUpdate(
+      { _id: playlist_id },
+      { $push: { songs_ids: song._id } },
+      function (err, playlist) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send(playlist_id);
+        }
+        console.log(playlist);
+      }
+    );
+  });
+});
+
+
+//POST for adding song to playlist
+app.post("/api/playlist/getsongs", (req, res) => {
+  let playlist_id = req.body.id;
+  let songs = [];
+
+  console.log("add to playlist is called");
+    playlistModel.findOne({ _id: playlist_id },
+      function (err, playlist) {
+        if (err) {
+          console.log(err);
+        } else {
+          // for (let i = 0; i < playlist.songs_ids.length; i++) {
+            // console.log("inside for loop: " + playlist.songs_ids[i]);
+            songModel.find({_id: { $in: playlist.songs_ids} }, function(err,song){
+              console.log(song);
+              if (err) {
+                console.log(err);
+              } else {
+                res.send(song);
+              }
+            })
+          // }
+          // console.log(songs);
+          // res.send(songs);
+        }
+        // console.log(songs);
+      }
+    );
+});
