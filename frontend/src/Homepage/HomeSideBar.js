@@ -72,10 +72,15 @@ function HomeSideBar(props) {
       .catch((err) => console.log(err));
   }
 
-  function changeName(e) {
+  function doubleclicked(e, playlist_id) {
+    e.preventDefault();
+    this.setState({enabled: playlist_id, toggle: true});
+    console.log("double clicked");
+  }
+  
+  function onblurHandler(e, playlist_id) {
     e.preventDefault();
   }
-
   return (
     <Sidebar>
       <SidebarHeader>
@@ -103,8 +108,18 @@ function HomeSideBar(props) {
           {isLoading ? (
             <p>loading...</p>
           ) : (
-            playlists.map((e) => (
-              <MenuItem key={e._id}>{e.playlist_name}</MenuItem>
+            playlists.map((playlist) => (
+              <MenuItem key={playlist._id}>                
+              <DisabledTextName
+              variant="standard"
+              fullWidth
+              disabled={enabled !== playlist._id}
+              onDoubleClick={(e) => this.doubleclicked(e, playlist._id)} 
+              onClick={currentplaylist(playlist_id)}
+              onBlur={(e) => this.onblurHandler(e, playlist._id)}
+              defaultValue={playlist.playlist_name}
+              />
+              </MenuItem>
             ))
           )}
         </Menu>

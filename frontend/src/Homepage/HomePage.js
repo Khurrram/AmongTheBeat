@@ -107,7 +107,7 @@ function HomePage() {
   return (
     <ViewPage.Provider value={value}>
       <div className="homepage1">
-        <HomeSideBar currentplaylist={currentplaylist} />
+        <HomeSideBar currentplaylist={setPlaylist} />
         <ContentWindow>
           <Navbar>
             <StyledAvatar>
