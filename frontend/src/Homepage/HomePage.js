@@ -12,7 +12,7 @@ import SettingView from "./SettingView";
 import BrowseView from "./BrowseView";
 import axios from "axios";
 import { SessionContext } from "../App";
-
+import { getSessionCookie } from "../CookieHandler";
 import "./HomePage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-pro-sidebar/dist/css/styles.css";
@@ -86,34 +86,25 @@ const StyledSettingIcon = styled(SettingsIcon)`
 
 export const ViewPage = React.createContext();
 
-function HomePage(props) {
-  const session = useContext(SessionContext);
+function HomePage() {
+  const session = getSessionCookie();
 
   const [page, setPage] = useState(2);
   const [settings, setSettings] = useState(false);
   const [username, setUser] = useState("");
-  const value = { state: { settings }, actions: { setPage, setSettings } };
+  const [currentplaylist, setPlaylist] = useState({});
+  const value = { state: { settings }, actions: { setPage, setSettings, setPlaylist } };
 
   let viewPage;
   if (page === 0) {
     viewPage = <BrowseView />;
   } else if (page === 1) {
-    viewPage = <PlayListView />;
+    console.log(currentplaylist.playlist_name);
+    viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0}/>;
   } else {
     setPage(0);
     viewPage = <BrowseView />;
   }
-
-  useEffect(() => {
-    let data = { id: session.id };
-    axios
-      .post("http://localhost:5000/api/user/getusername", data)
-      .then(function (res) {
-        let username = res.data;
-        setUser(username);
-      })
-      .catch((err) => console.log(err.data));
-  }, []);
 
   return (
     <ViewPage.Provider value={value}>
@@ -121,7 +112,9 @@ function HomePage(props) {
         <HomeSideBar />
         <ContentWindow>
           <Navbar>
-            <StyledAvatar>{username.charAt(0).toUpperCase()}</StyledAvatar>
+            <StyledAvatar>
+              {session.username.charAt(0).toUpperCase()}
+            </StyledAvatar>
 
             <StyledSettingIcon
               id="margin"

@@ -7,8 +7,8 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import styled from "styled-components";
-import { SessionContext } from "../App";
 import axios from "axios";
+import { getSessionCookie } from "../CookieHandler";
 
 const useStyles = makeStyles({
   root: {
@@ -84,7 +84,7 @@ function Settings() {
     username: "",
   });
 
-  const session = useContext(SessionContext);
+  const session = getSessionCookie();
 
   function handleConfirm(oldp, newp, confirmp) {
     if (newp !== confirmp) {
@@ -94,37 +94,18 @@ function Settings() {
       alert("Matches");
 
       axios
-        .post("http://localhost:5000/api/user/checkpass", data)
-        .then(function (res) {
-          console.log(res.data);
-        })
-        .catch((err) => console.log(err.data));
-
-      axios
         .post("http://localhost:5000/api/user/changepass", data)
         .then(function (res) {
           console.log(res.data);
-          console.log("Password changed");
+          if (res.data === "invalid pass") {
+            alert("Invalid password");
+          } else {
+            console.log("Password changed");
+          }
         })
         .catch((err) => console.log(err.data));
     }
   }
-
-  useEffect(() => {
-    let data = { id: session.id };
-    axios
-      .post("http://localhost:5000/api/user/getusername", data)
-      .then(function (res) {
-        let username = res.data;
-        setcurrF({
-          oldpass: currF.oldpass,
-          newpass: currF.newpass,
-          confirmpass: currF.confirmpass,
-          username: username,
-        });
-      })
-      .catch((err) => console.log(err.data));
-  });
 
   return (
     <CenterDiv>
@@ -136,9 +117,9 @@ function Settings() {
       <AlignTextDiv>
         <AccountDiv>
           <Avatar id="av" className="AvatarIcon">
-            {currF.username.charAt(0).toUpperCase()}
+            {session.username}
           </Avatar>
-          <div id="user">{currF.username}</div>
+          <div id="user">{session.username}</div>
         </AccountDiv>
 
         <div id="newpc">
@@ -152,8 +133,7 @@ function Settings() {
               setcurrF({
                 oldpass: val.target.value,
                 newpass: currF.newpass,
-                confirmpass: currF.confirmpass,
-                username: currF.username,
+                confirmpass: currF.confirmpass
               })
             }
           />
@@ -170,8 +150,7 @@ function Settings() {
               setcurrF({
                 oldpass: currF.oldpass,
                 newpass: val.target.value,
-                confirmpass: currF.confirmpass,
-                username: currF.username,
+                confirmpass: currF.confirmpass
               })
             }
           />
@@ -188,8 +167,7 @@ function Settings() {
               setcurrF({
                 oldpass: currF.oldpass,
                 newpass: currF.newpass,
-                confirmpass: val.target.value,
-                username: currF.username,
+                confirmpass: val.target.value
               })
             }
           />
