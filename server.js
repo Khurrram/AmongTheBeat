@@ -115,7 +115,6 @@ app.post("/api/register", (req, res) => {
 
 
 app.post("/api/login", (req, res) => {
-    // console.log(req.body.username);
   userModel.findOne(
     { username: req.body.username, password: req.body.password },
     function (err, user) {
@@ -245,12 +244,12 @@ app.post("/api/playlist/delete", (req, res) => {
   let playlist_id = req.body.id;
   let owner_id = req.body.owner;
 
-  // playlistModel.findOneAndRemove({ _id: playlist_id }, function (err, playlist) {
-  //   console.log("Delete playlist from playlists collection.");
-  //   if (err) {
-  //     console.log(err);
-  //   }
-  // });
+  playlistModel.findOneAndRemove({ _id: playlist_id }, function (err, playlist) {
+    console.log("Delete playlist from playlists collection.");
+    if (err) {
+      console.log(err);
+    }
+  });
 
   console.log("owner_id: " + owner_id);
   console.log("playlist id: " + playlist_id);

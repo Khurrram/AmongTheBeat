@@ -6,8 +6,8 @@ import SearchBar from "material-ui-search-bar";
 import test from "../data/test.json";
 import { ViewPage } from "./HomePage";
 import { Add } from "@material-ui/icons";
-import { TextField } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+
+
 import {
   ProSidebar as Sidebar,
   Menu,
@@ -39,20 +39,6 @@ const StyledSearh = styled(SearchBar)`
   margin-left: 1em;
   margin-right: 1em;
 `;
-
-const DisabledTextName = withStyles({
-  root: {
-    "& .MuiInputBase-root.Mui-disabled": {
-      color: "#BDBDBD" // (default alpha is 0.38)
-    },
-    "& .MuiInput-underline.Mui-disabled:before" : {
-      borderBottomStyle: 'none'
-    },
-    "& .MuiInputBase-root" : {
-      color: "#EE276A"
-    }
-  }
-})(TextField);
 
 function HomeSideBar(props) {
   const { state, actions } = useContext(ViewPage);
@@ -90,23 +76,6 @@ function HomeSideBar(props) {
       .catch((err) => console.log(err));
   }
 
-  function doubleclicked(e, playlist_id) {
-    e.preventDefault();
-    setEnabled(playlist_id);
-    console.log("double clicked");
-  }
-  
-  function onblurHandler(e, playlist_id) {
-    e.preventDefault();
-    let data = {id : playlist_id, updatedname: e.target.value};
-    axios
-    .post("http://localhost:5000/api/playlist/editname", data)
-    .then(function (res) {
-      setEnabled('');
-    })
-    .catch((err) => console.log(err));
-  }
-
   function currentplaylist(playlist) {
     actions.setPlaylist(playlist);
     actions.setPage(1);
@@ -142,16 +111,7 @@ function HomeSideBar(props) {
             <p>loading...</p>
           ) : (
             playlists.map((playlist) => (
-              <MenuItem key={playlist._id} onClick={() => currentplaylist(playlist)} >                
-              {/* <DisabledTextName
-              variant="standard"
-              fullWidth
-              disabled={enabled !== playlist._id}
-              // onDoubleClick={(e) => doubleclicked(e, playlist._id)} 
-              onClick={currentplaylist(playlist._id)}
-              onBlur={(e) => onblurHandler(e, playlist._id)}
-              defaultValue={playlist.playlist_name}
-              /> */}
+              <MenuItem key={playlist._id} onClick={() => currentplaylist(playlist)} >               
                 {playlist.playlist_name} 
               </MenuItem>
             ))
