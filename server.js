@@ -395,13 +395,13 @@ app.post("/api/song/addtoplaylist", (req, res) => {
 
 app.post("/api/song/updateplaylist", (req, res) => {
   let playlist_id = req.body.id;
-  let newsong_ids= req.body.songs_ids;
+  let newsongs= req.body.upsongs;
 
   console.log("Id is: ", playlist_id);
-  console.log("New song ids, ", newsong_ids);
+  console.log("New song ids, ", newsongs);
     playlistModel.findByIdAndUpdate(
-      playlist_id,
-      {songs_ids: newsong_ids},
+      {_id: playlist_id},
+      {songs_ids: newsongs},
       function (err, playlist) {
         if (err) {
           console.log(err);
