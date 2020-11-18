@@ -72,6 +72,12 @@ const Title = styled.h6`
   grid-row-end: 1;
 `;
 
+const CustomP = styled.p`
+  margin-block-start: 0em;
+  margin-block-end: 0em;
+  margin-bottom: 0rem;
+`
+
 const StyledTrash = styled(TrashIcon)`
   margin-left: 1rem;
   color: white;
@@ -122,10 +128,10 @@ function PlayListView(props) {
       let newids = []
       for(var i = 0; i < items.length; i++)
       {
-        newids.push(items[i]._id);
+        newids.push(items[i]._id + "");
       }
 
-      let pid = state.currentplaylist._id;
+      let pid = state.currentplaylist._id + "";
       let data = {id: pid, upsongs: newids};
       console.log("Data: ", data);
       axios
@@ -226,7 +232,7 @@ function PlayListView(props) {
               return(
                   <Draggable key = {_id} draggableId = {_id} index = {index}>
                       {(provided) => (
-                      <li
+                      <CustomP
                       {...provided.draggableProps}
                       ref = {provided.innerRef}
                       {...provided.dragHandleProps}
@@ -237,7 +243,7 @@ function PlayListView(props) {
                       id={_id} 
                       playlist_id= {id} 
                       type="Playlists" />
-                      </li>
+                      </CustomP>
                       )}
                   </Draggable>
               );
