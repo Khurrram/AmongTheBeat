@@ -9,8 +9,8 @@ import { withStyles } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import { Link, useHistory, useLocation } from "react-router-dom";
-
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import mongoose from "mongoose";
 
 const StyledDiv = styled.div`
   padding: 1.5rem;
@@ -72,6 +72,12 @@ const Title = styled.h6`
   grid-row-end: 1;
 `;
 
+const CustomP = styled.p`
+  margin-block-start: 0em;
+  margin-block-end: 0em;
+  margin-bottom: 0rem;
+`;
+
 const StyledTrash = styled(TrashIcon)`
   margin-left: 1rem;
   color: white;
@@ -103,49 +109,36 @@ function PlayListView(props) {
   const { state, actions } = useContext(ViewPage);
   const [editing, setEdit] = useState(false);
 
-  console.log(playlist._id);
+  console.log("state", state);
+  console.log("actions ", actions);
   let id = playlist._id;
   let owner = playlist.owner_id;
-  console.log(owner);
-  let history = useHistory();
-
-  const [updatedsongs, updateSongs] = useState(songs);
 
   function handleOnDragEnd(result) {
     if (!result.destination) return;
-
-    const ObjectId = (
-      m = Math,
-      d = Date,
-      h = 16,
-      s = (s) => m.floor(s).toString(h)
-    ) =>
-      s(d.now() / 1000) + " ".repeat(h).replace(/./g, () => s(m.random() * h));
-
-    var id = ObjectId();
-    console.log("Hi", id.toString());
-
-    const items = Array.from(updatedsongs);
+    const items = state.currentsongs;
+    console.log("Current items:", items);
     const [reordereditem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reordereditem);
+    console.log("Items now: ", items);
 
-    updateSongs(items);
-    // console.log(items);
-    // let songids = []
-    // for(var i = 0; i< items.length; i++)
-    // {
-    //   songids.push(items[i]._id);
-    // }
+    let newids = [];
+    for (var i = 0; i < items.length; i++) {
+      newids.push(items[i]._id + "");
+    }
 
-    // console.log(songids);
-    // let data = { id: id, song_ids: songids} //playlist id
-    // axios
-    //   .post("https://localhost:5000/api/song/updateplaylist",data)
-    //   .then(function(res)
-    //   {
-    //     console.log("Updated playlist! ", res.data)
-    //   })
-    //   .catch((err) => console.log("Damn", err.data));
+    let pid = state.currentplaylist._id + "";
+    let data = { id: pid, upsongs: newids };
+    console.log("Data: ", data);
+    axios
+      .post("http://localhost:5000/api/song/updateplaylist", data)
+      .then(function (res) {
+        console.log("Success!", res.data);
+        actions.setPlaylist(res.data);
+        actions.setSongs(items);
+        actions.setPage(1);
+      })
+      .catch((err) => console.log(err));
   }
 
   const shareAction = (e) => {
@@ -223,17 +216,42 @@ function PlayListView(props) {
         <hr />
       </span>
       <SongDiv>
-        {state.currentsongs.map((song) => {
-          return (
-            <Song
-              name={song.song_name}
-              artist={song.artist_name}
-              id={song._id}
-              playlist_id={id}
-              type="Playlists"
-            />
-          );
-        })}
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Droppable droppableId="songs">
+            {(provided) => (
+              <div
+                id="inside"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {state.currentsongs.map(
+                  ({ song_name, artist_name, _id }, index) => {
+                    return (
+                      <Draggable key={_id} draggableId={_id} index={index}>
+                        {(provided) => (
+                          <CustomP
+                            {...provided.draggableProps}
+                            ref={provided.innerRef}
+                            {...provided.dragHandleProps}
+                          >
+                            <Song
+                              name={song_name}
+                              artist={artist_name}
+                              id={_id}
+                              playlist_id={id}
+                              type="Playlists"
+                            />
+                          </CustomP>
+                        )}
+                      </Draggable>
+                    );
+                  }
+                )}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </SongDiv>
     </StyledDiv>
   );

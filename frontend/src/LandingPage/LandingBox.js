@@ -462,7 +462,7 @@ function LoginBox(props) {
             <Button
               variant="contained"
               className="btn-color"
-              href='http://localhost:5000/auth/spotify'
+              href="http://localhost:5000/auth/spotify"
               onClick={(e) => submitLogin(e, form.username, form.password)}
               disabled={
                 errorState.userError || errorState.passwordError || isEmpty()
@@ -491,7 +491,7 @@ function SpotifyBox(props) {
             <Button
               variant="contained"
               className="btn-color"
-              href='http://localhost:5000/auth/spotify'
+              href="http://localhost:5000/auth/spotify"
             >
               {" "}
               Log In Through Spotify{" "}
@@ -533,13 +533,15 @@ function CurrentBox(props) {
   const isloggedinhandler = props.isloggedinhandler;
   const isloggedin = props.isloggedin;
   if (isloggedin) {
-    return <SpotifyBox />
+    return <SpotifyBox />;
   } else {
-  if (isregisterclicked) {
-    return <RegisterBox button={button} isloggedinhandler={isloggedinhandler} />;
-  } else {
-    return <LoginBox button={button}  isloggedinhandler={isloggedinhandler}/>;
-  }
+    if (isregisterclicked) {
+      return (
+        <RegisterBox button={button} isloggedinhandler={isloggedinhandler} />
+      );
+    } else {
+      return <LoginBox button={button} isloggedinhandler={isloggedinhandler} />;
+    }
   }
 }
 
@@ -561,7 +563,7 @@ class LandingBox extends React.Component {
   }
 
   LoggedIn_handler() {
-    this.setState({ isloggedin: true});
+    this.setState({ isloggedin: true });
   }
 
   render() {
@@ -577,7 +579,12 @@ class LandingBox extends React.Component {
 
     return (
       <div>
-        <CurrentBox isregisterclicked={isregisterclicked} isloggedinhandler={this.LoggedIn_handler} isloggedin={isloggedin} button={button} />
+        <CurrentBox
+          isregisterclicked={isregisterclicked}
+          isloggedinhandler={this.LoggedIn_handler}
+          isloggedin={isloggedin}
+          button={button}
+        />
       </div>
     );
   }

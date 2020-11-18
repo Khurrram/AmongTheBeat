@@ -395,20 +395,33 @@ app.post("/api/song/addtoplaylist", (req, res) => {
 
 app.post("/api/song/updateplaylist", (req, res) => {
   let playlist_id = req.body.id;
-  let newsong_ids= req.body.songs_ids;
+  let newsongs= req.body.upsongs;
 
-    playlistModel.findOneAndUpdate(
-      { _id: playlist_id },
-      {songs_ids: newsong_ids},
+  console.log("Id is: ", playlist_id);
+  console.log("New song ids, ", newsongs);
+    playlistModel.findByIdAndUpdate(
+      {_id: playlist_id},
+      {$set: {songs_ids: newsongs}},
       function (err, playlist) {
         if (err) {
           console.log(err);
-        } else {
-          res.send(playlist);
         }
-        console.log(playlist);
       }
     );
+
+    playlistModel.findById(
+      {_id: playlist_id},
+      function(err, playlist)
+      {
+        if(err)
+        {
+          console.log(err)
+        }
+        else{
+          res.send(playlist)
+        }
+      }
+    )
 });
 
 
