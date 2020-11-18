@@ -5,6 +5,7 @@ import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PlayNavBar from "./PlayNavBar";
 import HomeSideBar from "./HomeSideBar";
+import AlbumPage from "./AlbumPage";
 import { Link, useHistory } from "react-router-dom";
 import PlayListView from "./PlayListView";
 import test from "../data/test.json";
@@ -89,12 +90,12 @@ export const ViewPage = React.createContext();
 function HomePage() {
   const session = getSessionCookie();
 
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(3);
   const [settings, setSettings] = useState(false);
   const [username, setUser] = useState("");
   const [currentplaylist, setPlaylist] = useState({});
   const [currentsongs, setSongs] = useState([]);
-  const value = { state: { settings, currentplaylist, currentsongs }, actions: { setPage, setSettings, setPlaylist, setSongs } };
+  const value = { state: { page, settings, currentplaylist, currentsongs }, actions: { setPage, setSettings, setPlaylist, setSongs } };
 
   let viewPage;
   if (page === 0) {
@@ -102,7 +103,11 @@ function HomePage() {
   } else if (page === 1) {
     console.log(currentplaylist.playlist_name);
     viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0} songs={currentsongs}/>;
-  } else {
+  } else if (page === 2)
+    {
+      viewPage = <AlbumPage />
+    }
+  else {
     setPage(0);
     viewPage = <BrowseView />;
   }
