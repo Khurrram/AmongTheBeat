@@ -71,8 +71,8 @@ function Album(props)
                 result = res.data
             }).catch((err) => console.log(err));
 
-        actions.setSongs(result.tracks.items);
-        actions.setPlaylist(result)
+        actions.setcurrentalbumSongs(result.tracks.items);
+        actions.setcurrentAlbum(result)
         actions.setPage(2);
     } 
 

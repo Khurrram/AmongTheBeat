@@ -108,8 +108,8 @@ function AlbumPage(props)
         <StyledDiv>
       
         <span>
-        <StylAvatar style={{variant: 'square', height: '5em', width: '5em' }} src = {state.currentplaylist.images[0].url}/>
-            <h1>{state.currentplaylist.name}</h1>
+        <StylAvatar style={{variant: 'square', height: '5em', width: '5em' }} src = {state.currentalbum.images[0].url}/>
+            <h1>{state.currentalbum.name}</h1>
         </span>
         <StyledSpan>
             <Title>Title</Title>
@@ -119,10 +119,10 @@ function AlbumPage(props)
             <hr />
         </span>
         <SongDiv>
-            {console.log(state.currentplaylist)}
             {
-                state.currentsongs.map((song) => 
+                state.currentalbumsongs.map((song) => 
                 {
+                    console.log(song);
                     let artists = artistamt(song.track.artists);
                     return(
                         <Song 

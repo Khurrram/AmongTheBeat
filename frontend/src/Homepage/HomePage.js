@@ -95,7 +95,9 @@ function HomePage() {
   const [username, setUser] = useState("");
   const [currentplaylist, setPlaylist] = useState({});
   const [currentsongs, setSongs] = useState([]);
-  const value = { state: { page, settings, currentplaylist, currentsongs }, actions: { setPage, setSettings, setPlaylist, setSongs } };
+  const [currentalbum, setcurrentAlbum] = useState({});
+  const [currentalbumsongs, setcurrentalbumSongs] = useState([]);
+  const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs }, actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs } };
 
   let viewPage;
   if (page === 0) {
