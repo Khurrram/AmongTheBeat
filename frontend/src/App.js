@@ -56,6 +56,11 @@ function App() {
             }
           />
           <Route
+            path="/land"
+            exact={true}
+            component={LandingPage}
+          />
+          <Route
             path="/mood"
             exact={true}
             render={() =>

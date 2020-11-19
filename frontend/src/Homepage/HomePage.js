@@ -97,7 +97,7 @@ function HomePage() {
   const [currentalbum, setcurrentAlbum] = useState({});
   const [rerender, setRerender] = useState(0);
   const [currentalbumsongs, setcurrentalbumSongs] = useState([]);
-  const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs, rerender}, actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs, setRerender, handleOnDragEnd } };
+  const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs, rerender}, actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs, setRerender } };
 
 
   const handleOnDragEnd = (result) =>
@@ -121,6 +121,7 @@ function HomePage() {
         .post("http://localhost:5000/api/song/updateplaylist",data)
           .then(function(res)
           {
+            console.log("Updated list: ", res.data);
             setPlaylist(res.data);
             setSongs(items);
             setPage(1);

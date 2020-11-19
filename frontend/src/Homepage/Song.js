@@ -150,7 +150,6 @@ function Song(props) {
     .then(function (res) {
       setPlaylists(res.data.playlists);
       setCurrSong(res.data.song);
-      console.log(res.data);
     })
     .catch((err) => console.log(err));
   }
@@ -167,6 +166,7 @@ function Song(props) {
 
   function addtoPlaylist(e, playlistid, uri) {
     e.preventDefault();
+    console.log("called here");
     let data = { id: playlistid, song_uri: uri}
     axios
     .post("http://localhost:5000/api/song/addtoplaylist", data)
