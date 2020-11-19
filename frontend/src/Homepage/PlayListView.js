@@ -111,70 +111,6 @@ function PlayListView(props) {
 
   let id = playlist._id;
   let owner = playlist.owner_id;
-<<<<<<< HEAD
-
-  function handleOnDragEnd(result) {
-    if (!result.destination) return;
-    const items = state.currentsongs;
-    console.log("Current items:", items);
-    const [reordereditem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reordereditem);
-    console.log("Items now: ", items);
-
-    let newids = [];
-    for (var i = 0; i < items.length; i++) {
-      newids.push(items[i]._id + "");
-    }
-
-    let pid = state.currentplaylist._id + "";
-    let data = { id: pid, upsongs: newids };
-    console.log("Data: ", data);
-    axios
-      .post("http://localhost:5000/api/song/updateplaylist", data)
-      .then(function (res) {
-        console.log("Success!", res.data);
-        actions.setPlaylist(res.data);
-        actions.setSongs(items);
-        actions.setPage(1);
-      })
-      .catch((err) => console.log(err));
-  }
-||||||| merged common ancestors
-  
-  function handleOnDragEnd(result)
-  {
-
-      if (!result.destination) return;
-      const items = state.currentsongs;
-      console.log("Current items:", items)
-      const [reordereditem] = items.splice(result.source.index,1);
-      items.splice(result.destination.index, 0 , reordereditem);
-      console.log("Items now: ", items);
-      
-      let newids = []
-      for(var i = 0; i < items.length; i++)
-      {
-        newids.push(items[i]._id + "");
-      }
-
-      let pid = state.currentplaylist._id + "";
-      let data = {id: pid, upsongs: newids};
-      console.log("Data: ", data);
-      axios
-        .post("http://localhost:5000/api/song/updateplaylist",data)
-          .then(function(res)
-          {
-            console.log("Success!", res.data);
-            actions.setPlaylist(res.data);
-            actions.setSongs(items);
-            actions.setPage(1);
-          })
-            .catch((err) => console.log(err));
-
-
-  }
-=======
->>>>>>> e595a081b5b39394d0ac2f0d8ad3d9f1ca60db84
 
   const shareAction = (e) => {
     e.preventDefault();
@@ -251,8 +187,7 @@ function PlayListView(props) {
         <hr />
       </span>
       <SongDiv>
-<<<<<<< HEAD
-        <DragDropContext onDragEnd={handleOnDragEnd}>
+        <DragDropContext onDragEnd={(res) => actions.handleOnDragEnd(res)}>
           <Droppable droppableId="songs">
             {(provided) => (
               <div
@@ -288,69 +223,6 @@ function PlayListView(props) {
             )}
           </Droppable>
         </DragDropContext>
-||||||| merged common ancestors
-      <DragDropContext onDragEnd = {handleOnDragEnd}>
-        <Droppable droppableId = "songs">
-          {( provided) => (
-          <div id = "inside" {...provided.droppableProps} ref = {provided.innerRef}>
-            {state.currentsongs.map(({song_name,artist_name,_id}, index) => 
-            {
-              return(
-                  <Draggable key = {_id} draggableId = {_id} index = {index}>
-                      {(provided) => (
-                      <CustomP
-                      {...provided.draggableProps}
-                      ref = {provided.innerRef}
-                      {...provided.dragHandleProps}
-                      >
-                      <Song 
-                      name={song_name} 
-                      artist={artist_name} 
-                      id={_id} 
-                      playlist_id= {id} 
-                      type="Playlists" />
-                      </CustomP>
-                      )}
-                  </Draggable>
-              );
-            })}
-          {provided.placeholder}
-          </div>
-          )}
-        </Droppable>
-    </DragDropContext>
-=======
-      <DragDropContext onDragEnd = {(res) => actions.handleOnDragEnd(res)}>
-        <Droppable droppableId = "songs">
-          {( provided) => (
-          <div id = "inside" {...provided.droppableProps} ref = {provided.innerRef}>
-            {state.currentsongs.map(({song_name,artist_name,_id}, index) => 
-            {
-              return(
-                  <Draggable key = {_id} draggableId = {_id} index = {index}>
-                      {(provided) => (
-                      <CustomP
-                      {...provided.draggableProps}
-                      ref = {provided.innerRef}
-                      {...provided.dragHandleProps}
-                      >
-                      <Song 
-                      name={song_name} 
-                      artist={artist_name} 
-                      id={_id} 
-                      playlist_id= {id} 
-                      type="Playlists" />
-                      </CustomP>
-                      )}
-                  </Draggable>
-              );
-            })}
-          {provided.placeholder}
-          </div>
-          )}
-        </Droppable>
-    </DragDropContext>
->>>>>>> e595a081b5b39394d0ac2f0d8ad3d9f1ca60db84
       </SongDiv>
     </StyledDiv>
   );
