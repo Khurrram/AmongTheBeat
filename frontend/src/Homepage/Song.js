@@ -8,8 +8,8 @@ import QueueMusicIcon from "@material-ui/icons/QueueMusic";
 import AddIcon from "@material-ui/icons/Add";
 import { Button } from "react-materialize";
 import Modal from "react-modal";
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
 import { ViewPage } from "./HomePage";
@@ -143,23 +143,28 @@ function Song(props) {
   function toggleModal() {
     setModalIsOpen(!modalIsOpen);
     if (!modalIsOpen) {
-    let data = {id: session.id, song_name : name, artist_name: artist, uri: uri};
+      let data = {
+        id: session.id,
+        song_name: name,
+        artist_name: artist,
+        uri: uri,
+      };
 
-    axios
-    .post("http://localhost:5000/api/song/getplaylists", data)
-    .then(function (res) {
-      setPlaylists(res.data.playlists);
-      setCurrSong(res.data.song);
-      console.log(res.data);
-    })
-    .catch((err) => console.log(err));
-  }
+      axios
+        .post("http://localhost:5000/api/song/getplaylists", data)
+        .then(function (res) {
+          setPlaylists(res.data.playlists);
+          setCurrSong(res.data.song);
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
   }
 
-  function handleClick(event){
+  function handleClick(event) {
     setAnchorEl(event.currentTarget);
     // console.log(id);
-  };
+  }
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -167,27 +172,27 @@ function Song(props) {
 
   function addtoPlaylist(e, playlistid, uri) {
     e.preventDefault();
-    let data = { id: playlistid, song_uri: uri}
+    let data = { id: playlistid, song_uri: uri };
     axios
-    .post("http://localhost:5000/api/song/addtoplaylist", data)
-    .then(function (res) {
-      setModalIsOpen(!modalIsOpen);
-    })
-    .catch((err) => console.log(err));
+      .post("http://localhost:5000/api/song/addtoplaylist", data)
+      .then(function (res) {
+        setModalIsOpen(!modalIsOpen);
+      })
+      .catch((err) => console.log(err));
   }
 
   function removeSong(e, song) {
     e.preventDefault();
-    let data = { id: playlist_id, song: song}
+    let data = { id: playlist_id, song: song };
     axios
-    .post("http://localhost:5000/api/song/removefromplaylist", data)
-    .then(function (res) {
-      actions.setPlaylist(res.data);
-      actions.setPage(1);
-      console.log("song is removed");
-      setAnchorEl(null);
-    })
-    .catch((err) => console.log(err));
+      .post("http://localhost:5000/api/song/removefromplaylist", data)
+      .then(function (res) {
+        actions.setPlaylist(res.data);
+        actions.setPage(1);
+        console.log("song is removed");
+        setAnchorEl(null);
+      })
+      .catch((err) => console.log(err));
   }
 
   return (
@@ -202,7 +207,11 @@ function Song(props) {
 
         {/*  JUST SAMPLE FOR TESTING, THIS IS WHERE DATABASE IMPLEMENTATION NEEDS TO BE ADDED */}
         {playlists.map((playlist) => {
-          return <ModalContent onClick={(e) => addtoPlaylist(e, playlist._id, uri)}>{playlist.playlist_name}</ModalContent>;
+          return (
+            <ModalContent onClick={(e) => addtoPlaylist(e, playlist._id, uri)}>
+              {playlist.playlist_name}
+            </ModalContent>
+          );
         })}
       </Modal>
 
@@ -214,7 +223,7 @@ function Song(props) {
         onClose={handleClose}
       >
         <MenuItem onClick={(e) => removeSong(e, id)}>Confirm</MenuItem>
-        <MenuItem onClick = {() => handleClose()}>Cancel</MenuItem>
+        <MenuItem onClick={() => handleClose()}>Cancel</MenuItem>
       </Menu>
 
       <SongInfo>
@@ -236,17 +245,18 @@ function Song(props) {
 
 function View(props, toggleModal, handleClick) {
   return (
-    <SongAction >
+    <SongAction>
       <StyledHeart></StyledHeart>
       <StyledQueue />
       {props.Browse ? (
         <StyledPlaylistAdd onClick={() => toggleModal()} />
       ) : (
-        <StyledTrashCan aria-label="more"
-                   aria-controls="long-menu"
-                   aria-haspopup="true"
-                   onClick={(e) => handleClick(e)}
-                    />
+        <StyledTrashCan
+          aria-label="more"
+          aria-controls="long-menu"
+          aria-haspopup="true"
+          onClick={(e) => handleClick(e)}
+        />
       )}
     </SongAction>
   );

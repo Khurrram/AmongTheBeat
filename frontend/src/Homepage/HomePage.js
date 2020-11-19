@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useReducer } from "react";
 
 import styled from "styled-components";
 import Avatar from "@material-ui/core/Avatar";
@@ -14,6 +14,7 @@ import BrowseView from "./BrowseView";
 import axios from "axios";
 import { SessionContext } from "../App";
 import { getSessionCookie } from "../CookieHandler";
+import { playlistsInitialState, playlistReducer } from "./reducers";
 import "./HomePage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-pro-sidebar/dist/css/styles.css";
@@ -90,26 +91,76 @@ export const ViewPage = React.createContext();
 function HomePage() {
   const session = getSessionCookie();
 
+  const [reduceState, dispatch] = useReducer(
+    playlistReducer,
+    playlistsInitialState
+  );
+  const [test, setTest] = useState(0);
+
+  useEffect(() => {
+    let data = { id: session.id };
+    axios
+      .post("http://localhost:5000/api/playlist/getplaylists", data)
+      .then((response) => {
+        // console.log({ response });
+        dispatch({ type: "FETCH_SUCCESS", playlists: response.data });
+      })
+      .catch((error) => {
+        dispatch({
+          type: "FETCH_ERROR",
+          errorMessage: "Fail update Playlists" + error,
+        });
+      });
+  }, [test]);
+
+  const playlistView2 = (idObject) => {
+    axios
+      .post("http://localhost:5000/api/playlist/getsongs", idObject)
+      .then((response) => {
+        dispatch({ type: "FETCH_SONG_SUCCESS", playlistSongs: response.data });
+      })
+      .catch((error) =>
+        dispatch({
+          type: "FETCH_ERROR",
+          errorMessage: "Fail update playlist songs" + error,
+        })
+      );
+    setPage(1);
+  };
+
   const [page, setPage] = useState(3);
+
   const [settings, setSettings] = useState(false);
   const [username, setUser] = useState("");
   const [currentplaylist, setPlaylist] = useState({});
   const [currentsongs, setSongs] = useState([]);
-  const [currentalbum, setcurrentAlbum] = useState({});
-  const [currentalbumsongs, setcurrentalbumSongs] = useState([]);
-  const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs }, actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs } };
+
+  const value = {
+    state: { settings, currentplaylist, currentsongs, reduceState },
+    actions: {
+      setPage,
+      setSettings,
+      setPlaylist,
+      setSongs,
+      setTest,
+      playlistView2,
+    },
+  };
 
   let viewPage;
   if (page === 0) {
-    viewPage = <BrowseView session = {session}/>;
+    viewPage = <BrowseView session={session} />;
   } else if (page === 1) {
     console.log(currentplaylist.playlist_name);
-    viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0} songs={currentsongs}/>;
-  } else if (page === 2)
-    {
-      viewPage = <AlbumPage />
-    }
-  else {
+    viewPage = (
+      <PlayListView
+        playlist={currentplaylist}
+        playlistName={currentplaylist.playlist_name}
+        playlistTime={0}
+        songs={currentsongs}
+      />
+    );
+  } else {
     setPage(0);
     viewPage = <BrowseView />;
   }
