@@ -110,43 +110,8 @@ function PlayListView(props) {
   const { state, actions } = useContext(ViewPage);
   const [editing, setEdit] = useState(false);
 
-  console.log("state", state);
-  console.log("actions ", actions);
   let id = playlist._id;
   let owner = playlist.owner_id;
-  
-  function handleOnDragEnd(result)
-  {
-
-      if (!result.destination) return;
-      const items = state.currentsongs;
-      console.log("Current items:", items)
-      const [reordereditem] = items.splice(result.source.index,1);
-      items.splice(result.destination.index, 0 , reordereditem);
-      console.log("Items now: ", items);
-      
-      let newids = []
-      for(var i = 0; i < items.length; i++)
-      {
-        newids.push(items[i]._id + "");
-      }
-
-      let pid = state.currentplaylist._id + "";
-      let data = {id: pid, upsongs: newids};
-      console.log("Data: ", data);
-      axios
-        .post("http://localhost:5000/api/song/updateplaylist",data)
-          .then(function(res)
-          {
-            console.log("Success!", res.data);
-            actions.setPlaylist(res.data);
-            actions.setSongs(items);
-            actions.setPage(1);
-          })
-            .catch((err) => console.log(err));
-
-
-  }
 
   const shareAction = (e) => {
     e.preventDefault();
@@ -223,7 +188,7 @@ function PlayListView(props) {
         <hr />
       </span>
       <SongDiv>
-      <DragDropContext onDragEnd = {handleOnDragEnd}>
+      <DragDropContext onDragEnd = {(res) => actions.handleOnDragEnd(res)}>
         <Droppable droppableId = "songs">
           {( provided) => (
           <div id = "inside" {...provided.droppableProps} ref = {provided.innerRef}>

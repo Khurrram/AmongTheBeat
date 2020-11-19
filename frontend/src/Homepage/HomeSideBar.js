@@ -79,6 +79,7 @@ function HomeSideBar(props) {
     axios
       .post("http://localhost:5000/api/playlist/getsongs", data)
       .then(function (res) {
+        console.log("IN HERE, ", res.data);
         actions.setSongs(res.data);
         actions.setPlaylist(playlist);
         actions.setPage(1);

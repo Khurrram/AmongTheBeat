@@ -97,14 +97,42 @@ function HomePage() {
   const [currentsongs, setSongs] = useState([]);
   const [currentalbum, setcurrentAlbum] = useState({});
   const [currentalbumsongs, setcurrentalbumSongs] = useState([]);
-  const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs }, actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs } };
+
+  const handleOnDragEnd = (result) =>
+  {
+
+      if (!result.destination) return;
+      const items = currentsongs;
+      const [reordereditem] = items.splice(result.source.index,1);
+      items.splice(result.destination.index, 0 , reordereditem);
+      console.log("Items now: ", items);
+      
+      let newids = []
+      for(var i = 0; i < items.length; i++)
+      {
+        newids.push(items[i]._id + "");
+      }
+
+      let pid = currentplaylist._id + "";
+      let data = {id: pid, upsongs: newids};
+      axios
+        .post("http://localhost:5000/api/song/updateplaylist",data)
+          .then(function(res)
+          {
+            setPlaylist(res.data);
+            setSongs(items);
+            setPage(1);
+          })
+            .catch((err) => console.log(err));
+  }
+
+  const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs }, actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs, handleOnDragEnd } };
 
   let viewPage;
   if (page === 0) {
     viewPage = <BrowseView session = {session}/>;
   } else if (page === 1) {
-    console.log(currentplaylist.playlist_name);
-    viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0} songs={currentsongs}/>;
+    viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0} songs={currentsongs} handleOnDragEnd = {handleOnDragEnd}/>;
   } else if (page === 2)
     {
       viewPage = <AlbumPage />
