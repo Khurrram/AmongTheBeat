@@ -52,34 +52,35 @@ function HomeSideBar(props) {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
+      console.log("Use Effect HomeSideBar");
       const result = await axios.post(
         "http://localhost:5000/api/playlist/getplaylists",
         data
       );
-      // console.log("RESULTS " + JSON.stringify(result.data));
       setPlaylists(result.data);
       setIsLoading(false);
     };
     fetchData();
-  }, [createNew]);
+  }, [state.rerender]);
 
   function createPlaylist(e) {
     e.preventDefault();
     axios
       .post("http://localhost:5000/api/playlist/createPlaylist", data)
       .then(function (res) {
-        setCreateNew(!createNew);
+        console.log(actions);
+        actions.setRerender(state.rerender+1);
       })
       .catch((err) => console.log(err));
   }
 
   function currentplaylist(playlist) {
     let data = {id: playlist._id};
-
+    console.log("current playlist is clicked");
     axios
       .post("http://localhost:5000/api/playlist/getsongs", data)
       .then(function (res) {
-        console.log("IN HERE, ", res.data);
+        console.log("getsongs " + res.data);
         actions.setSongs(res.data);
         actions.setPlaylist(playlist);
         actions.setPage(1);

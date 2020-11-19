@@ -183,7 +183,17 @@ function Song(props) {
     .post("http://localhost:5000/api/song/removefromplaylist", data)
     .then(function (res) {
       actions.setPlaylist(res.data);
-      actions.setPage(1);
+      actions.setCurrentPlaylist(res.data);
+
+      axios
+        .post("http://localhost:5000/api/playlist/getsongs", data)
+        .then(function (res) {
+          console.log("called getsongs");
+          actions.setSongs(res.data);
+          actions.setPage(1);
+          actions.setRerender(state.rerender+1);
+        })
+        .catch((err) => console.log(err));
       console.log("song is removed");
       setAnchorEl(null);
     })

@@ -92,11 +92,13 @@ function HomePage() {
 
   const [page, setPage] = useState(3);
   const [settings, setSettings] = useState(false);
-  const [username, setUser] = useState("");
   const [currentplaylist, setPlaylist] = useState({});
   const [currentsongs, setSongs] = useState([]);
   const [currentalbum, setcurrentAlbum] = useState({});
+  const [rerender, setRerender] = useState(0);
   const [currentalbumsongs, setcurrentalbumSongs] = useState([]);
+  const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs, rerender}, actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs, setRerender, handleOnDragEnd } };
+
 
   const handleOnDragEnd = (result) =>
   {
@@ -126,13 +128,12 @@ function HomePage() {
             .catch((err) => console.log(err));
   }
 
-  const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs }, actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs, handleOnDragEnd } };
-
+  
   let viewPage;
   if (page === 0) {
     viewPage = <BrowseView session = {session}/>;
   } else if (page === 1) {
-    viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0} songs={currentsongs} handleOnDragEnd = {handleOnDragEnd}/>;
+    viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0} songs={currentsongs} deletePlaylist={deletePlaylist} handleOnDragEnd={handleOnDragEnd} />;
   } else if (page === 2)
     {
       viewPage = <AlbumPage />
@@ -141,6 +142,23 @@ function HomePage() {
     setPage(0);
     viewPage = <BrowseView />;
   }
+
+
+  function deletePlaylist(e, id, owner) {
+    e.preventDefault();
+    let data = {id: id, owner: owner};
+    axios
+    .post("http://localhost:5000/api/playlist/delete", data)
+    .then(function (res) {
+      console.log("playlist has been deleted");
+      setPlaylist(res.data);
+      setRerender(rerender+1);
+      setPage(0);
+    })
+    .catch((err) => console.log(err));
+  }
+
+
 
   return (
     <ViewPage.Provider value={value}>
@@ -171,5 +189,6 @@ function HomePage() {
     </ViewPage.Provider>
   );
 }
+
 
 export default HomePage;
