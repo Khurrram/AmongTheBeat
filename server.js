@@ -239,6 +239,7 @@ app.post("/api/user/remove", (req, res) => {
 
 app.post("/api/user/changepass", (req, res) => {
   let id = req.body.id;
+  let oldpass = req.body.oldpass;
   let updatedpass = req.body.updatedpass;
   userModel.findOneAndUpdate(
     { _id: id, password: oldpass },
