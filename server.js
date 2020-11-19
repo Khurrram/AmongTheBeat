@@ -550,10 +550,10 @@ app.post("/api/playlist/getsongs", (req, res) => {
           console.log(err);
         } 
             songModel.find({_id: { $in: playlist.songs_ids} }, function(err,song){
-              // console.log(song);
               if (err) {
                 console.log(err);
               } 
+                console.log(song);
                 res.send(song);
             });
       }

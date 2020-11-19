@@ -5,6 +5,10 @@ export const setSessionCookie = (session) => {
   Cookies.set("session", session, { expires: 1 });
 };
 
+export const removeSessionCookie = () => {
+  Cookies.remove("session")
+}
+
 export const getSessionCookie = () => {
   const sessionCookie = Cookies.get("session");
 

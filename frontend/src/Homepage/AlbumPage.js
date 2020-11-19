@@ -129,6 +129,7 @@ function AlbumPage(props)
                             artist = {artists}
                             time = {msToTime(song.track.duration_ms)}
                             uri = {song.track.uri}
+                            id = {song.track.id}
                             Browse = {true}
                         />
                     );

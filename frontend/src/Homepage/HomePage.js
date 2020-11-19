@@ -119,6 +119,7 @@ function HomePage() {
         .post("http://localhost:5000/api/song/updateplaylist",data)
           .then(function(res)
           {
+            console.log("Updated list: ", res.data);
             setPlaylist(res.data);
             setSongs(items);
             setPage(1);
@@ -126,7 +127,9 @@ function HomePage() {
             .catch((err) => console.log(err));
   }
 
-  const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs }, actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs, handleOnDragEnd } };
+  const value = 
+  { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs }, 
+  actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs} };
 
   let viewPage;
   if (page === 0) {

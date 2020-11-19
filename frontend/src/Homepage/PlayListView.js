@@ -176,7 +176,7 @@ function PlayListView(props) {
         <StyledTrash onClick={(e) => deletePlaylist(e, id, owner)}/>
         <h6 id="timestamp">{playlistTime}</h6>
         <h6>
-          {playlist.length + " "}
+          {state.currentsongs.length + " "}
           Songs
         </h6>
       </span>
@@ -188,7 +188,7 @@ function PlayListView(props) {
         <hr />
       </span>
       <SongDiv>
-      <DragDropContext onDragEnd = {(res) => actions.handleOnDragEnd(res)}>
+      <DragDropContext onDragEnd = {(res) => props.handleOnDragEnd(res)}>
         <Droppable droppableId = "songs">
           {( provided) => (
           <div id = "inside" {...provided.droppableProps} ref = {provided.innerRef}>

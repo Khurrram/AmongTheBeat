@@ -3,11 +3,14 @@ import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-import { Link } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
+
 import { Button } from "react-materialize";
 import { SessionContext } from "../App";
 import { ViewPage } from "./HomePage";
 import axios from "axios";
+import { removeSessionCookie } from "../CookieHandler";
+import { HistoryRounded } from "@material-ui/icons";
 
 const SettingDiv = styled.div`
   display: flex;
@@ -94,6 +97,7 @@ const useStyles = makeStyles({
 });
 
 function SettingView(props) {
+  const history = useHistory();
   const { state, actions } = useContext(ViewPage);
   const session = useContext(SessionContext);
 
@@ -211,7 +215,11 @@ function SettingView(props) {
             Confirm
           </Button>
 
-          <Button id="logout">Log Out</Button>
+          <Button id="logout" onClick={()=> {
+            console.log("asdasd");
+            removeSessionCookie();
+            
+          }}>Log Out</Button>
         </AccountButtonDiv>
       </SettingDiv>
     </SidebarDiv>
