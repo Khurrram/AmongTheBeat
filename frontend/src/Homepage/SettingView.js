@@ -215,11 +215,16 @@ function SettingView(props) {
             Confirm
           </Button>
 
-          <Button id="logout" onClick={()=> {
-            console.log("asdasd");
-            removeSessionCookie();
-            history.push("/land");
-          }}>Log Out</Button>
+          <Button
+            id="logout"
+            onClick={() => {
+              console.log("asdasd");
+              removeSessionCookie();
+              history.push("/");
+            }}
+          >
+            Log Out
+          </Button>
         </AccountButtonDiv>
       </SettingDiv>
     </SidebarDiv>

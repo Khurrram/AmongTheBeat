@@ -55,11 +55,7 @@ function App() {
               )
             }
           />
-          <Route
-            path="/land"
-            exact={true}
-            component={LandingPage}
-          />
+          <Route path="/landing" exact={true} component={LandingPage} />
           <Route
             path="/mood"
             exact={true}
@@ -94,17 +90,12 @@ function App() {
             }
           />
 
-          <Route 
-            path = "/test"
-            exact = {true}
+          <Route
+            path="/test"
+            exact={true}
             render={() =>
-              !session.username === undefined ? (
-                <Redirect to="/" />
-              ) : (
-                <Test />
-              )
+              !session.username === undefined ? <Redirect to="/" /> : <Test />
             }
-          
           />
         </Switch>
       </Router>
