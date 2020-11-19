@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import Song from "./Song";
 import TrashIcon from "@material-ui/icons/Delete";
@@ -7,10 +7,10 @@ import axios from "axios";
 import { ViewPage } from "./HomePage";
 import { withStyles } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
-import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from "@material-ui/icons/Edit";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import mongoose from 'mongoose';
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import mongoose from "mongoose";
 
 const StyledDiv = styled.div`
   padding: 1.5rem;
@@ -76,7 +76,7 @@ const CustomP = styled.p`
   margin-block-start: 0em;
   margin-block-end: 0em;
   margin-bottom: 0rem;
-`
+`;
 
 const StyledTrash = styled(TrashIcon)`
   margin-left: 1rem;
@@ -93,17 +93,16 @@ const StyledButton = styled(Button)`
 const DisabledTextName = withStyles({
   root: {
     "& .MuiInputBase-root.Mui-disabled": {
-      color: "#BDBDBD" // (default alpha is 0.38)
+      color: "#BDBDBD", // (default alpha is 0.38)
     },
-    "& .MuiInput-underline.Mui-disabled:before" : {
-      borderBottomStyle: 'none'
+    "& .MuiInput-underline.Mui-disabled:before": {
+      borderBottomStyle: "none",
     },
-    "& .MuiInputBase-root" : {
-      color: "#EE276A"
-    }
-  }
+    "& .MuiInputBase-root": {
+      color: "#EE276A",
+    },
+  },
 })(TextField);
-
 
 function PlayListView(props) {
   let { playlistName, playlistTime, playlist, songs } = props;
@@ -114,38 +113,32 @@ function PlayListView(props) {
   console.log("actions ", actions);
   let id = playlist._id;
   let owner = playlist.owner_id;
-  
-  function handleOnDragEnd(result)
-  {
 
-      if (!result.destination) return;
-      const items = state.currentsongs;
-      console.log("Current items:", items)
-      const [reordereditem] = items.splice(result.source.index,1);
-      items.splice(result.destination.index, 0 , reordereditem);
-      console.log("Items now: ", items);
-      
-      let newids = []
-      for(var i = 0; i < items.length; i++)
-      {
-        newids.push(items[i]._id + "");
-      }
+  function handleOnDragEnd(result) {
+    if (!result.destination) return;
+    const items = state.currentsongs;
+    console.log("Current items:", items);
+    const [reordereditem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reordereditem);
+    console.log("Items now: ", items);
 
-      let pid = state.currentplaylist._id + "";
-      let data = {id: pid, upsongs: newids};
-      console.log("Data: ", data);
-      axios
-        .post("http://localhost:5000/api/song/updateplaylist",data)
-          .then(function(res)
-          {
-            console.log("Success!", res.data);
-            actions.setPlaylist(res.data);
-            actions.setSongs(items);
-            actions.setPage(1);
-          })
-            .catch((err) => console.log(err));
+    let newids = [];
+    for (var i = 0; i < items.length; i++) {
+      newids.push(items[i]._id + "");
+    }
 
-
+    let pid = state.currentplaylist._id + "";
+    let data = { id: pid, upsongs: newids };
+    console.log("Data: ", data);
+    axios
+      .post("http://localhost:5000/api/song/updateplaylist", data)
+      .then(function (res) {
+        console.log("Success!", res.data);
+        actions.setPlaylist(res.data);
+        actions.setSongs(items);
+        actions.setPage(1);
+      })
+      .catch((err) => console.log(err));
   }
 
   const shareAction = (e) => {
@@ -157,50 +150,50 @@ function PlayListView(props) {
     setEdit(true);
     console.log("double clicked");
   }
-  
+
   function onblurHandler(e, playlist_id) {
     e.preventDefault();
     console.log(e.target.value);
-    let data = {id : playlist_id, updatedname: e.target.value};
+    let data = { id: playlist_id, updatedname: e.target.value };
     axios
-    .post("http://localhost:5000/api/playlist/editname", data)
-    .then(function (res) {
-      setEdit(false);
-      actions.setPage(1);
-    })
-    .catch((err) => console.log(err));
+      .post("http://localhost:5000/api/playlist/editname", data)
+      .then(function (res) {
+        setEdit(false);
+        actions.setPage(1);
+      })
+      .catch((err) => console.log(err));
   }
-
 
   function deletePlaylist(e, id, owner) {
     e.preventDefault();
-    let data = {id: id, owner: owner};
+    let data = { id: id, owner: owner };
     axios
-    .post("http://localhost:5000/api/playlist/delete", data)
-    .then(function (res) {
-      console.log("playlist has been deleted");
-      actions.setPage(0);
-    })
-    .catch((err) => console.log(err));
-
-}
+      .post("http://localhost:5000/api/playlist/delete", data)
+      .then(function (res) {
+        console.log("playlist has been deleted");
+        actions.setPage(0);
+      })
+      .catch((err) => console.log(err));
+  }
 
   return (
     <StyledDiv>
       <span>
-              {editing?
-              <h1>
-              <DisabledTextName
+        {editing ? (
+          <h1>
+            <DisabledTextName
               variant="standard"
-              // onChange={(e) => doubleclicked(e, id)} 
+              // onChange={(e) => doubleclicked(e, id)}
               onBlur={(e) => onblurHandler(e, id)}
               defaultValue={playlistName}
-              />
-              </h1> : 
-              <h1>
-              {playlistName}
-              <EditIcon onClick={(e) => doubleclicked(e, id)}/>
-              </h1>}
+            />
+          </h1>
+        ) : (
+          <h1>
+            {playlistName}
+            <EditIcon onClick={(e) => doubleclicked(e, id)} />
+          </h1>
+        )}
         <StyledButton
           variant="contained"
           disableElevation
@@ -208,7 +201,7 @@ function PlayListView(props) {
         >
           Share
         </StyledButton>
-        <StyledTrash onClick={(e) => deletePlaylist(e, id, owner)}/>
+        <StyledTrash onClick={(e) => deletePlaylist(e, id, owner)} />
         <h6 id="timestamp">{playlistTime}</h6>
         <h6>
           {playlist.length + " "}
@@ -223,41 +216,45 @@ function PlayListView(props) {
         <hr />
       </span>
       <SongDiv>
-      <DragDropContext onDragEnd = {handleOnDragEnd}>
-        <Droppable droppableId = "songs">
-          {( provided) => (
-          <div id = "inside" {...provided.droppableProps} ref = {provided.innerRef}>
-            {state.currentsongs.map(({song_name,artist_name,_id}, index) => 
-            {
-              return(
-                  <Draggable key = {_id} draggableId = {_id} index = {index}>
-                      {(provided) => (
-                      <CustomP
-                      {...provided.draggableProps}
-                      ref = {provided.innerRef}
-                      {...provided.dragHandleProps}
-                      >
-                      <Song 
-                      name={song_name} 
-                      artist={artist_name} 
-                      id={_id} 
-                      playlist_id= {id} 
-                      type="Playlists" />
-                      </CustomP>
-                      )}
-                  </Draggable>
-              );
-            })}
-          {provided.placeholder}
-          </div>
-          )}
-        </Droppable>
-    </DragDropContext>
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Droppable droppableId="songs">
+            {(provided) => (
+              <div
+                id="inside"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {state.currentsongs.map(
+                  ({ song_name, artist_name, _id }, index) => {
+                    return (
+                      <Draggable key={_id} draggableId={_id} index={index}>
+                        {(provided) => (
+                          <CustomP
+                            {...provided.draggableProps}
+                            ref={provided.innerRef}
+                            {...provided.dragHandleProps}
+                          >
+                            <Song
+                              name={song_name}
+                              artist={artist_name}
+                              id={_id}
+                              playlist_id={id}
+                              type="Playlists"
+                            />
+                          </CustomP>
+                        )}
+                      </Draggable>
+                    );
+                  }
+                )}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </SongDiv>
     </StyledDiv>
   );
 }
-
-
 
 export default PlayListView;
