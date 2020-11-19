@@ -14,8 +14,6 @@ import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
 import { ViewPage } from "./HomePage";
 
-import test from "../data/test.json";
-
 import "./Song.css";
 
 const Container = styled.div`
@@ -134,7 +132,7 @@ const ModalContent = styled.div`
 Modal.setAppElement("#root");
 
 function Song(props) {
-  const { name, artist, time, playlist, uri, id, playlist_id, update } = props;
+  const { name, artist, time, playlist, uri, id, playlist_id, update, images } = props;
   const session = getSessionCookie();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [playlists, setPlaylists] = useState([]);
@@ -219,7 +217,6 @@ function Song(props) {
         <MenuItem onClick = {() => handleClose()}>Cancel</MenuItem>
       </Menu>
 
-      <StyledAvatar variant="rounded"> L </StyledAvatar>
       <SongInfo>
         <SongName>{name}</SongName>
         <SongArtist>{artist}</SongArtist>

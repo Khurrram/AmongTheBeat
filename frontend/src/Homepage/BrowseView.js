@@ -9,7 +9,8 @@ import { Search } from "@material-ui/icons";
 import testplay from '../data/testsongs.json'
 import axios from "axios";
 import { session } from "passport";
-
+import Album from "./Album";
+import { getSessionCookie } from "../CookieHandler";
 
 const StyledDiv = styled.div`
   padding: 1.5rem;
@@ -80,37 +81,53 @@ function BrowseView(props) {
 
   let { playlist, username } = props;
   playlist = testplay.songs; // TESTING PURPOSES
-
-  let data = {id: session.id}
   const fetchData1 = async () =>
     {
+      const session = getSessionCookie();
+      let data = {_id: session.id};
+      let accessToken = ""
+      await axios.post("http://localhost:5000/api/getToken",data)
+      .then(function(res)
+      {
+          accessToken = res.data.accessToken;
+      }).catch((err) => console.log(err));
+
+
+      let data2 = {curraccessToken: accessToken};
       setLoad(true);
-      const result = await axios.post("http://localhost:5000/api/browse", data);
-      console.log("IN HERE");
+      const result = await axios.post("http://localhost:5000/api/browse", data2);
       setcurrPlay(result.data);
       setLoad(false);
     }
 
     async function clicklol() {
       let a =  await fetchData1();
-      console.log(a);
     }
   
   useEffect(() =>
   {
     const fetchData = async () =>
     {
+      const session = getSessionCookie();
+      let data = {_id: session.id};
+      let accessToken = ""
+      await axios.post("http://localhost:5000/api/getToken",data)
+      .then(function(res)
+      {
+          accessToken = res.data.accessToken;
+      }).catch((err) => console.log(err));
+
+      let data2 = {curraccessToken: accessToken};
       setLoad(true);
-      const result = await axios.post("http://localhost:5000/api/browse", data);
-      console.log("IN HERE");
+      const result = await axios.post("http://localhost:5000/api/browse", data2);
+      console.log(result.data);
       setcurrPlay(result.data);
-      // console.log("end end end  "+JSON.parse(result.data));
-      console.log("end end end  "+JSON.stringify(result.data));
       setLoad(false);
       return result.data;
     }
-    fetchData().then(u => {console.log("u  "+ JSON.stringify(u));setcurrPlay(u)});
+    fetchData().then(u => {setcurrPlay(u)});
   }, []);
+  
 
   return (
     <StyledDiv>
@@ -122,7 +139,7 @@ function BrowseView(props) {
       </span>
       <StyledSpan>
         <Title onClick={()=>{clicklol()}}>Title</Title>
-        {username ? "" : <Artist>Artist</Artist>}
+        {username ? "" : <Artist>Description</Artist>}
       </StyledSpan>
       <span>
         <hr />
@@ -131,22 +148,10 @@ function BrowseView(props) {
         {/* <Suspense><ExtraDiv testing={currPlay}/></Suspense> */}
         
         {currPlay ? 
-        currPlay.albums.items.map((album)=>{
-          if(album.album_type === "single")
-              {
-                let authors= ""; 
-
-                console.log(album);
-                for( var i = 0; i < album.artists.length; i++)
-                {
-                  if(i === album.artists.length-1){authors += album.artists[i].name;}
-                  else{authors += album.artists[i].name + ", ";}
-                }
-
-                return (
-                  <Song name={album.name} artist={authors} images = {album.images} uri = {album.uri} Browse = {true} />
-                );
-              }
+        currPlay.playlists.items.map((album)=>{
+          return (
+            <Album name = {album.name} playlistid = {album.id} images = {album.images[0].url} description = {album.description}/>
+          );
         }
         )
         :

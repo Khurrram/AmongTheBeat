@@ -4,6 +4,8 @@ import MoodPage from "./MoodPage/MoodPage";
 import LandingPage from "./LandingPage/LandingPage";
 import SettingsPage from "./components/Settings";
 import AdminPage from "./components/Admin";
+import Test from "./data/testdrag";
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -85,6 +87,19 @@ function App() {
                 <AdminPage />
               )
             }
+          />
+
+          <Route 
+            path = "/test"
+            exact = {true}
+            render={() =>
+              !session.username === undefined ? (
+                <Redirect to="/" />
+              ) : (
+                <Test />
+              )
+            }
+          
           />
         </Switch>
       </Router>
