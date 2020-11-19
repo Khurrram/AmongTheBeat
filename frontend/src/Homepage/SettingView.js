@@ -167,6 +167,7 @@ function SettingView(props) {
           defaultValue=""
           variant="outlined"
           label="Old Password"
+          type="password"
           onChange={(val) =>
             setcurrF({
               oldpass: val.target.value,
@@ -181,6 +182,7 @@ function SettingView(props) {
           defaultValue=""
           variant="outlined"
           label="New Password"
+          type="password"
           onChange={(val) =>
             setcurrF({
               oldpass: currF.oldpass,
@@ -195,6 +197,7 @@ function SettingView(props) {
           defaultValue=""
           variant="outlined"
           label="Confirm Password"
+          type="password"
           id="width"
           onChange={(val) =>
             setcurrF({
