@@ -1,10 +1,16 @@
-import React from "react";
+import React, {useContext, useState} from "react";
 import styled from "styled-components";
 import Song from "./Song";
 import TrashIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
+import { ViewPage } from "./HomePage";
+import { withStyles } from "@material-ui/core/styles";
+import { TextField } from "@material-ui/core";
+import EditIcon from '@material-ui/icons/Edit';
 import { Link, useHistory, useLocation } from "react-router-dom";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import mongoose from 'mongoose';
 
 const StyledDiv = styled.div`
   padding: 1.5rem;
@@ -66,6 +72,12 @@ const Title = styled.h6`
   grid-row-end: 1;
 `;
 
+const CustomP = styled.p`
+  margin-block-start: 0em;
+  margin-block-end: 0em;
+  margin-bottom: 0rem;
+`
+
 const StyledTrash = styled(TrashIcon)`
   margin-left: 1rem;
   color: white;
@@ -78,18 +90,87 @@ const StyledButton = styled(Button)`
   }
 `;
 
+const DisabledTextName = withStyles({
+  root: {
+    "& .MuiInputBase-root.Mui-disabled": {
+      color: "#BDBDBD" // (default alpha is 0.38)
+    },
+    "& .MuiInput-underline.Mui-disabled:before" : {
+      borderBottomStyle: 'none'
+    },
+    "& .MuiInputBase-root" : {
+      color: "#EE276A"
+    }
+  }
+})(TextField);
+
+
 function PlayListView(props) {
-  let { playlistName, playlistTime, playlist } = props;
-  console.log(playlist._id);
+  let { playlistName, playlistTime, playlist, songs } = props;
+  const { state, actions } = useContext(ViewPage);
+  const [editing, setEdit] = useState(false);
+
+  console.log("state", state);
+  console.log("actions ", actions);
   let id = playlist._id;
   let owner = playlist.owner_id;
-  console.log(owner);
-  let history = useHistory();
-  playlist = []; // TESTING PURPOSES
+  
+  function handleOnDragEnd(result)
+  {
+
+      if (!result.destination) return;
+      const items = state.currentsongs;
+      console.log("Current items:", items)
+      const [reordereditem] = items.splice(result.source.index,1);
+      items.splice(result.destination.index, 0 , reordereditem);
+      console.log("Items now: ", items);
+      
+      let newids = []
+      for(var i = 0; i < items.length; i++)
+      {
+        newids.push(items[i]._id + "");
+      }
+
+      let pid = state.currentplaylist._id + "";
+      let data = {id: pid, upsongs: newids};
+      console.log("Data: ", data);
+      axios
+        .post("http://localhost:5000/api/song/updateplaylist",data)
+          .then(function(res)
+          {
+            console.log("Success!", res.data);
+            actions.setPlaylist(res.data);
+            actions.setSongs(items);
+            actions.setPage(1);
+          })
+            .catch((err) => console.log(err));
+
+
+  }
 
   const shareAction = (e) => {
     e.preventDefault();
   };
+
+  function doubleclicked(e, playlist_id) {
+    e.preventDefault();
+    setEdit(true);
+    console.log("double clicked");
+  }
+  
+  function onblurHandler(e, playlist_id) {
+    e.preventDefault();
+    console.log(e.target.value);
+    let data = {id : playlist_id, updatedname: e.target.value};
+    axios
+    .post("http://localhost:5000/api/playlist/editname", data)
+    .then(function (res) {
+      setEdit(false);
+      actions.setPage(1);
+    })
+    .catch((err) => console.log(err));
+  }
+
 
   function deletePlaylist(e, id, owner) {
     e.preventDefault();
@@ -97,8 +178,8 @@ function PlayListView(props) {
     axios
     .post("http://localhost:5000/api/playlist/delete", data)
     .then(function (res) {
-      console.log("Deleted playlist");
-      // window.location("/home");
+      console.log("playlist has been deleted");
+      actions.setPage(0);
     })
     .catch((err) => console.log(err));
 
@@ -107,7 +188,19 @@ function PlayListView(props) {
   return (
     <StyledDiv>
       <span>
-        <h1>{playlistName}</h1>
+              {editing?
+              <h1>
+              <DisabledTextName
+              variant="standard"
+              // onChange={(e) => doubleclicked(e, id)} 
+              onBlur={(e) => onblurHandler(e, id)}
+              defaultValue={playlistName}
+              />
+              </h1> : 
+              <h1>
+              {playlistName}
+              <EditIcon onClick={(e) => doubleclicked(e, id)}/>
+              </h1>}
         <StyledButton
           variant="contained"
           disableElevation
@@ -130,11 +223,36 @@ function PlayListView(props) {
         <hr />
       </span>
       <SongDiv>
-        {playlist.map((song) => {
-          return (
-            <Song name={song.name} artist={song.author} type="Playlists" />
-          );
-        })}
+      <DragDropContext onDragEnd = {handleOnDragEnd}>
+        <Droppable droppableId = "songs">
+          {( provided) => (
+          <div id = "inside" {...provided.droppableProps} ref = {provided.innerRef}>
+            {state.currentsongs.map(({song_name,artist_name,_id}, index) => 
+            {
+              return(
+                  <Draggable key = {_id} draggableId = {_id} index = {index}>
+                      {(provided) => (
+                      <CustomP
+                      {...provided.draggableProps}
+                      ref = {provided.innerRef}
+                      {...provided.dragHandleProps}
+                      >
+                      <Song 
+                      name={song_name} 
+                      artist={artist_name} 
+                      id={_id} 
+                      playlist_id= {id} 
+                      type="Playlists" />
+                      </CustomP>
+                      )}
+                  </Draggable>
+              );
+            })}
+          {provided.placeholder}
+          </div>
+          )}
+        </Droppable>
+    </DragDropContext>
       </SongDiv>
     </StyledDiv>
   );

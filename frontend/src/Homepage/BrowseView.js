@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+
+import React, {useState, useEffect, Suspense} from "react";
 import styled from "styled-components";
 import Song from "./Song";
 import SettingIcon from "@material-ui/icons/Settings";
@@ -6,7 +7,10 @@ import Button from "@material-ui/core/Button";
 import SearchBar from "material-ui-search-bar";
 import { Search } from "@material-ui/icons";
 import testplay from '../data/testsongs.json'
-
+import axios from "axios";
+import { session } from "passport";
+import Album from "./Album";
+import { getSessionCookie } from "../CookieHandler";
 
 const StyledDiv = styled.div`
   padding: 1.5rem;
@@ -70,10 +74,60 @@ const SongDiv = styled.div`
   overflow-y: auto;
 `;
 
-
 function BrowseView(props) {
+  const [currPlay, setcurrPlay] = useState();
+  const [load, setLoad] = useState(false);
+  const [filler, setFiller] = useState(false);
+
   let { playlist, username } = props;
   playlist = testplay.songs; // TESTING PURPOSES
+  const fetchData1 = async () =>
+    {
+      const session = getSessionCookie();
+      let data = {_id: session.id};
+      let accessToken = ""
+      await axios.post("http://localhost:5000/api/getToken",data)
+      .then(function(res)
+      {
+          accessToken = res.data.accessToken;
+      }).catch((err) => console.log(err));
+
+
+      let data2 = {curraccessToken: accessToken};
+      setLoad(true);
+      const result = await axios.post("http://localhost:5000/api/browse", data2);
+      setcurrPlay(result.data);
+      setLoad(false);
+    }
+
+    async function clicklol() {
+      let a =  await fetchData1();
+    }
+  
+  useEffect(() =>
+  {
+    const fetchData = async () =>
+    {
+      const session = getSessionCookie();
+      let data = {_id: session.id};
+      let accessToken = ""
+      await axios.post("http://localhost:5000/api/getToken",data)
+      .then(function(res)
+      {
+          accessToken = res.data.accessToken;
+      }).catch((err) => console.log(err));
+
+      let data2 = {curraccessToken: accessToken};
+      setLoad(true);
+      const result = await axios.post("http://localhost:5000/api/browse", data2);
+      console.log(result.data);
+      setcurrPlay(result.data);
+      setLoad(false);
+      return result.data;
+    }
+    fetchData().then(u => {setcurrPlay(u)});
+  }, []);
+  
 
   return (
     <StyledDiv>
@@ -84,21 +138,41 @@ function BrowseView(props) {
         <StyledSearch />
       </span>
       <StyledSpan>
-        <Title>Title</Title>
-        {username ? "" : <Artist>Artist</Artist>}
+        <Title onClick={()=>{clicklol()}}>Title</Title>
+        {username ? "" : <Artist>Description</Artist>}
       </StyledSpan>
       <span>
         <hr />
       </span>
       <SongDiv>
-        {playlist.map((song) => {
+        {/* <Suspense><ExtraDiv testing={currPlay}/></Suspense> */}
+        
+        {currPlay ? 
+        currPlay.playlists.items.map((album)=>{
           return (
-            <Song name={song.name} artist={song.author} time = {song.length} Browse = {true} />
+            <Album name = {album.name} playlistid = {album.id} images = {album.images[0].url} description = {album.description}/>
           );
-        })}
+        }
+        )
+        :
+        ( <p>Loading...</p>
+        )}
+  
       </SongDiv>
     </StyledDiv>
   );
+}
+
+
+function ExtraDiv(props) {
+
+  useEffect(()=>{
+    console.log("extradiv: "+JSON.stringify(props.currPlay));
+  },[])
+
+  return(<div>
+    extra div
+  </div>);
 }
 
 export default BrowseView;
