@@ -36,80 +36,42 @@ passport.serializeUser(function (user, done) {
     done(null, obj);
   });
 
-passport.use(
-    new SpotifyStrategy(
-      {
-        clientID: "6e6168bb4f424095b42f948f1e303b69",
-        clientSecret: "d0083b4ff5b743f5888468fe02c2ba9c",
-        callbackURL: "http://localhost:5000/auth/spotify/callback"
-      },
-      function (accessToken, refreshToken, expires_in, profile, done) {
-        process.nextTick(function () {
-            // console.log(profile);
-            // console.log("accessToken: " + accessToken);
-            // console.log("refreshToken: " + refreshToken);
-            // console.log("expires_in: " + expires_in);
-
-            
-            spotifyApi.setAccessToken(accessToken);
-          return done(null, profile);
-        });
+app.post("/api/getToken", (req,res) =>
+{
+  userModel.findById(
+    {_id: req.body._id },
+    function(err, user)
+    {
+      if(user){
+        res.send(user);
       }
-    )
+      else  
+        console.log("ERROR, ", err);
+    }
   );
 
-  app.use(passport.initialize());
-  app.use(passport.session());
-  
-  app.get(
-    "/auth/spotify",
-    passport.authenticate("spotify", {
-      scope: [      
-      "user-read-email",
-      "user-read-private",
-      "user-read-recently-played",
-      "user-read-playback-state",
-      "user-top-read",
-      "user-read-currently-playing",
-      "user-follow-read",
-      "user-library-read",
-      "streaming"
-    ],
-      showDialog: true,
-    })
-  );
-
-app.get(
-  "/auth/spotify/callback",
-  passport.authenticate("spotify", {
-    failureRedirect: "/",
-    scope: [
-      "user-read-email",
-      "user-read-private",
-      "user-read-recently-played",
-      "user-read-playback-state",
-      "user-top-read",
-      "user-read-currently-playing",
-      "user-follow-read",
-      "user-library-read",
-      "streaming"
-    ],
-  }),
-  function (req, res) {
-    res.redirect("http://localhost:3000/home");
-  }
-);
+})
 
 app.post("/api/browse", (req, res) => {
 
-  spotifyApi.getNewReleases({ limit : 15, offset: 0, country: 'US' })
+  spotifyApi.setAccessToken(req.body.curraccessToken)
+  spotifyApi.getFeaturedPlaylists({limit:15})
     .then(function(data) {
-      // console.log(data.body);
         res.send(data.body);
       }, function(err) {
         console.log("Something went wrong!", err);
       });
 });
+
+app.post("/api/openalbum", (req, res) =>
+{
+  spotifyApi.setAccessToken(req.body.curraccessToken)
+  spotifyApi.getPlaylist(req.body.id)
+    .then(function(data)
+    {
+      res.send(data.body)
+    }), function(err){console.log("Something went wrong!, ", err)}
+})
 
 
 app.post("/api/register", (req, res) => {
@@ -143,6 +105,81 @@ app.post("/api/login", (req, res) => {
           res.send("banned");
         } else {
           res.send(user._id + "");
+          passport.use(
+            new SpotifyStrategy(
+              {
+                clientID: "6e6168bb4f424095b42f948f1e303b69",
+                clientSecret: "d0083b4ff5b743f5888468fe02c2ba9c",
+                callbackURL: "http://localhost:5000/auth/spotify/callback"
+              },
+              function (accessToken, refreshToken, expires_in, profile, done) {
+                process.nextTick(function () {
+                    // console.log(profile);
+                    // console.log("accessToken: " + accessToken);
+                    // console.log("refreshToken: " + refreshToken);
+                    // console.log("expires_in: " + expires_in);
+        
+                    spotifyApi.setAccessToken(accessToken);
+                    
+                    userModel.findOneAndUpdate(
+                      { username: req.body.username, password: req.body.password },
+                      {$set : {"accessToken": accessToken} },
+                      {strict: false},
+                      function(err, user)
+                      {
+                        if(err){console.log("Error!, ", err);}
+                        else{
+                        }
+                      }
+                    );
+                  return done(null, profile);
+                });
+              }
+            )
+          );
+        
+          app.use(passport.initialize());
+          app.use(passport.session());
+          
+          app.get(
+            "/auth/spotify",
+            passport.authenticate("spotify", {
+              scope: [      
+              "user-read-email",
+              "user-read-private",
+              "user-read-recently-played",
+              "user-read-playback-state",
+              "user-top-read",
+              "user-read-currently-playing",
+              "user-follow-read",
+              "user-library-read",
+              "streaming"
+            ],
+              showDialog: true,
+            })
+          );
+        
+        app.get(
+          "/auth/spotify/callback",
+          passport.authenticate("spotify", {
+            failureRedirect: "/",
+            scope: [
+              "user-read-email",
+              "user-read-private",
+              "user-read-recently-played",
+              "user-read-playback-state",
+              "user-top-read",
+              "user-read-currently-playing",
+              "user-follow-read",
+              "user-library-read",
+              "streaming"
+            ],
+          }),
+          function (req, res) {
+            res.redirect("http://localhost:3000/home");
+          }
+        );
+
         }
       } else {
         res.send("notFound");
@@ -202,6 +239,7 @@ app.post("/api/user/remove", (req, res) => {
 
 app.post("/api/user/changepass", (req, res) => {
   let id = req.body.id;
+  let oldpass = req.body.oldpass;
   let updatedpass = req.body.updatedpass;
   userModel.findOneAndUpdate(
     { _id: id, password: oldpass },
