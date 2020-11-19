@@ -81,9 +81,9 @@ function HomeSideBar(props) {
       .post("http://localhost:5000/api/playlist/getsongs", data)
       .then(function (res) {
         console.log("getsongs " + res.data);
-        // actions.setSongs(res.data);
-        // actions.setPlaylist(playlist);
-        // actions.setPage(1);
+        actions.setSongs(res.data);
+        actions.setPlaylist(playlist);
+        actions.setPage(1);
       })
       .catch((err) => console.log(err));
 
