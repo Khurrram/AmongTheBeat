@@ -218,7 +218,7 @@ function SettingView(props) {
           <Button id="logout" onClick={()=> {
             console.log("asdasd");
             removeSessionCookie();
-            
+            history.push("/land");
           }}>Log Out</Button>
         </AccountButtonDiv>
       </SettingDiv>
