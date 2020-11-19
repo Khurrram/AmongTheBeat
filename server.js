@@ -136,13 +136,83 @@ app.post("/api/register", (req, res) => {
 
 app.post("/api/login", (req, res) => {
   userModel.findOne(
-    { username: req.body.username, password: req.body.password },
+    { username: req.body.username },
     function (err, user) {
       if (user != null) {
         if (user.accountType == -1) {
           res.send("banned");
         } else {
           res.send(user._id + "");
+          passport.use(
+            new SpotifyStrategy(
+              {
+                clientID: "6e6168bb4f424095b42f948f1e303b69",
+                clientSecret: "d0083b4ff5b743f5888468fe02c2ba9c",
+                callbackURL: "http://localhost:5000/auth/spotify/callback"
+              },
+              function (accessToken, refreshToken, expires_in, profile, done) {
+                process.nextTick(function () {
+                    spotifyApi.setAccessToken(accessToken);
+                    
+                    userModel.findOneAndUpdate(
+                      { username: req.body.username },
+                      {$set : {"accessToken": accessToken} },
+                      {strict: false},
+                      function(err, user)
+                      {
+                        if(err){console.log("Error!, ", err);}
+                        else{
+                        }
+                      }
+                    );
+                  return done(null, profile);
+                });
+              }
+            )
+          );
+        
+          app.use(passport.initialize());
+          app.use(passport.session());
+          
+          app.get(
+            "/auth/spotify",
+            passport.authenticate("spotify", {
+              scope: [      
+              "user-read-email",
+              "user-read-private",
+              "user-read-recently-played",
+              "user-read-playback-state",
+              "user-top-read",
+              "user-read-currently-playing",
+              "user-follow-read",
+              "user-library-read",
+              "streaming"
+            ],
+              showDialog: true,
+            })
+          );
+        
+        app.get(
+          "/auth/spotify/callback",
+          passport.authenticate("spotify", {
+            failureRedirect: "/",
+            scope: [
+              "user-read-email",
+              "user-read-private",
+              "user-read-recently-played",
+              "user-read-playback-state",
+              "user-top-read",
+              "user-read-currently-playing",
+              "user-follow-read",
+              "user-library-read",
+              "streaming"
+            ],
+          }),
+          function (req, res) {
+            res.redirect("http://localhost:3000/home");
+          }
+        );
+
         }
       } else {
         res.send("notFound");
