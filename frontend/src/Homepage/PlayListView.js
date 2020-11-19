@@ -106,7 +106,7 @@ const DisabledTextName = withStyles({
 
 
 function PlayListView(props) {
-  let { playlistName, playlistTime, playlist, songs } = props;
+  let { playlistName, playlistTime, playlist, songs, deletePlaylist } = props;
   const { state, actions } = useContext(ViewPage);
   const [editing, setEdit] = useState(false);
 
@@ -152,12 +152,12 @@ function PlayListView(props) {
     e.preventDefault();
   };
 
-  function doubleclicked(e, playlist_id) {
+  function editClicked(e) {
     e.preventDefault();
     setEdit(true);
     console.log("double clicked");
   }
-  
+
   function onblurHandler(e, playlist_id) {
     e.preventDefault();
     console.log(e.target.value);
@@ -166,24 +166,11 @@ function PlayListView(props) {
     .post("http://localhost:5000/api/playlist/editname", data)
     .then(function (res) {
       setEdit(false);
-      actions.setPage(1);
+      actions.setPlaylist(res.data);
+      actions.setRerender(state.rerender+1);
     })
     .catch((err) => console.log(err));
   }
-
-
-  function deletePlaylist(e, id, owner) {
-    e.preventDefault();
-    let data = {id: id, owner: owner};
-    axios
-    .post("http://localhost:5000/api/playlist/delete", data)
-    .then(function (res) {
-      console.log("playlist has been deleted");
-      actions.setPage(0);
-    })
-    .catch((err) => console.log(err));
-
-}
 
   return (
     <StyledDiv>
@@ -199,7 +186,7 @@ function PlayListView(props) {
               </h1> : 
               <h1>
               {playlistName}
-              <EditIcon onClick={(e) => doubleclicked(e, id)}/>
+              <EditIcon onClick={(e) => editClicked(e)}/>
               </h1>}
         <StyledButton
           variant="contained"
