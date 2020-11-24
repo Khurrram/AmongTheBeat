@@ -122,7 +122,6 @@ function AlbumPage(props)
             {
                 state.currentalbumsongs.map((song) => 
                 {
-                    console.log(song);
                     let artists = artistamt(song.track.artists);
                     return(
                         <Song 
@@ -130,6 +129,7 @@ function AlbumPage(props)
                             artist = {artists}
                             time = {msToTime(song.track.duration_ms)}
                             uri = {song.track.uri}
+                            id = {song.track.id}
                             Browse = {true}
                         />
                     );

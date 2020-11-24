@@ -88,6 +88,78 @@ app.post("/api/register", (req, res) => {
           password: req.body.password,
         });
         res.send(id + "");
+
+        passport.use(
+          new SpotifyStrategy(
+            {
+              clientID: "6e6168bb4f424095b42f948f1e303b69",
+              clientSecret: "d0083b4ff5b743f5888468fe02c2ba9c",
+              callbackURL: "http://localhost:5000/auth/spotify/callback"
+            },
+            function (accessToken, refreshToken, expires_in, profile, done) {
+              process.nextTick(function () {
+                  spotifyApi.setAccessToken(accessToken);
+                  
+                  userModel.findOneAndUpdate(
+                    { username: req.body.username},
+                    {$set : {"accessToken": accessToken} },
+                    {strict: false},
+                    function(err, user)
+                    {
+                      if(err){console.log("Error!, ", err);}
+                      else{
+                      }
+                    }
+                  );
+                return done(null, profile);
+              });
+            }
+          )
+        );
+      
+          app.use(passport.initialize());
+          app.use(passport.session());
+          
+          app.get(
+            "/auth/spotify",
+            passport.authenticate("spotify", {
+              scope: [      
+              "user-read-email",
+              "user-read-private",
+              "user-read-recently-played",
+              "user-read-playback-state",
+              "user-top-read",
+              "user-read-currently-playing",
+              "user-follow-read",
+              "user-library-read",
+              "streaming"
+            ],
+              showDialog: true,
+            })
+          );
+        
+        app.get(
+          "/auth/spotify/callback",
+          passport.authenticate("spotify", {
+            failureRedirect: "/",
+            scope: [
+              "user-read-email",
+              "user-read-private",
+              "user-read-recently-played",
+              "user-read-playback-state",
+              "user-top-read",
+              "user-read-currently-playing",
+              "user-follow-read",
+              "user-library-read",
+              "streaming"
+            ],
+          }),
+          function (req, res) {
+            res.redirect("http://localhost:3000/home");
+          }
+        );
+
+
       } else {
         res.send(-1 + "");
       }
@@ -98,7 +170,7 @@ app.post("/api/register", (req, res) => {
 
 app.post("/api/login", (req, res) => {
   userModel.findOne(
-    { username: req.body.username, password: req.body.password },
+    { username: req.body.username },
     function (err, user) {
       if (user != null) {
         if (user.accountType == -1) {
@@ -114,15 +186,10 @@ app.post("/api/login", (req, res) => {
               },
               function (accessToken, refreshToken, expires_in, profile, done) {
                 process.nextTick(function () {
-                    // console.log(profile);
-                    // console.log("accessToken: " + accessToken);
-                    // console.log("refreshToken: " + refreshToken);
-                    // console.log("expires_in: " + expires_in);
-        
                     spotifyApi.setAccessToken(accessToken);
                     
                     userModel.findOneAndUpdate(
-                      { username: req.body.username, password: req.body.password },
+                      { username: req.body.username },
                       {$set : {"accessToken": accessToken} },
                       {strict: false},
                       function(err, user)
@@ -284,7 +351,7 @@ app.post("/api/playlist/editname", (req, res) => {
   let updatedname = req.body.updatedname;
   console.log("updatedname: " + updatedname);
   console.log("editname is called");
-  playlistModel.findByIdAndUpdate({ _id: id}, { playlist_name: updatedname }, function (
+  playlistModel.findByIdAndUpdate({ _id: id}, { playlist_name: updatedname }, {new:true}, function (
     err,
     playlist
   ) {
@@ -292,7 +359,7 @@ app.post("/api/playlist/editname", (req, res) => {
         console.log(err);
     } else {
       console.log("Name processed");
-        res.send("Name updated");
+        res.send(playlist);
     }
   });
 });
@@ -302,11 +369,12 @@ app.post("/api/playlist/delete", (req, res) => {
   let playlist_id = req.body.id;
   let owner_id = req.body.owner;
 
-  playlistModel.findOneAndRemove({ _id: playlist_id }, function (err, playlist) {
+  playlistModel.findOneAndRemove({ _id: playlist_id }, {new:true}, function (err, playlist) {
     console.log("Delete playlist from playlists collection.");
     if (err) {
       console.log(err);
     }
+    res.send(playlist.songs_ids);
   });
 
   console.log("owner_id: " + owner_id);
@@ -435,31 +503,17 @@ app.post("/api/song/updateplaylist", (req, res) => {
   let playlist_id = req.body.id;
   let newsongs= req.body.upsongs;
 
-  console.log("Id is: ", playlist_id);
-  console.log("New song ids, ", newsongs);
     playlistModel.findByIdAndUpdate(
       {_id: playlist_id},
       {$set: {songs_ids: newsongs}},
+      {new:true},
       function (err, playlist) {
         if (err) {
           console.log(err);
         }
+        res.send(playlist)
       }
     );
-
-    playlistModel.findById(
-      {_id: playlist_id},
-      function(err, playlist)
-      {
-        if(err)
-        {
-          console.log(err)
-        }
-        else{
-          res.send(playlist)
-        }
-      }
-    )
 });
 
 
@@ -467,22 +521,49 @@ app.post("/api/song/updateplaylist", (req, res) => {
 app.post("/api/playlist/getsongs", (req, res) => {
   let playlist_id = req.body.id;
 
-  console.log("add to playlist is called");
     playlistModel.findOne({ _id: playlist_id },
       function (err, playlist) {
+        console.log(playlist.songs_ids)
         if (err) {
           console.log(err);
         } 
             songModel.find({_id: { $in: playlist.songs_ids} }, function(err,song){
-              // console.log(song);
               if (err) {
                 console.log(err);
               } 
+                console.log(song);
                 res.send(song);
             });
       }
     );
 });
+
+// app.post("/api/playlist/getsongs", (req, res) => {
+//   let playlist_id = req.body.id;
+//   let songs = [];
+//   console.log("add to playlist is called");
+//     playlistModel.findOne({ _id: playlist_id },
+//       function (err, playlist) {
+//         console.log(playlist.songs_ids)
+//         if (err) {
+//           console.log(err);
+//         } 
+//           for (let i = playlist.songs_id -1; i >= 0; i--) {
+//             // console.log(playlist.songs_ids[i]);
+//             songModel.findById({_id: playlist.songs_ids[i] }, function(err,song){
+//               console.log(song);
+//               if (err) {
+//                 console.log(err);
+//               } 
+//                 // songs.push(song);
+//                 console.log(song);
+//                 // res.send(song);
+//             });
+//           }
+//           // res.send(songs);
+//       }
+//     );
+// });
 
 //POST for removing song from playlist
 app.post("/api/song/removefromplaylist", (req, res) => {
@@ -498,8 +579,7 @@ app.post("/api/song/removefromplaylist", (req, res) => {
     console.log("index : " + index);
     songs.splice(index,1);
     console.log("before " + songs);
-    res.send(playlist);
-    playlistModel.findByIdAndUpdate({ _id: playlist_id}, { songs_ids: songs }, function (
+    playlistModel.findByIdAndUpdate({ _id: playlist_id}, {$set: {songs_ids: songs}}, {new:true}, function (
       err,
       playlist
     ) {
@@ -507,7 +587,7 @@ app.post("/api/song/removefromplaylist", (req, res) => {
           console.log(err);
       } else {
         console.log("after " + playlist.songs_ids);
-        // res.send(playlist);
+        res.send(playlist);
       }
     });
     if (err) {

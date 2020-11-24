@@ -143,6 +143,7 @@ function Song(props) {
   function toggleModal() {
     setModalIsOpen(!modalIsOpen);
     if (!modalIsOpen) {
+<<<<<<< HEAD
       let data = {
         id: session.id,
         song_name: name,
@@ -159,6 +160,30 @@ function Song(props) {
         })
         .catch((err) => console.log(err));
     }
+||||||| merged common ancestors
+    let data = {id: session.id, song_name : name, artist_name: artist, uri: uri};
+
+    axios
+    .post("http://localhost:5000/api/song/getplaylists", data)
+    .then(function (res) {
+      setPlaylists(res.data.playlists);
+      setCurrSong(res.data.song);
+      console.log(res.data);
+    })
+    .catch((err) => console.log(err));
+  }
+=======
+    let data = {id: session.id, song_name : name, artist_name: artist, uri: uri};
+
+    axios
+    .post("http://localhost:5000/api/song/getplaylists", data)
+    .then(function (res) {
+      setPlaylists(res.data.playlists);
+      setCurrSong(res.data.song);
+    })
+    .catch((err) => console.log(err));
+  }
+>>>>>>> ab7a647e9f3eaa33ff26e7687695bd4f9584df51
   }
 
   function handleClick(event) {
@@ -172,7 +197,14 @@ function Song(props) {
 
   function addtoPlaylist(e, playlistid, uri) {
     e.preventDefault();
+<<<<<<< HEAD
     let data = { id: playlistid, song_uri: uri };
+||||||| merged common ancestors
+    let data = { id: playlistid, song_uri: uri}
+=======
+    console.log("called here");
+    let data = { id: playlistid, song_uri: uri}
+>>>>>>> ab7a647e9f3eaa33ff26e7687695bd4f9584df51
     axios
       .post("http://localhost:5000/api/song/addtoplaylist", data)
       .then(function (res) {
@@ -185,6 +217,7 @@ function Song(props) {
     e.preventDefault();
     let data = { id: playlist_id, song: song };
     axios
+<<<<<<< HEAD
       .post("http://localhost:5000/api/song/removefromplaylist", data)
       .then(function (res) {
         actions.setPlaylist(res.data);
@@ -193,6 +226,35 @@ function Song(props) {
         setAnchorEl(null);
       })
       .catch((err) => console.log(err));
+||||||| merged common ancestors
+    .post("http://localhost:5000/api/song/removefromplaylist", data)
+    .then(function (res) {
+      actions.setPlaylist(res.data);
+      actions.setPage(1);
+      console.log("song is removed");
+      setAnchorEl(null);
+    })
+    .catch((err) => console.log(err));
+=======
+    .post("http://localhost:5000/api/song/removefromplaylist", data)
+    .then(function (res) {
+      actions.setPlaylist(res.data);
+      actions.setCurrentPlaylist(res.data);
+
+      axios
+        .post("http://localhost:5000/api/playlist/getsongs", data)
+        .then(function (res) {
+          console.log("called getsongs");
+          actions.setSongs(res.data);
+          actions.setPage(1);
+          actions.setRerender(state.rerender+1);
+        })
+        .catch((err) => console.log(err));
+      console.log("song is removed");
+      setAnchorEl(null);
+    })
+    .catch((err) => console.log(err));
+>>>>>>> ab7a647e9f3eaa33ff26e7687695bd4f9584df51
   }
 
   return (

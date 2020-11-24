@@ -5,11 +5,12 @@ import AtBtext from "./LandingPage_assets/atb.gif";
 import { Row, Col } from "react-materialize";
 import { SessionContext } from "../App";
 import { Redirect, useHistory } from "react-router-dom";
+import { getSessionCookie } from "../CookieHandler";
 
 function LandingPage() {
   const session = useContext(SessionContext);
   let history = useHistory();
-  if (session.id) {
+  if (getSessionCookie() === undefined) {
     history.push("/home");
     return <Redirect to="/home"></Redirect>;
   }
