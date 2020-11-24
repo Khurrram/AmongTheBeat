@@ -133,112 +133,89 @@ function HomePage() {
   const [settings, setSettings] = useState(false);
   const [currentplaylist, setPlaylist] = useState({});
   const [currentsongs, setSongs] = useState([]);
-<<<<<<< HEAD
-
+  const [currentalbum, setcurrentAlbum] = useState({});
+  const [rerender, setRerender] = useState(0);
+  const [currentalbumsongs, setcurrentalbumSongs] = useState([]);
   const value = {
-    state: { settings, currentplaylist, currentsongs, reduceState },
+    state: {
+      page,
+      settings,
+      currentplaylist,
+      currentsongs,
+      currentalbum,
+      currentalbumsongs,
+      rerender,
+    },
     actions: {
       setPage,
       setSettings,
       setPlaylist,
       setSongs,
-      setTest,
-      playlistView2,
+      setcurrentAlbum,
+      setcurrentalbumSongs,
+      setRerender,
     },
   };
-||||||| merged common ancestors
-  const [currentalbum, setcurrentAlbum] = useState({});
-  const [currentalbumsongs, setcurrentalbumSongs] = useState([]);
-  const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs }, actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs } };
-=======
-  const [currentalbum, setcurrentAlbum] = useState({});
-  const [rerender, setRerender] = useState(0);
-  const [currentalbumsongs, setcurrentalbumSongs] = useState([]);
-  const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs, rerender}, actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs, setRerender } };
 
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return;
+    const items = currentsongs;
+    const [reordereditem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reordereditem);
+    console.log("Items now: ", items);
 
-  const handleOnDragEnd = (result) =>
-  {
+    let newids = [];
+    for (var i = 0; i < items.length; i++) {
+      newids.push(items[i]._id + "");
+    }
 
-      if (!result.destination) return;
-      const items = currentsongs;
-      const [reordereditem] = items.splice(result.source.index,1);
-      items.splice(result.destination.index, 0 , reordereditem);
-      console.log("Items now: ", items);
-      
-      let newids = []
-      for(var i = 0; i < items.length; i++)
-      {
-        newids.push(items[i]._id + "");
-      }
+    let pid = currentplaylist._id + "";
+    let data = { id: pid, upsongs: newids };
+    axios
+      .post("http://localhost:5000/api/song/updateplaylist", data)
+      .then(function (res) {
+        console.log("Updated list: ", res.data);
+        setPlaylist(res.data);
+        setSongs(items);
+        setPage(1);
+      })
+      .catch((err) => console.log(err));
+  };
 
-      let pid = currentplaylist._id + "";
-      let data = {id: pid, upsongs: newids};
-      axios
-        .post("http://localhost:5000/api/song/updateplaylist",data)
-          .then(function(res)
-          {
-            console.log("Updated list: ", res.data);
-            setPlaylist(res.data);
-            setSongs(items);
-            setPage(1);
-          })
-            .catch((err) => console.log(err));
-  }
->>>>>>> ab7a647e9f3eaa33ff26e7687695bd4f9584df51
-
-  
   let viewPage;
   if (page === 0) {
     viewPage = <BrowseView session={session} />;
   } else if (page === 1) {
-<<<<<<< HEAD
-    console.log(currentplaylist.playlist_name);
     viewPage = (
       <PlayListView
         playlist={currentplaylist}
         playlistName={currentplaylist.playlist_name}
         playlistTime={0}
         songs={currentsongs}
+        deletePlaylist={deletePlaylist}
+        handleOnDragEnd={handleOnDragEnd}
       />
     );
+  } else if (page === 2) {
+    viewPage = <AlbumPage />;
   } else {
-||||||| merged common ancestors
-    console.log(currentplaylist.playlist_name);
-    viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0} songs={currentsongs}/>;
-  } else if (page === 2)
-    {
-      viewPage = <AlbumPage />
-    }
-  else {
-=======
-    viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0} songs={currentsongs} deletePlaylist={deletePlaylist} handleOnDragEnd={handleOnDragEnd} />;
-  } else if (page === 2)
-    {
-      viewPage = <AlbumPage />
-    }
-  else {
->>>>>>> ab7a647e9f3eaa33ff26e7687695bd4f9584df51
     setPage(0);
     viewPage = <BrowseView />;
   }
 
-
   function deletePlaylist(e, id, owner) {
     e.preventDefault();
-    let data = {id: id, owner: owner};
+    let data = { id: id, owner: owner };
     axios
-    .post("http://localhost:5000/api/playlist/delete", data)
-    .then(function (res) {
-      console.log("playlist has been deleted");
-      setPlaylist(res.data);
-      setRerender(rerender+1);
-      setPage(0);
-    })
-    .catch((err) => console.log(err));
+      .post("http://localhost:5000/api/playlist/delete", data)
+      .then(function (res) {
+        console.log("playlist has been deleted");
+        setPlaylist(res.data);
+        setRerender(rerender + 1);
+        setPage(0);
+      })
+      .catch((err) => console.log(err));
   }
-
-
 
   return (
     <ViewPage.Provider value={value}>
@@ -269,6 +246,5 @@ function HomePage() {
     </ViewPage.Provider>
   );
 }
-
 
 export default HomePage;
