@@ -10,6 +10,7 @@ import testplay from '../data/testsongs.json'
 import axios from "axios";
 import { session } from "passport";
 import Album from "./Album";
+import SearchSong from "./SearchSong";
 import { getSessionCookie } from "../CookieHandler";
 
 const StyledDiv = styled.div`
@@ -77,6 +78,8 @@ const SongDiv = styled.div`
 function BrowseView(props) {
   const [currPlay, setcurrPlay] = useState();
   const [load, setLoad] = useState(false);
+  const [search, setSearch] = useState(false);
+  const [searchItems, setSearchItems] = useState("");
   const [filler, setFiller] = useState(false);
 
   let { playlist, username } = props;
@@ -123,11 +126,27 @@ function BrowseView(props) {
       console.log(result.data);
       setcurrPlay(result.data);
       setLoad(false);
+
+      setSearchItems("");
+      setSearch(false);
       return result.data;
     }
     fetchData().then(u => {setcurrPlay(u)});
   }, []);
   
+  const searchforSong = (val) =>
+  {
+    if(val.trim() === "")
+    {
+      setSearchItems("");
+      setSearch(false);
+    }
+    else{
+      console.log("Searched");
+      setSearchItems(val);
+      setSearch(true);
+    }
+  }
 
   return (
     <StyledDiv>
@@ -135,7 +154,11 @@ function BrowseView(props) {
       <span>
         <h1>{username ? username : "Browse"}</h1>
 
-        <StyledSearch />
+        <StyledSearch 
+          placeholder = "Search For Song"
+          onChange = {(val) => searchforSong(val)}
+          onCancelSearch = {() => searchforSong("")}
+        />
       </span>
       <StyledSpan>
         <Title onClick={()=>{clicklol()}}>Title</Title>
@@ -147,7 +170,7 @@ function BrowseView(props) {
       <SongDiv>
         {/* <Suspense><ExtraDiv testing={currPlay}/></Suspense> */}
         
-        {currPlay ? 
+        {currPlay && search === false ? 
         currPlay.playlists.items.map((album)=>{
           return (
             <Album name = {album.name} playlistid = {album.id} images = {album.images[0].url} description = {album.description}/>
@@ -155,7 +178,9 @@ function BrowseView(props) {
         }
         )
         :
-        ( <p>Loading...</p>
+        ( search === true?
+          <SearchSong search = {searchItems}/>: 
+        <p>Loading...</p>
         )}
   
       </SongDiv>

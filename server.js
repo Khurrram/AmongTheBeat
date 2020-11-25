@@ -73,6 +73,19 @@ app.post("/api/openalbum", (req, res) =>
     }), function(err){console.log("Something went wrong!, ", err)}
 })
 
+app.post("/api/searchTracks",  (req,res) =>
+{
+  spotifyApi.setAccessToken(req.body.curraccessToken)
+  const search = "track:" + req.body.search;
+  spotifyApi.searchTracks(search)
+    .then(function(data)
+    {
+      console.log(data.body);
+      res.send(data.body)
+    }),function(err){console.log("Something went wrong!, ", err)}
+
+})
+
 
 app.post("/api/register", (req, res) => {
   userModel.findOne(
