@@ -117,13 +117,6 @@ function SettingView(props) {
       alert("Matches");
 
       axios
-        .post("http://localhost:5000/api/user/checkpass", data)
-        .then(function (res) {
-          console.log(res.data);
-        })
-        .catch((err) => console.log(err.data));
-
-      axios
         .post("http://localhost:5000/api/user/changepass", data)
         .then(function (res) {
           console.log(res.data);
@@ -132,22 +125,6 @@ function SettingView(props) {
         .catch((err) => console.log(err.data));
     }
   }
-
-  useEffect(() => {
-    let data = { id: session.id };
-    axios
-      .post("http://localhost:5000/api/user/getusername", data)
-      .then(function (res) {
-        let username = res.data;
-        setcurrF({
-          oldpass: currF.oldpass,
-          newpass: currF.newpass,
-          confirmpass: currF.confirmpass,
-          username: username,
-        });
-      })
-      .catch((err) => console.log(err.data));
-  }, []);
 
   return (
     <SidebarDiv>

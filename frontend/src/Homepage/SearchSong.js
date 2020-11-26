@@ -18,7 +18,6 @@ function SearchSong(props)
     useEffect( async () =>
     {
         const session = getSessionCookie();
-        console.log(session);
         let data = {_id: session.id};
         let accessToken = ""
         await axios.post("http://localhost:5000/api/getToken",data)
@@ -32,7 +31,7 @@ function SearchSong(props)
         await axios.post("http://localhost:5000/api/searchTracks",data2)
             .then(function(res)
             {
-                console.log(res);
+                console.log(res.data);
                 setResults(res.data)
             }).catch((err) => console.log(err));
     }, [search])

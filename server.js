@@ -80,7 +80,6 @@ app.post("/api/searchTracks",  (req,res) =>
   spotifyApi.searchTracks(search)
     .then(function(data)
     {
-      console.log(data.body);
       res.send(data.body)
     }),function(err){console.log("Something went wrong!, ", err)}
 
@@ -414,6 +413,23 @@ app.post("/api/playlist/delete", (req, res) => {
         console.log(err);
     } 
   });
+})
+
+//POST for finding the owner that matches a string query
+app.post("/api/playlist/getowner", (req, res) =>
+{
+  let username = req.body.username;
+
+    userModel.find(
+      {username: username},
+      function(err, user)
+      {
+        if(err){res.send("No User Found")}
+        else{
+          res.send(user)
+        }
+      }
+    );
 })
 
 //POST for getting playlists of a specific user

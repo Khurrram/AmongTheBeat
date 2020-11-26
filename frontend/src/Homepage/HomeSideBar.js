@@ -59,7 +59,9 @@ function HomeSideBar(props) {
       );
       setPlaylists(result.data);
       setIsLoading(false);
+      actions.setuserResults("");
     };
+
     fetchData();
   }, [state.rerender]);
 
@@ -89,6 +91,20 @@ function HomeSideBar(props) {
 
   }
 
+  const setUser = (val) =>
+  {
+    if (val.trim() !== "")
+    {
+      actions.setuserResults(val);
+      actions.setPage(3);
+    }
+    else
+    {
+      actions.setuserResults("")
+      actions.setPage(0);
+    }
+  }
+
 
   return (
     <Sidebar>
@@ -107,7 +123,11 @@ function HomeSideBar(props) {
           >
             Browse
           </MenuItem>
-          <StyledSearh placeholder="Search User" />
+          <StyledSearh placeholder="Search User" 
+            value = {state.userresults}
+            onChange = {(val) => setUser(val)}
+            onCancelSearch = {() => setUser("")}
+          />
         </Menu>
         <hr width="90%" color="black"></hr>
         <Menu>
