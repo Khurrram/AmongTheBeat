@@ -182,7 +182,7 @@ app.post("/api/register", (req, res) => {
 
 app.post("/api/login", (req, res) => {
   userModel.findOne(
-    { username: req.body.username },
+    { username: req.body.username, password: req.body.password },
     function (err, user) {
       if (user != null) {
         if (user.accountType == -1) {
