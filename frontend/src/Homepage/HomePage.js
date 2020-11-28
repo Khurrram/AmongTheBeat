@@ -6,6 +6,8 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import PlayNavBar from "./PlayNavBar";
 import HomeSideBar from "./HomeSideBar";
 import AlbumPage from "./AlbumPage";
+import SearchUsers from "./SearchUsers";
+import SearchUsersPage from "./SearchUsersPage";
 import { Link, useHistory } from "react-router-dom";
 import PlayListView from "./PlayListView";
 import test from "../data/test.json";
@@ -89,15 +91,18 @@ export const ViewPage = React.createContext();
 
 function HomePage() {
   const session = getSessionCookie();
-  console.log(session);
-  const [page, setPage] = useState(3);
+
+  const [page, setPage] = useState(5);
   const [settings, setSettings] = useState(false);
   const [currentplaylist, setPlaylist] = useState({});
   const [currentsongs, setSongs] = useState([]);
   const [currentalbum, setcurrentAlbum] = useState({});
   const [rerender, setRerender] = useState(0);
   const [currentalbumsongs, setcurrentalbumSongs] = useState([]);
-  const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs, rerender}, actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs, setRerender } };
+  const [userresults, setuserResults] = useState("");
+  const [urPlaylists, seturPlaylists] = useState({});
+  const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs, rerender, userresults, urPlaylists}, 
+  actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs, setRerender, setuserResults, seturPlaylists} };
 
 
   const handleOnDragEnd = (result) =>
@@ -138,6 +143,14 @@ function HomePage() {
   } else if (page === 2)
     {
       viewPage = <AlbumPage />
+    }
+    else if (page === 3)
+    {
+      viewPage = <SearchUsers search = {userresults}/>
+    }
+    else if (page === 4)
+    {
+      viewPage = <SearchUsersPage playlist = {urPlaylists}/>
     }
   else {
     setPage(0);
