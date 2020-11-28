@@ -8,7 +8,6 @@ import SearchBar from "material-ui-search-bar";
 import { Search } from "@material-ui/icons";
 import testplay from '../data/testsongs.json'
 import axios from "axios";
-import { session } from "passport";
 import Album from "./Album";
 import SearchSong from "./SearchSong";
 import SearchUsers from "./SearchUsers";
@@ -91,14 +90,7 @@ function BrowseView(props) {
   const fetchData1 = async () =>
     {
       const session = getSessionCookie();
-      let data = {_id: session.id};
-      let accessToken = ""
-      await axios.post("http://localhost:5000/api/getToken",data)
-      .then(function(res)
-      {
-          accessToken = res.data.accessToken;
-      }).catch((err) => console.log(err));
-
+      let accessToken = session.accessToken;
 
       let data2 = {curraccessToken: accessToken};
       setLoad(true);
@@ -116,13 +108,7 @@ function BrowseView(props) {
     const fetchData = async () =>
     {
       const session = getSessionCookie();
-      let data = {_id: session.id};
-      let accessToken = ""
-      await axios.post("http://localhost:5000/api/getToken",data)
-      .then(function(res)
-      {
-          accessToken = res.data.accessToken;
-      }).catch((err) => console.log(err));
+      let accessToken = session.accessToken;
 
       let data2 = {curraccessToken: accessToken};
       setLoad(true);

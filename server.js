@@ -9,6 +9,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const SpotifyWebApi = require('spotify-web-api-node');
+const spotifyApi = new SpotifyWebApi();
+
 const db = require("./config/keys.js").mongoURI;
 
 mongoose
@@ -356,6 +359,27 @@ app.post("/api/song/addtoplaylist", (req, res) => {
       }
     );
   });
+});
+
+//POST for adding song to playlist
+app.post("/api/playlist/getsongs", (req, res) => {
+  let playlist_id = req.body.id;
+
+    playlistModel.findOne({ _id: playlist_id },
+      function (err, playlist) {
+        console.log(playlist.songs_ids)
+        if (err) {
+          console.log(err);
+        } 
+            songModel.find({_id: { $in: playlist.songs_ids} }, function(err,song){
+              if (err) {
+                console.log(err);
+              } 
+                console.log(song);
+                res.send(song);
+            });
+      }
+    );
 });
 
 app.post("/api/song/updateplaylist", (req, res) => {

@@ -1,13 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import Song from "./Song";
-import SettingIcon from "@material-ui/icons/Settings";
-import Button from "@material-ui/core/Button";
-import SearchBar from "material-ui-search-bar";
-import { Search } from "@material-ui/icons";
-import testplay from '../data/testsongs.json'
 import axios from "axios";
-import { session } from "passport";
 import { ViewPage } from "./HomePage";
 import Avatar from "@material-ui/core/Avatar";
 import { getSessionCookie } from "../CookieHandler";
@@ -52,14 +45,7 @@ function Album(props)
     const getSong = async () =>
     {
         const session = getSessionCookie();
-        let data = {_id: session.id};
-        let accessToken = ""
-        await axios.post("http://localhost:5000/api/getToken",data)
-            .then(function(res)
-            {
-                accessToken = res.data.accessToken;
-            }).catch((err) => console.log(err));
-
+        let accessToken = session.accessToken;
         console.log("accesstoken:", accessToken)
         let data2 = {id: playlistid, curraccessToken: accessToken};
         console.log("here", data2);

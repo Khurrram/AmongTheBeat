@@ -1,13 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Song from "./Song";
-import SettingIcon from "@material-ui/icons/Settings";
-import Button from "@material-ui/core/Button";
-import SearchBar from "material-ui-search-bar";
-import { CallMissedSharp, Search } from "@material-ui/icons";
-import testplay from '../data/testsongs.json'
-import axios from "axios";
-import { session } from "passport";
 import { ViewPage } from "./HomePage";
 import Avatar from "@material-ui/core/Avatar";
 
