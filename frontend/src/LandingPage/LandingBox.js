@@ -462,7 +462,6 @@ function LoginBox(props) {
             <Button
               variant="contained"
               className="btn-color"
-              href="http://localhost:5000/auth/spotify"
               onClick={(e) => submitLogin(e, form.username, form.password)}
               disabled={
                 errorState.userError || errorState.passwordError || isEmpty()
@@ -480,6 +479,21 @@ function LoginBox(props) {
 }
 
 function SpotifyBox(props) {
+  const auth = "https://accounts.spotify.com/authorize?";
+  const client_id ="6e6168bb4f424095b42f948f1e303b69";
+  const response_type ="code";
+  const redirect_uri = "http://localhost:3000/redirect";
+  const scope = [
+    "user-read-email",
+    "user-read-private",
+    "user-read-recently-played",
+    "user-read-playback-state",
+    "user-top-read",
+    "user-read-currently-playing",
+    "user-follow-read",
+    "user-library-read",
+    "streaming"
+  ];
   return (
     <CardPanel className="box-dim hoverable">
       <div class="overlay input-dim">
@@ -491,7 +505,7 @@ function SpotifyBox(props) {
             <Button
               variant="contained"
               className="btn-color"
-              href="http://localhost:5000/auth/spotify"
+              href={auth+"client_id="+client_id+"&redirect_uri="+redirect_uri+"&scope="+scope.join("%20")+"&response_type=token&show_dialog=true"}
             >
               {" "}
               Log In Through Spotify{" "}
@@ -502,6 +516,7 @@ function SpotifyBox(props) {
     </CardPanel>
   );
 }
+
 
 function LoginButton(props) {
   return (

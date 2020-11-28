@@ -6,6 +6,7 @@ import SearchBar from "material-ui-search-bar";
 import test from "../data/test.json";
 import { ViewPage } from "./HomePage";
 import { Add } from "@material-ui/icons";
+import { useHistory } from "react-router-dom";
 
 
 import {
@@ -41,6 +42,7 @@ const StyledSearh = styled(SearchBar)`
 `;
 
 function HomeSideBar(props) {
+  let history = useHistory();
   const { state, actions } = useContext(ViewPage);
   const [playlists, setPlaylists] = useState([]);
   const [createNew, setCreateNew] = useState(false);
@@ -75,18 +77,20 @@ function HomeSideBar(props) {
   }
 
   function currentplaylist(playlist) {
-    let data = {id: playlist._id};
+    let params = {id: playlist._id, name: playlist.playlist_name};
+
+    console.log("params : " + params.id + " " + params.name);
     console.log("current playlist is clicked");
     axios
-      .post("http://localhost:5000/api/playlist/getsongs", data)
+      .get("http://localhost:5000/playlist/", {params: params})
       .then(function (res) {
         console.log("getsongs " + res.data);
         actions.setSongs(res.data);
         actions.setPlaylist(playlist);
         actions.setPage(1);
+        // history.push("/playlist/" + params.id+"/"+ params.name + "/");
       })
       .catch((err) => console.log(err));
-
   }
 
 

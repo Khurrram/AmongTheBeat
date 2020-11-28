@@ -89,7 +89,7 @@ export const ViewPage = React.createContext();
 
 function HomePage() {
   const session = getSessionCookie();
-
+  console.log(session);
   const [page, setPage] = useState(3);
   const [settings, setSettings] = useState(false);
   const [currentplaylist, setPlaylist] = useState({});
