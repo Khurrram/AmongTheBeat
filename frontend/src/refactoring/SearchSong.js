@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import axios from "axios";
 import styled from "styled-components";
 import { getSessionCookie } from "../CookieHandler";
-import Song from "../Homepage/Song";
+import SongDisplay from "./SongDisplay";
 
 const SongDiv = styled.div`
   min-height: 65vh;
@@ -67,7 +67,7 @@ function SearchSong(props)
             {
                 let artists = artistamt(track.artists);
                 return(
-                    <Song 
+                    <SongDisplay
                         name = {track.name}
                         artist = {artists}
                         time = {msToTime(track.duration_ms)}
