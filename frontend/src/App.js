@@ -31,12 +31,11 @@ function App() {
         <Switch>
           <Route
             path="/home"
-            exact={true}
             render={() =>
               !session.username === undefined ? (
                 <Redirect to="/" />
               ) : (
-                <HomePage />
+                <Home/>
               )
             }
           />
@@ -86,6 +85,19 @@ function App() {
             }
           />
 
+          <Route 
+            path = "/redirect"
+            exact = {true}
+            render={() =>
+              !session.username === undefined ? (
+                <Redirect to="/" />
+              ) : (
+                <RedirectPage />
+              )
+            }
+
+          />
+
           <Route
             path="/test"
             exact={true}
@@ -94,9 +106,6 @@ function App() {
             }
           />
 
-          <Route path="/lol">
-            <Home />
-          </Route>
         </Switch>
       </BrowserRouter>
     </SessionContext.Provider>

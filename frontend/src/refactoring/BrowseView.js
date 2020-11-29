@@ -39,8 +39,6 @@ function BrowseView(props) {
       const session = getSessionCookie();
       let accessToken = session.accessToken;
 
-      console.log("HERE", accessToken);
-
       let data2 = {curraccessToken: accessToken};
       setLoad(true);
       const result = await axios.post("http://localhost:5000/api/browse", data2);
