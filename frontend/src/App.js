@@ -5,14 +5,9 @@ import LandingPage from "./LandingPage/LandingPage";
 import SettingsPage from "./components/Settings";
 import AdminPage from "./components/Admin";
 import Test from "./data/testdrag";
+import Home from "./refactoring/Home";
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter, Switch, Route, Link, Redirect } from "react-router-dom";
 import { createBrowserHistory } from "history";
 
 import "./App.css";
@@ -31,7 +26,7 @@ function App() {
 
   return (
     <SessionContext.Provider value={session}>
-      <Router>
+      <BrowserRouter>
         <Switch>
           <Route
             path="/home"
@@ -97,8 +92,12 @@ function App() {
               !session.username === undefined ? <Redirect to="/" /> : <Test />
             }
           />
+
+          <Route path="/lol">
+            <Home />
+          </Route>
         </Switch>
-      </Router>
+      </BrowserRouter>
     </SessionContext.Provider>
   );
 }
