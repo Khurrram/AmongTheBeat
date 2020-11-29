@@ -10,6 +10,7 @@ import HomeDashView from "./HomeDashView";
 import usePlaylists from "../DataManipulation/usePlaylists";
 import SearchUsers from "./SearchUsers";
 import SearchUsersPage from "./SearchUsersPage";
+import AlbumPage from "./AlbumPage";
 
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -54,6 +55,11 @@ function Home() {
               <Route exact path={`${path}/browse`}>
                 <BrowseView></BrowseView>
               </Route>
+
+              <Route exact path = {`${path}/browse/:albumID`}>
+                <AlbumPage />
+              </Route>
+
               <Route
                 exact
                 path={`${path}/playlist/:playlistID`}

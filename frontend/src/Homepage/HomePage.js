@@ -5,7 +5,7 @@ import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PlayNavBar from "./PlayNavBar";
 import HomeSideBar from "./HomeSideBar";
-import AlbumPage from "./AlbumPage";
+// import AlbumPage from "./AlbumPage";
 import SearchUsers from "../refactoring/SearchUsers";
 import SearchUsersPage from "../refactoring/SearchUsersPage";
 import { Link, useHistory } from "react-router-dom";
@@ -167,7 +167,7 @@ function HomePage() {
       />
     );
   } else if (page === 2) {
-    viewPage = <AlbumPage />;
+    // viewPage = <AlbumPage />;
     
   } 
   else if (page === 3)
@@ -188,7 +188,7 @@ function HomePage() {
     let data = { id: id, owner: owner };
     axios
       .post("http://localhost:5000/api/playlist/delete", data)
-      .then(function (res) {
+      .then(function (res) { 
         console.log("playlist has been deleted");
         setPlaylist(res.data);
         setRerender(rerender + 1);

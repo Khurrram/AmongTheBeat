@@ -1,9 +1,43 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { ViewPage } from "./HomePage";
 import Avatar from "@material-ui/core/Avatar";
 import { getSessionCookie } from "../CookieHandler";
+import { HomeContext } from "./Home";
+
+function Album(props)
+{
+    const { state, actions } = useContext(HomeContext);
+    const {name, playlistid, images, description} = props;
+
+    const getSong = async () =>
+    {
+        const session = getSessionCookie();
+        let accessToken = session.accessToken;
+        console.log("accesstoken:", accessToken)
+        let data2 = {id: playlistid, curraccessToken: accessToken};
+        console.log("here", data2);
+
+        let result = ""
+        await axios.post("http://localhost:5000/api/openalbum",data2)
+            .then(function(res)
+            {
+                result = res.data
+            }).catch((err) => console.log(err));
+
+    } 
+
+    return(
+        <Container onClick = {() => getSong()}>
+        <StyledAvatar variant="rounded" src = {images}/>
+            <SongInfo>
+                <SongName>{name}</SongName>
+                <SongArtist>{description}</SongArtist>
+            </SongInfo>
+        </Container>
+    );
+    
+}
 
 const Container = styled.div`
   display: flex;
@@ -36,42 +70,5 @@ const SongArtist = styled.span`
 const SongName = styled.span`
   flex: auto;
 `;
-
-function Album(props)
-{
-    const { state, actions } = useContext(ViewPage);
-    const {name, playlistid, images, description} = props;
-
-    const getSong = async () =>
-    {
-        const session = getSessionCookie();
-        let accessToken = session.accessToken;
-        console.log("accesstoken:", accessToken)
-        let data2 = {id: playlistid, curraccessToken: accessToken};
-        console.log("here", data2);
-
-        let result = ""
-        await axios.post("http://localhost:5000/api/openalbum",data2)
-            .then(function(res)
-            {
-                result = res.data
-            }).catch((err) => console.log(err));
-
-        actions.setcurrentalbumSongs(result.tracks.items);
-        actions.setcurrentAlbum(result)
-        actions.setPage(2);
-    } 
-
-    return(
-        <Container onClick = {() => getSong()}>
-        <StyledAvatar variant="rounded" src = {images}/>
-            <SongInfo>
-                <SongName>{name}</SongName>
-                <SongArtist>{description}</SongArtist>
-            </SongInfo>
-        </Container>
-    );
-    
-}
 
 export default Album;

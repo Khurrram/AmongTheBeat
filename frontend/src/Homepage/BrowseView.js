@@ -8,8 +8,7 @@ import SearchBar from "material-ui-search-bar";
 import { Search } from "@material-ui/icons";
 import testplay from '../data/testsongs.json'
 import axios from "axios";
-import Album from "./Album";
-import SearchSong from "./SearchSong";
+import SearchSong from "../refactoring/SearchSong";
 import SearchUsers from "../refactoring/SearchUsers";
 import { getSessionCookie } from "../CookieHandler";
 import { ViewPage } from "./HomePage";
@@ -160,7 +159,7 @@ function BrowseView(props) {
       <SongDiv>
         {/* <Suspense><ExtraDiv testing={currPlay}/></Suspense> */}
         
-        {currPlay && search === false ? 
+        {/* {currPlay && search === false ? 
         currPlay.playlists.items.map((album)=>{
           return (
             <Album name = {album.name} playlistid = {album.id} images = {album.images[0].url} description = {album.description}/>
@@ -173,7 +172,7 @@ function BrowseView(props) {
         :<p>Loading...</p>
         )
 
-        }
+        } */}
   
       </SongDiv>
     </StyledDiv>
