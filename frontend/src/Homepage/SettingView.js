@@ -12,90 +12,6 @@ import axios from "axios";
 import { removeSessionCookie } from "../CookieHandler";
 import { HistoryRounded } from "@material-ui/icons";
 
-const SettingDiv = styled.div`
-  display: flex;
-  height: 83vh;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 30vw;
-  color: white;
-`;
-
-const StyledTextField = styled(TextField)`
-  &&& {
-    margin-top: 1.5rem;
-  }
-  width: 450px;
-`;
-
-const AccountDiv = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 1rem;
-`;
-
-const AccountButtonDiv = styled(AccountDiv)`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-  width: 80%;
-`;
-
-const SidebarDiv = styled.div`
-  position: absolute;
-  right: 0px;
-  top: 2rem;
-  background-color: rgb(0, 0, 0, 0.7);
-  border-radius: 15px 0px 0px 15px;
-  backdrop-filter: blur(10px);
-`;
-
-const StyledBackIcon = styled(ArrowForwardIcon)`
-  color: white;
-  position: relative;
-  top: 1rem;
-  left: 1rem;
-`;
-
-const test = styled.div`
-  position: relative;
-`;
-
-const useStyles = makeStyles({
-  root: {
-    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "grey",
-    },
-    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "white",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "white",
-    },
-    "& .MuiOutlinedInput-input": {
-      color: "grey",
-    },
-    "&:hover .MuiOutlinedInput-input": {
-      color: "white",
-    },
-    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-      color: "white",
-    },
-    "& .MuiInputLabel-outlined": {
-      color: "grey",
-    },
-    "&:hover .MuiInputLabel-outlined": {
-      color: "white",
-    },
-    "& .MuiInputLabel-outlined.Mui-focused": {
-      color: "white",
-    },
-  },
-});
-
 function SettingView(props) {
   const history = useHistory();
   const { state, actions } = useContext(ViewPage);
@@ -233,5 +149,89 @@ function SettingView(props) {
     </SidebarDiv>
   );
 }
+
+const SettingDiv = styled.div`
+  display: flex;
+  height: 83vh;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 30vw;
+  color: white;
+`;
+
+const StyledTextField = styled(TextField)`
+  &&& {
+    margin-top: 1.5rem;
+  }
+  width: 450px;
+`;
+
+const AccountDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem;
+`;
+
+const AccountButtonDiv = styled(AccountDiv)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  width: 80%;
+`;
+
+const SidebarDiv = styled.div`
+  position: absolute;
+  right: 0px;
+  top: 2rem;
+  background-color: rgb(0, 0, 0, 0.7);
+  border-radius: 15px 0px 0px 15px;
+  backdrop-filter: blur(10px);
+`;
+
+const StyledBackIcon = styled(ArrowForwardIcon)`
+  color: white;
+  position: relative;
+  top: 1rem;
+  left: 1rem;
+`;
+
+const test = styled.div`
+  position: relative;
+`;
+
+const useStyles = makeStyles({
+  root: {
+    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "grey",
+    },
+    "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "white",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "white",
+    },
+    "& .MuiOutlinedInput-input": {
+      color: "grey",
+    },
+    "&:hover .MuiOutlinedInput-input": {
+      color: "white",
+    },
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+      color: "white",
+    },
+    "& .MuiInputLabel-outlined": {
+      color: "grey",
+    },
+    "&:hover .MuiInputLabel-outlined": {
+      color: "white",
+    },
+    "& .MuiInputLabel-outlined.Mui-focused": {
+      color: "white",
+    },
+  },
+});
 
 export default SettingView;
