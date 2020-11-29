@@ -1,48 +1,84 @@
-import React, { useContext, useState, useRef } from "react";
+import React, {
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+} from "react";
 import styled from "styled-components";
 import TrashIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
 import { TextField } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
-import { Link, useHistory, useLocation } from "react-router-dom";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Link, useHistory, useLocation, useParams } from "react-router-dom";
+import { HomeContext } from "./Home";
 
 function PlayListView(props) {
-  // const { state, actions } = useContext(ViewPage);
+  const { state, actions } = useContext(HomeContext);
+  const { playlistID } = useParams();
+  const history = useHistory();
+
   const [disableTitle, setdisableTitle] = useState(false);
-  const playlistTitle = useRef("");
+  const [playlistName, setPlaylistName] = useState("");
+
+  const playlistTitle = useRef(null);
+
   let DEFAULT_VALUE = "DEFAULT";
 
-  const click = () => {
+  // THIS IS FOR GETTING INITIAL PLAYLIST TITLE
+  useEffect(() => {
+    if (state.currentPlaylist.playlist_name === undefined) {
+      console.log("lo0");
+      history.push("/lol");
+    }
+    setPlaylistName(state.currentPlaylist.playlist_name);
+  }, [playlistID]);
+
+  const dClick = () => {
     setdisableTitle(false);
     playlistTitle.current.focus();
   };
 
+  const handleOnChange = (e) => {
+    setPlaylistName(e.target.value);
+  };
+
   const saveTitle = (e) => {
     setdisableTitle(true);
-    playlistTitle.current = e.target.value;
+    // playlistTitle.current = e.target.value;
+    actions.editPlaylists(playlistID, e.target.value);
     console.log(e.target.value);
   };
 
   return (
     <StyledDiv>
       <span>
-        <div onDoubleClick={click}>
-          <PlayListTitle
-            ref={playlistTitle}
-            type="text"
-            readOnly={disableTitle}
-            defaultValue={DEFAULT_VALUE}
-            spellCheck={false}
-            onBlur={saveTitle}
-          ></PlayListTitle>
+        <div onDoubleClick={dClick}>
+          {state.currentPlaylist ? (
+            <PlayListTitle
+              ref={playlistTitle}
+              type="text"
+              readOnly={disableTitle}
+              onChange={handleOnChange}
+              value={playlistName}
+              spellCheck={false}
+              onBlur={saveTitle}
+            />
+          ) : (
+            <div></div>
+          )}
         </div>
 
-        <StyledButton variant="contained" disableElevation onClick={click}>
+        <StyledButton variant="contained" disableElevation onClick={dClick}>
           Share
         </StyledButton>
-        <StyledTrash />
+        <StyledTrash
+          onClick={() => {
+            actions.deletePlaylists(playlistID);
+            history.push("/lol");
+          }}
+        />
         <h6 id="timestamp">{DEFAULT_VALUE}</h6>
         <h6>
           {/* {state.currentsongs.length + " "} */}
@@ -56,44 +92,7 @@ function PlayListView(props) {
       <span>
         <hr />
       </span>
-      <SongDiv>
-        {/* <DragDropContext onDragEnd={(res) => props.handleOnDragEnd(res)}>
-          <Droppable droppableId="songs">
-            {(provided) => (
-              <div
-                id="inside"
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                {state.currentsongs.map(
-                  ({ song_name, artist_name, _id }, index) => {
-                    return (
-                      <Draggable key={_id} draggableId={_id} index={index}>
-                        {(provided) => (
-                          <CustomP
-                            {...provided.draggableProps}
-                            ref={provided.innerRef}
-                            {...provided.dragHandleProps}
-                          >
-                            <Song
-                              name={song_name}
-                              artist={artist_name}
-                              id={_id}
-                              playlist_id={id}
-                              type="Playlists"
-                            />
-                          </CustomP>
-                        )}
-                      </Draggable>
-                    );
-                  }
-                )}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext> */}
-      </SongDiv>
+      <SongDiv></SongDiv>
     </StyledDiv>
   );
 }

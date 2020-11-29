@@ -13,15 +13,19 @@ import {
   SidebarFooter,
   SidebarContent,
 } from "react-pro-sidebar";
-import { Link } from "react-router-dom";
+import { Route, useRouteMatch, Link, useHistory } from "react-router-dom";
 import { getSessionCookie } from "../CookieHandler";
 import axios from "axios";
+import { HomeContext } from "./Home";
 
 import "react-pro-sidebar/dist/css/styles.css";
 
-function Sidebar() {
+function Sidebar(props) {
   const session = getSessionCookie();
+  const { state, actions } = useContext(HomeContext);
+  let { path, url } = useRouteMatch();
 
+  let history = useHistory();
   let data = { id: session.id };
 
   return (
@@ -35,34 +39,49 @@ function Sidebar() {
         <Menu>
           <MenuItem id="fontsize" style={{ padding: "0rem" }}>
             Home
+            <Link to="/lol"></Link>
           </MenuItem>
-          <MenuItem
-            id="fontsize"
-            onClick={() => {
-              // actions.setPage(0);
-            }}
-          >
+          <MenuItem id="fontsize">
             Browse
+            <Link to={`${url}/browse`}></Link>
           </MenuItem>
           <StyledSearh placeholder="Search User" />
         </Menu>
         <Separator width="90%" color="white"></Separator>
         <Menu>
           <MenuItem id="fontlarge">
-            New Playlist <Add />
+            <FlexDiv onClick={actions.createPlaylists}>
+              New Playlist <Add />
+            </FlexDiv>
           </MenuItem>
-          {/* {isLoading ? (
-            <p>loading...</p>
-          ) : (
-            playlists.map((playlist) => (
-              <MenuItem
-                key={playlist._id}
-                onClick={() => currentplaylist(playlist)}
-              >
-                {playlist.playlist_name}
-              </MenuItem>
-            ))
-          )} */}
+          {/* {props.playlists &&
+            props.playlists.map((playlist) => {
+              return (
+                <MenuItem
+                  key={playlist._id}
+                  onClick={() => {
+                    actions.changeCurrentPlaylistView(playlist._id);
+                    history.push(`${url}/playlist/${playlist._id}`);
+                  }}
+                >
+                  {playlist.playlist_name}
+                </MenuItem>
+              );
+            })} */}
+          {state.playlists &&
+            state.playlists.map((playlist) => {
+              return (
+                <MenuItem
+                  key={playlist._id}
+                  onClick={() => {
+                    actions.changeCurrentPlaylistView(playlist._id);
+                    history.push(`${url}/playlist/${playlist._id}`);
+                  }}
+                >
+                  {playlist.playlist_name}
+                </MenuItem>
+              );
+            })}
         </Menu>
       </SidebarContent>
     </ProSidebar>
@@ -90,7 +109,8 @@ const Separator = styled.hr`
   margin: 0.5rem auto 0 auto;
 `;
 
-const test2 = styled(MenuItem)`
-  margin-top: 1rem;
+const FlexDiv = styled.div`
+  display: flex;
+  align-items: center;
 `;
 export default Sidebar;
