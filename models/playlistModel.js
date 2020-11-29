@@ -16,9 +16,12 @@ const playlistSchema = new Schema({
         type: Number,
         required: [true, "Enter private information"]
     },
-    songs_ids: {
-        type: Array
-    }
+    songs_ids: [
+        {
+            song_id : String,
+            order : Number
+        }
+    ]
 
 });
 

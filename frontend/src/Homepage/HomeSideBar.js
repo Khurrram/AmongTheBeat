@@ -86,6 +86,7 @@ function HomeSideBar(props) {
     axios
       .get("http://localhost:5000/playlist/", {params: params})
       .then(function (res) {
+        console.log(res);
         console.log("getsongs " + res.data);
         actions.setSongs(res.data);
         actions.setPlaylist(playlist);

@@ -298,7 +298,6 @@ app.post("/api/song/getplaylists", (req, res) => {
           console.log(err);
       } else {
         songModel.findOne({SpotifyURI : uri}, function (err, song) {
-          // console.log(song);
           songHold = song;
           if (song == null) {
             songModel.create({
@@ -310,22 +309,15 @@ app.post("/api/song/getplaylists", (req, res) => {
             let data = {playlists : playlists, song: id};
             res.send(data);
           } else {
-            playlistModel.find({songs_ids : song._id}, function (err, playlist){
+            playlistModel.find({"songs_ids.song_id" : song._id}, function (err, playlist){
               if (err) { console.log(err); }
-              // console.log(playlists);
-              // console.log(playlist);
               for (let i = 0; i < playlists.length; i++) {
                 for (let j = 0; j < playlist.length; j++) {
-                  console.log("playlist id: " + playlist[j]._id);
-                  console.log("playlists id: " +playlists[i]._id);
-                  if (playlists[i]._id+"" === playlist[j]._id+"") {
-                    console.log("playlist found");
+                  if (playlists[i]._id+"" === playlist[j]._id+"") { //playlist found
                     playlists.splice(i,1);
                   }
                 }
               }
-              // console.log(playlists);
-              // console.log(songHold._id);
               let data = {playlists : playlists, song: songHold._id};
               res.send(data);
             });
@@ -342,44 +334,65 @@ app.post("/api/song/getplaylists", (req, res) => {
 app.post("/api/song/addtoplaylist", (req, res) => {
   let playlist_id = req.body.id;
   let uri = req.body.song_uri;
+  const getLength = playlistModel.findById({_id: playlist_id}); // query for getting length
+  const findSong = songModel.findOne({SpotifyURI : uri}); // query for getting song from songs collection
 
-  console.log("add to playlist is called");
-  songModel.findOne({SpotifyURI : uri}, function (err, song) {
-    console.log(song._id);
-    playlistModel.findOneAndUpdate(
-      { _id: playlist_id },
-      { $push: { songs_ids: song._id } },
-      function (err, playlist) {
-        if (err) {
-          console.log(err);
-        } else {
-          res.send(playlist_id);
+  getLength.then(function(length) {
+    findSong.then(function(song){
+      playlistModel.findOneAndUpdate(
+        { _id: playlist_id },
+        { $push: { songs_ids: [{song_id: song._id, order: length.songs_ids.length }] } },
+        function (err, playlist) {
+          if (err) {
+            console.log(err);
+          } else {
+            res.send(playlist_id);
+          }
         }
-        console.log(playlist);
-      }
-    );
+      );
+    });
   });
 });
 
-//POST for adding song to playlist
+//POST for retrieving songs from playlist
 app.post("/api/playlist/getsongs", (req, res) => {
   let playlist_id = req.body.id;
 
-    playlistModel.findOne({ _id: playlist_id },
-      function (err, playlist) {
-        console.log(playlist.songs_ids)
-        if (err) {
-          console.log(err);
-        } 
-            songModel.find({_id: { $in: playlist.songs_ids} }, function(err,song){
-              if (err) {
-                console.log(err);
-              } 
-                console.log(song);
-                res.send(song);
-            });
-      }
-    );
+    // playlistModel.findOne({ _id: playlist_id },
+    //   function (err, playlist) {
+    //     console.log(playlist.songs_ids)
+    //     if (err) {
+    //       console.log(err);
+    //     } 
+    //         songModel.find({_id: { $in: playlist.songs_ids.song_id} }, function(err,song){
+    //           if (err) {
+    //             console.log(err);
+    //           } 
+    //             console.log(song);
+    //             res.send(song);
+    //         });
+    //   }
+    // );
+
+  playlistModel.aggregate([
+    {"$match": { _id: playlist.id }},
+    {"$unwind": "$order"},
+    {"$sort": {
+      "songs_ids.order":-1
+    }},
+    {"$group": {
+      "songs_ids": {
+        "$push": "$songs_ids"
+      },
+      "_id": 1
+    }},
+    {"$project": {
+      "_id":0,
+      "Items": 1
+    }}], function(err,res) {
+      console.log(res);
+      res.send(res);
+    });
 });
 
 app.post("/api/song/updateplaylist", (req, res) => {
@@ -401,26 +414,56 @@ app.post("/api/song/updateplaylist", (req, res) => {
 
 
 //POST for adding song to playlist
-app.get("/playlist/*", (req, res) => {
+app.get("/playlist/*", (req, response) => {
   console.log(req.url);
-  // console.log("in get");
+  // console.log("in get " + req.query.id);
   let playlist_id = req.query.id;
+  let songs = [];
 
-    playlistModel.findOne({ _id: playlist_id },
-      function (err, playlist) {
-        console.log(playlist.songs_ids)
-        if (err) {
-          console.log(err);
-        } 
-            songModel.find({_id: { $in: playlist.songs_ids} }, function(err,song){
-              if (err) {
-                console.log(err);
-              } 
-                console.log(song);
-                res.send(song);
-            });
+  const findPlaylist = playlistModel.findById({_id: playlist_id});
+  findPlaylist.then(function(playlist) {
+    let length = playlist.songs_ids.length;
+    console.log("length " + length);
+    let count = 0;
+    let pointer = 0;
+    while (count < length) {
+      if (playlist.songs_ids[pointer].order == count) {
+        console.log("found");
+        console.log(playlist.songs_ids[pointer].order);
+        songModel.findById({_id: playlist.songs_ids[pointer].song_id}, function(err, song) {
+          songs.push(song);
+          count++;
+          console.log("in songModel");
+        });
+      } else {
+        pointer++;
       }
-    );
+      if (pointer == length-1) {
+        pointer = 0;
+      }
+    }
+
+    console.log(songs);
+  });
+  // const sorted = playlistModel.aggregate([
+  //   {"$match": { _id: playlist_id }},
+  //   {"$unwind": "$songs_ids"},
+  //   {"$sort": {
+  //     "songs_ids.order":-1
+  //   }},
+  //   {"$group": {
+  //     "_id": "$_id",
+  //     "songs": {
+  //       "$push": "$songs_ids"
+  //     }
+  //   }},
+  //   {"$project": {
+  //     "songs_ids":"$songs"
+  //   }}]);
+
+    // sorted.then(function(result) {
+    //   console.log("result" + result);
+    // })
 });
 
 //POST for removing song from playlist
