@@ -130,7 +130,7 @@ function HomePage() {
     setPage(1);
   };
 
-  const [page, setPage] = useState(3);
+  const [page, setPage] = useState(5);
 
   const [settings, setSettings] = useState(false);
   const [currentplaylist, setPlaylist] = useState({});
@@ -206,7 +206,17 @@ function HomePage() {
     );
   } else if (page === 2) {
     viewPage = <AlbumPage />;
-  } else {
+    
+  } 
+  else if (page === 3)
+  {
+    viewPage = <SearchUsers search = {userresults}/>
+  }
+  else if (page === 4)
+  {
+    viewPage = <SearchUsersPage playlist = {urPlaylists}/>
+  }
+  else {
     setPage(0);
     viewPage = <BrowseView />;
   }
