@@ -5,13 +5,17 @@ export const setSessionCookie = (session) => {
   Cookies.set("session", session, { expires: 1 });
 };
 
+export const removeSessionCookie = () => {
+  Cookies.remove("session")
+}
+
 export const getSessionCookie = () => {
   const sessionCookie = Cookies.get("session");
 
   if (sessionCookie === undefined) {
     return {};
   } else {
-    console.log(sessionCookie);
+    // console.log(sessionCookie);
     return JSON.parse(sessionCookie);
   }
 };

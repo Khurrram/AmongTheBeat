@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import Song from "./Song";
 import TrashIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
+import axios from "axios";
+import { ViewPage } from "./HomePage";
+import { withStyles } from "@material-ui/core/styles";
+import { TextField } from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
 import { Link, useHistory, useLocation } from "react-router-dom";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import mongoose from "mongoose";
 
 const StyledDiv = styled.div`
   padding: 1.5rem;
@@ -65,6 +72,12 @@ const Title = styled.h6`
   grid-row-end: 1;
 `;
 
+const CustomP = styled.p`
+  margin-block-start: 0em;
+  margin-block-end: 0em;
+  margin-bottom: 0rem;
+`;
+
 const StyledTrash = styled(TrashIcon)`
   margin-left: 1rem;
   color: white;
@@ -77,18 +90,67 @@ const StyledButton = styled(Button)`
   }
 `;
 
+const DisabledTextName = withStyles({
+  root: {
+    "& .MuiInputBase-root.Mui-disabled": {
+      color: "#BDBDBD", // (default alpha is 0.38)
+    },
+    "& .MuiInput-underline.Mui-disabled:before": {
+      borderBottomStyle: "none",
+    },
+    "& .MuiInputBase-root": {
+      color: "#EE276A",
+    },
+  },
+})(TextField);
+
 function PlayListView(props) {
-  let { playlistName, playlistTime, playlist } = props;
-  playlist = []; // TESTING PURPOSES
+  let { playlistName, playlistTime, playlist, songs, deletePlaylist } = props;
+  const { state, actions } = useContext(ViewPage);
+  const [editing, setEdit] = useState(false);
+
+  let id = playlist._id;
+  let owner = playlist.owner_id;
 
   const shareAction = (e) => {
     e.preventDefault();
   };
 
+  function editClicked(e) {
+    e.preventDefault();
+    setEdit(true);
+    console.log("double clicked");
+  }
+
+  function onblurHandler(e, playlist_id) {
+    e.preventDefault();
+    console.log(e.target.value);
+    let data = { id: playlist_id, updatedname: e.target.value };
+    axios
+    .post("http://localhost:5000/api/playlist/editname", data)
+    .then(function (res) {
+      setEdit(false);
+      actions.setPlaylist(res.data);
+      actions.setRerender(state.rerender+1);
+    })
+    .catch((err) => console.log(err));
+  }
+
   return (
     <StyledDiv>
       <span>
-        <h1>{playlistName}</h1>
+        {editing ? (
+            <h1><DisabledTextName
+              variant="standard"
+              // onChange={(e) => doubleclicked(e, id)}
+              onBlur={(e) => onblurHandler(e, id)}
+              defaultValue={playlistName}
+              />
+              </h1>) : 
+              (<h1>
+              {playlistName}
+              <EditIcon onClick={(e) => editClicked(e)}/>
+              </h1>)}
         <StyledButton
           variant="contained"
           disableElevation
@@ -96,10 +158,10 @@ function PlayListView(props) {
         >
           Share
         </StyledButton>
-        <StyledTrash />
+        <StyledTrash onClick={(e) => deletePlaylist(e, id, owner)} />
         <h6 id="timestamp">{playlistTime}</h6>
         <h6>
-          {playlist.length + " "}
+          {state.currentsongs.length + " "}
           Songs
         </h6>
       </span>
@@ -111,11 +173,36 @@ function PlayListView(props) {
         <hr />
       </span>
       <SongDiv>
-        {playlist.map((song) => {
-          return (
-            <Song name={song.name} artist={song.author} type="Playlists" />
-          );
-        })}
+      <DragDropContext onDragEnd = {(res) => props.handleOnDragEnd(res)}>
+        <Droppable droppableId = "songs">
+          {( provided) => (
+          <div id = "inside" {...provided.droppableProps} ref = {provided.innerRef}>
+            {state.currentsongs.map(({song_name,artist_name,_id}, index) => 
+            {
+              return(
+                  <Draggable key = {_id} draggableId = {_id} index = {index}>
+                      {(provided) => (
+                      <CustomP
+                      {...provided.draggableProps}
+                      ref = {provided.innerRef}
+                      {...provided.dragHandleProps}
+                      >
+                      <Song 
+                      name={song_name} 
+                      artist={artist_name} 
+                      id={_id} 
+                      playlist_id= {id} 
+                      type="Playlists" />
+                      </CustomP>
+                      )}
+                  </Draggable>
+              );
+            })}
+          {provided.placeholder}
+          </div>
+          )}
+        </Droppable>
+    </DragDropContext>
       </SongDiv>
     </StyledDiv>
   );

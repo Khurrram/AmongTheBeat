@@ -16,122 +16,9 @@ import { ViewPage } from "./HomePage";
 
 import "./Song.css";
 
-const Container = styled.div`
-  display: flex;
-  height: 3em;
-  align-items: center;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-  color: white;
-  border-radius: 5px;
-
-  &:hover {
-    background-color: #686868;
-  }
-`;
-
-const StyledAvatar = styled(Avatar)`
-  margin-left: 0.5em;
-`;
-
-const SongInfo = styled.div`
-  display: flex;
-  margin-right: auto;
-  align-items: center;
-  margin: 1.5em;
-  width: 100%;
-  color: white;
-`;
-
-const StyledHeart = styled(HeartIcon)`
-  margin-right: 1rem;
-  color: ${(props) => (props.fav ? "red" : "grey")};
-
-  &:hover {
-    color: ${(props) => (props.fav ? "grey" : "red")};
-  }
-`;
-
-const StyledPlaylistAdd = styled(PlaylistAddIcon)`
-  color: ${"white"};
-
-  &:hover {
-    color: ${"blue"};
-  }
-}
-`;
-
-const StyledTrashCan = styled(TrashIcon)`
-  color: ${"white"};
-
-  &:hover {
-    color: ${"blue"};
-  }
-}
-`;
-
-const StyledQueue = styled(QueueMusicIcon)`
-  margin-right: 1rem;
-`;
-
-const SongArtist = styled.span`
-  width: 43rem;
-`;
-const SongName = styled.span`
-  flex: auto;
-`;
-
-const SongAction = styled.div`
-  display: flex;
-  margin-left: auto;
-  margin-right: 6em;
-  justify-content: space-evenly;
-`;
-const SongTime = styled.span`
-  float: right;
-  padding-right: 2rem;
-`;
-
-const customStyles = {
-  overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.75)",
-  },
-  content: {
-    top: "35%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    width: "60%",
-    transform: "translate(-40%, -10%)",
-    background:
-      "linear-gradient(160deg, rgba(49,22,101,1) 59%, rgba(127,60,142,1) 100%)",
-    color: "white",
-  },
-};
-
-const ModalHeader = styled.div`
-  font-size: 24px;
-  padding-bottom: 2em;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-`;
-
-const ModalContent = styled.div`
-  font-size: 15px;
-  padding-bottom: 1em;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  &:hover {
-    background-color: #686868;
-  }
-`;
-
 Modal.setAppElement("#root");
 
-function Song(props) {
+function SongDisplay(props) {
   const {
     name,
     artist,
@@ -282,4 +169,117 @@ function View(props, toggleModal, handleClick) {
   );
 }
 
-export default Song;
+const Container = styled.div`
+  display: flex;
+  height: 3em;
+  align-items: center;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  color: white;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #686868;
+  }
+`;
+
+const StyledAvatar = styled(Avatar)`
+  margin-left: 0.5em;
+`;
+
+const SongInfo = styled.div`
+  display: flex;
+  margin-right: auto;
+  align-items: center;
+  margin: 1.5em;
+  width: 100%;
+  color: white;
+`;
+
+const StyledHeart = styled(HeartIcon)`
+  margin-right: 1rem;
+  color: ${(props) => (props.fav ? "red" : "grey")};
+
+  &:hover {
+    color: ${(props) => (props.fav ? "grey" : "red")};
+  }
+`;
+
+const StyledPlaylistAdd = styled(PlaylistAddIcon)`
+  color: ${"white"};
+
+  &:hover {
+    color: ${"blue"};
+  }
+}
+`;
+
+const StyledTrashCan = styled(TrashIcon)`
+  color: ${"white"};
+
+  &:hover {
+    color: ${"blue"};
+  }
+}
+`;
+
+const StyledQueue = styled(QueueMusicIcon)`
+  margin-right: 1rem;
+`;
+
+const SongArtist = styled.span`
+  width: 43rem;
+`;
+const SongName = styled.span`
+  flex: auto;
+`;
+
+const SongAction = styled.div`
+  display: flex;
+  margin-left: auto;
+  margin-right: 6em;
+  justify-content: space-evenly;
+`;
+const SongTime = styled.span`
+  float: right;
+  padding-right: 2rem;
+`;
+
+const customStyles = {
+  overlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
+  },
+  content: {
+    top: "35%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    width: "60%",
+    transform: "translate(-40%, -10%)",
+    background:
+      "linear-gradient(160deg, rgba(49,22,101,1) 59%, rgba(127,60,142,1) 100%)",
+    color: "white",
+  },
+};
+
+const ModalHeader = styled.div`
+  font-size: 24px;
+  padding-bottom: 2em;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+`;
+
+const ModalContent = styled.div`
+  font-size: 15px;
+  padding-bottom: 1em;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  &:hover {
+    background-color: #686868;
+  }
+`;
+
+export default SongDisplay;

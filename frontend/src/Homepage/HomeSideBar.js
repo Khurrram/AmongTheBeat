@@ -6,7 +6,8 @@ import SearchBar from "material-ui-search-bar";
 import test from "../data/test.json";
 import { ViewPage } from "./HomePage";
 import { Add } from "@material-ui/icons";
-import { TextField } from "@material-ui/core";
+
+
 import {
   ProSidebar as Sidebar,
   Menu,
@@ -17,9 +18,10 @@ import {
 } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
 import { getSessionCookie } from "../CookieHandler";
-import axios from 'axios';
+import axios from "axios";
 
 import "react-pro-sidebar/dist/css/styles.css";
+import { set } from "js-cookie";
 
 const Button = styled.button`
   padding: 0.5em;
@@ -40,33 +42,53 @@ const StyledSearh = styled(SearchBar)`
 
 function HomeSideBar(props) {
   const { state, actions } = useContext(ViewPage);
-  // const [ playlists, setPlaylists] = useState([]);
-  const playlists = props.playlists;
-  const toggle = false;
-  const [disabled, setDisabled] = useState(true);
+  const [playlists, setPlaylists] = useState([]);
+  const [createNew, setCreateNew] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const session = getSessionCookie();
-  // var playlists = [];
 
   let data = { id: session.id };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      console.log("Use Effect HomeSideBar");
+      const result = await axios.post(
+        "http://localhost:5000/api/playlist/getplaylists",
+        data
+      );
+      setPlaylists(result.data);
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [state.rerender]);
+
   function createPlaylist(e) {
     e.preventDefault();
-
     axios
-    .post("http://localhost:5000/api/playlist/createPlaylist", data)
-    .then(function (res) {
-      let id = res.data;
-      console.log("res: " + res.data);
-      // toggle = !toggle;
-    })
-    .catch((err) => console.log(err));
+      .post("http://localhost:5000/api/playlist/createPlaylist", data)
+      .then(function (res) {
+        console.log(actions);
+        actions.setRerender(state.rerender+1);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function currentplaylist(playlist) {
+    let data = {id: playlist._id};
+    console.log("current playlist is clicked");
+    axios
+      .post("http://localhost:5000/api/playlist/getsongs", data)
+      .then(function (res) {
+        console.log("getsongs " + res.data);
+        actions.setSongs(res.data);
+        actions.setPlaylist(playlist);
+        actions.setPage(1);
+      })
+      .catch((err) => console.log(err));
 
   }
 
-  function changeName(e) {
-    e.preventDefault();
-
-  }
 
   return (
     <Sidebar>
@@ -89,34 +111,18 @@ function HomeSideBar(props) {
         </Menu>
         <hr width="90%" color="black"></hr>
         <Menu>
-          <MenuItem id="fontlarge">Playlists <Add onClick={(e) => createPlaylist(e)} /></MenuItem>
-          {playlists.map((playlist) => {
-            // let path = "/playlist/" + playlist.name;
-            return (
-              <MenuItem >
-                {/* <Link
-                  to={{
-                    pathname: path,
-                    state: {
-                      name: playlist.name,
-                      songs: playlist.songs,
-                    },
-                  }}
-                > */}
-                  {" "}
-                  {console.log(playlist)}
-                <TextField
-                variant="standard"
-                fullWidth
-                onDoubleClick={setDisabled(false)} 
-                onBlur={setDisabled(true)}
-                >
-                  {playlist.playlist_name}{" "}
-                </TextField>
-                {/* </Link> */}
+          <MenuItem id="fontlarge" onClick={(e) => createPlaylist(e)}>
+            New Playlist <Add />
+          </MenuItem>
+          {isLoading ? (
+            <p>loading...</p>
+          ) : (
+            playlists.map((playlist) => (
+              <MenuItem key={playlist._id} onClick={() => currentplaylist(playlist)} >               
+                {playlist.playlist_name} 
               </MenuItem>
-            );
-          })}
+            ))
+          )}
         </Menu>
       </SidebarContent>
       <SidebarFooter id="center">

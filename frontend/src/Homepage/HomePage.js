@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useReducer } from "react";
 
 import styled from "styled-components";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PlayNavBar from "./PlayNavBar";
 import HomeSideBar from "./HomeSideBar";
+import AlbumPage from "./AlbumPage";
 import { Link, useHistory } from "react-router-dom";
 import PlayListView from "./PlayListView";
 import test from "../data/test.json";
@@ -13,6 +14,7 @@ import BrowseView from "./BrowseView";
 import axios from "axios";
 import { SessionContext } from "../App";
 import { getSessionCookie } from "../CookieHandler";
+import { playlistsInitialState, playlistReducer } from "./reducers";
 import "./HomePage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-pro-sidebar/dist/css/styles.css";
@@ -89,36 +91,136 @@ export const ViewPage = React.createContext();
 function HomePage() {
   const session = getSessionCookie();
 
-  const [page, setPage] = useState(2);
+  const [reduceState, dispatch] = useReducer(
+    playlistReducer,
+    playlistsInitialState
+  );
+  const [test, setTest] = useState(0);
+
+  useEffect(() => {
+    let data = { id: session.id };
+    axios
+      .post("http://localhost:5000/api/playlist/getplaylists", data)
+      .then((response) => {
+        // console.log({ response });
+        dispatch({ type: "FETCH_SUCCESS", playlists: response.data });
+      })
+      .catch((error) => {
+        dispatch({
+          type: "FETCH_ERROR",
+          errorMessage: "Fail update Playlists" + error,
+        });
+      });
+  }, [test]);
+
+  const playlistView2 = (idObject) => {
+    axios
+      .post("http://localhost:5000/api/playlist/getsongs", idObject)
+      .then((response) => {
+        dispatch({ type: "FETCH_SONG_SUCCESS", playlistSongs: response.data });
+      })
+      .catch((error) =>
+        dispatch({
+          type: "FETCH_ERROR",
+          errorMessage: "Fail update playlist songs" + error,
+        })
+      );
+    setPage(1);
+  };
+
+  const [page, setPage] = useState(3);
+
   const [settings, setSettings] = useState(false);
-  const [playlists, setPlaylists] = useState([]);
-  const [username, setUser] = useState("");
-  const value = { state: { settings }, actions: { setPage, setSettings } };
+  const [currentplaylist, setPlaylist] = useState({});
+  const [currentsongs, setSongs] = useState([]);
+  const [currentalbum, setcurrentAlbum] = useState({});
+  const [rerender, setRerender] = useState(0);
+  const [currentalbumsongs, setcurrentalbumSongs] = useState([]);
+  const value = {
+    state: {
+      page,
+      settings,
+      currentplaylist,
+      currentsongs,
+      currentalbum,
+      currentalbumsongs,
+      rerender,
+    },
+    actions: {
+      setPage,
+      setSettings,
+      setPlaylist,
+      setSongs,
+      setcurrentAlbum,
+      setcurrentalbumSongs,
+      setRerender,
+    },
+  };
 
-  let data = {id: session.id};
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return;
+    const items = currentsongs;
+    const [reordereditem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reordereditem);
+    console.log("Items now: ", items);
 
-  axios
-  .post("http://localhost:5000/api/playlist/getplaylists", data)
-  .then(function (res) {
-    setPlaylists(res.data);
-    console.log("Playlists: " + playlists);
-  })
-  .catch((err) => console.log(err));
+    let newids = [];
+    for (var i = 0; i < items.length; i++) {
+      newids.push(items[i]._id + "");
+    }
+
+    let pid = currentplaylist._id + "";
+    let data = { id: pid, upsongs: newids };
+    axios
+      .post("http://localhost:5000/api/song/updateplaylist", data)
+      .then(function (res) {
+        console.log("Updated list: ", res.data);
+        setPlaylist(res.data);
+        setSongs(items);
+        setPage(1);
+      })
+      .catch((err) => console.log(err));
+  };
 
   let viewPage;
   if (page === 0) {
-    viewPage = <BrowseView />;
+    viewPage = <BrowseView session={session} />;
   } else if (page === 1) {
-    viewPage = <PlayListView />;
+    viewPage = (
+      <PlayListView
+        playlist={currentplaylist}
+        playlistName={currentplaylist.playlist_name}
+        playlistTime={0}
+        songs={currentsongs}
+        deletePlaylist={deletePlaylist}
+        handleOnDragEnd={handleOnDragEnd}
+      />
+    );
+  } else if (page === 2) {
+    viewPage = <AlbumPage />;
   } else {
     setPage(0);
     viewPage = <BrowseView />;
   }
 
+  function deletePlaylist(e, id, owner) {
+    e.preventDefault();
+    let data = { id: id, owner: owner };
+    axios
+      .post("http://localhost:5000/api/playlist/delete", data)
+      .then(function (res) {
+        console.log("playlist has been deleted");
+        setPlaylist(res.data);
+        setRerender(rerender + 1);
+        setPage(0);
+      })
+      .catch((err) => console.log(err));
+  }
+
   return (
     <ViewPage.Provider value={value}>
       <div className="homepage1">
-        <HomeSideBar playlists={playlists} />
+        <HomeSideBar />
         <ContentWindow>
           <Navbar>
             <StyledAvatar>
