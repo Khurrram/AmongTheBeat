@@ -6,8 +6,8 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import PlayNavBar from "./PlayNavBar";
 import HomeSideBar from "./HomeSideBar";
 import AlbumPage from "./AlbumPage";
-import SearchUsers from "./SearchUsers";
-import SearchUsersPage from "./SearchUsersPage";
+import SearchUsers from "../refactoring/SearchUsers";
+import SearchUsersPage from "../refactoring/SearchUsersPage";
 import { Link, useHistory } from "react-router-dom";
 import PlayListView from "./PlayListView";
 import test from "../data/test.json";
@@ -16,7 +16,6 @@ import BrowseView from "./BrowseView";
 import axios from "axios";
 import { SessionContext } from "../App";
 import { getSessionCookie } from "../CookieHandler";
-import { playlistsInitialState, playlistReducer } from "./reducers";
 import "./HomePage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-pro-sidebar/dist/css/styles.css";
@@ -92,43 +91,6 @@ export const ViewPage = React.createContext();
 
 function HomePage() {
   const session = getSessionCookie();
-
-  const [reduceState, dispatch] = useReducer(
-    playlistReducer,
-    playlistsInitialState
-  );
-  const [test, setTest] = useState(0);
-
-  useEffect(() => {
-    let data = { id: session.id };
-    axios
-      .post("http://localhost:5000/api/playlist/getplaylists", data)
-      .then((response) => {
-        // console.log({ response });
-        dispatch({ type: "FETCH_SUCCESS", playlists: response.data });
-      })
-      .catch((error) => {
-        dispatch({
-          type: "FETCH_ERROR",
-          errorMessage: "Fail update Playlists" + error,
-        });
-      });
-  }, [test]);
-
-  const playlistView2 = (idObject) => {
-    axios
-      .post("http://localhost:5000/api/playlist/getsongs", idObject)
-      .then((response) => {
-        dispatch({ type: "FETCH_SONG_SUCCESS", playlistSongs: response.data });
-      })
-      .catch((error) =>
-        dispatch({
-          type: "FETCH_ERROR",
-          errorMessage: "Fail update playlist songs" + error,
-        })
-      );
-    setPage(1);
-  };
 
   const [page, setPage] = useState(5);
 

@@ -10,7 +10,7 @@ import testplay from '../data/testsongs.json'
 import axios from "axios";
 import Album from "./Album";
 import SearchSong from "./SearchSong";
-import SearchUsers from "./SearchUsers";
+import SearchUsers from "../refactoring/SearchUsers";
 import { getSessionCookie } from "../CookieHandler";
 import { ViewPage } from "./HomePage";
 

@@ -11,6 +11,16 @@ export const getPlaylistSongs = async (playlistID) => {
     });
 };
 
+export const getOwner = async (username) => 
+{
+  return instance
+    .post("/api/playlist/getowner", {username: username})
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {console.log("getOwner Error")})
+}
+
 export const createPlaylist = async (accountID) => {
   return instance
     .post("/api/playlist/createPlaylist", { id: accountID })

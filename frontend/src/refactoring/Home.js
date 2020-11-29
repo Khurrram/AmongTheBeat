@@ -8,6 +8,8 @@ import BrowseView from "./BrowseView";
 import UserPlaylistView from "./UserPlaylistView";
 import HomeDashView from "./HomeDashView";
 import usePlaylists from "../DataManipulation/usePlaylists";
+import SearchUsers from "./SearchUsers";
+import SearchUsersPage from "./SearchUsersPage";
 
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -60,6 +62,15 @@ function Home() {
               <Route exact path={`${path}/user/:userID`}>
                 <UserPlaylistView></UserPlaylistView>
               </Route>
+
+              <Route exact path = {`${path}/searchuser`}>
+                <SearchUsers />
+              </Route>
+
+              <Route exact path = {`${path}/searchuser/:ownerID`}>
+                <SearchUsersPage />
+              </Route>
+
             </Switch>
           </ContentWindow>
           <Footer>

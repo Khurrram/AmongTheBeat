@@ -8,7 +8,6 @@ import { ViewPage } from "./HomePage";
 import { Add } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 
-
 import {
   ProSidebar as Sidebar,
   Menu,
@@ -42,7 +41,6 @@ const StyledSearh = styled(SearchBar)`
 `;
 
 function HomeSideBar(props) {
-  let history = useHistory();
   const { state, actions } = useContext(ViewPage);
   const [playlists, setPlaylists] = useState([]);
   const [createNew, setCreateNew] = useState(false);
@@ -51,49 +49,44 @@ function HomeSideBar(props) {
 
   let data = { id: session.id };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      console.log("Use Effect HomeSideBar");
-      const result = await axios.post(
-        "http://localhost:5000/api/playlist/getplaylists",
-        data
-      );
-      setPlaylists(result.data);
-      setIsLoading(false);
-      actions.setuserResults("");
-    };
-
-    fetchData();
-  }, [state.rerender]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setIsLoading(true);
+  //     console.log("Use Effect HomeSideBar");
+  //     const result = await axios.post(
+  //       "http://localhost:5000/api/playlist/getplaylists",
+  //       data
+  //     );
+  //     setPlaylists(result.data);
+  //     setIsLoading(false);
+  //   };
+  //   fetchData();
+  // }, [state.rerender]);
 
   function createPlaylist(e) {
     e.preventDefault();
     axios
       .post("http://localhost:5000/api/playlist/createPlaylist", data)
       .then(function (res) {
-        console.log(actions);
-        actions.setRerender(state.rerender+1);
+        // console.log(actions);
+        // actions.setRerender(state.rerender + 1);
       })
       .catch((err) => console.log(err));
   }
 
-  function currentplaylist(playlist) {
-    let params = {id: playlist._id, name: playlist.playlist_name};
-
-    console.log("params : " + params.id + " " + params.name);
-    console.log("current playlist is clicked");
-    axios
-      .get("http://localhost:5000/playlist/", {params: params})
-      .then(function (res) {
-        console.log("getsongs " + res.data);
-        actions.setSongs(res.data);
-        actions.setPlaylist(playlist);
-        actions.setPage(1);
-        // history.push("/playlist/" + params.id+"/"+ params.name + "/");
-      })
-      .catch((err) => console.log(err));
-  }
+  // function currentplaylist(playlist) {
+  //   let data = { id: playlist._id };
+  //   console.log("current playlist is clicked");
+  //   axios
+  //     .get("http://localhost:5000/playlist/", {params: params})
+  //     .then(function (res) {
+  //       console.log("getsongs " + res.data);
+  //       // actions.setSongs(res.data);
+  //       // actions.setPlaylist(playlist);
+  //       // actions.setPage(1);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
 
   const setUser = (val) =>
   {
@@ -109,7 +102,6 @@ function HomeSideBar(props) {
     }
   }
 
-
   return (
     <Sidebar>
       <SidebarHeader>
@@ -122,7 +114,7 @@ function HomeSideBar(props) {
           <MenuItem
             id="fontsize"
             onClick={() => {
-              actions.setPage(0);
+              // actions.setPage(0);
             }}
           >
             Browse
@@ -138,20 +130,23 @@ function HomeSideBar(props) {
           <MenuItem id="fontlarge" onClick={(e) => createPlaylist(e)}>
             New Playlist <Add />
           </MenuItem>
-          {isLoading ? (
+          {/* {isLoading ? (
             <p>loading...</p>
           ) : (
             playlists.map((playlist) => (
-              <MenuItem key={playlist._id} onClick={() => currentplaylist(playlist)} >               
-                {playlist.playlist_name} 
+              <MenuItem
+                key={playlist._id}
+                onClick={() => currentplaylist(playlist)}
+              >
+                {playlist.playlist_name}
               </MenuItem>
             ))
-          )}
+          )} */}
         </Menu>
       </SidebarContent>
-      <SidebarFooter id="center">
+      {/* <SidebarFooter id="center">
         <Button>Happy</Button>
-      </SidebarFooter>
+      </SidebarFooter> */}
     </Sidebar>
   );
 }
