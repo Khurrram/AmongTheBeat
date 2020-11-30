@@ -11,7 +11,7 @@ import usePlaylists from "../DataManipulation/usePlaylists";
 import SearchUsers from "./SearchUsers";
 import SearchUsersPage from "./SearchUsersPage";
 import AlbumPage from "./AlbumPage";
-
+import { getSessionCookie } from "../CookieHandler";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
 import { PlaylistAdd } from "@material-ui/icons";
@@ -27,7 +27,7 @@ function Home() {
     deletePlaylists,
     editPlaylists,
     changeCurrentPlaylistView,
-  } = usePlaylists("5fac7f0f4b43e0761cc2103b");
+  } = usePlaylists(getSessionCookie().id);
 
   const contextValue = {
     state: { playlists, currentPlaylist },

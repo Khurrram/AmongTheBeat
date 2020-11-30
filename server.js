@@ -356,47 +356,6 @@ app.post("/api/song/addtoplaylist", (req, res) => {
 
 //WE ARE NOW USING GET REQUEST PLAYLIST/*
 
-// //POST for retrieving songs from playlist
-// app.post("/api/playlist/getsongs", (req, res) => {
-//   let playlist_id = req.body.id;
-
-//     // playlistModel.findOne({ _id: playlist_id },
-//     //   function (err, playlist) {
-//     //     console.log(playlist.songs_ids)
-//     //     if (err) {
-//     //       console.log(err);
-//     //     } 
-//     //         songModel.find({_id: { $in: playlist.songs_ids.song_id} }, function(err,song){
-//     //           if (err) {
-//     //             console.log(err);
-//     //           } 
-//     //             console.log(song);
-//     //             res.send(song);
-//     //         });
-//     //   }
-//     // );
-
-//   playlistModel.aggregate([
-//     {"$match": { _id: playlist.id }},
-//     {"$unwind": "$order"},
-//     {"$sort": {
-//       "songs_ids.order":-1
-//     }},
-//     {"$group": {
-//       "songs_ids": {
-//         "$push": "$songs_ids"
-//       },
-//       "_id": 1
-//     }},
-//     {"$project": {
-//       "_id":0,
-//       "Items": 1
-//     }}], function(err,res) {
-//       console.log(res);
-//       res.send(res);
-//     });
-// });
-
 app.post("/api/song/updateplaylist", (req, res) => {
   let playlist_id = req.body.id;
   let newsongs= req.body.upsongs;
