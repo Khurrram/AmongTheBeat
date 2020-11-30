@@ -17,6 +17,7 @@ import { Route, useRouteMatch, Link, useHistory } from "react-router-dom";
 import { getSessionCookie } from "../CookieHandler";
 import axios from "axios";
 import { HomeContext } from "./Home";
+import {getPlaylistSongs} from "../DataManipulation/PlaylistREST"
 
 import "react-pro-sidebar/dist/css/styles.css";
 
@@ -35,6 +36,20 @@ function Sidebar(props) {
       pathname:`${url}/searchuser`,
       state: {search: searchresults}
     });
+  }
+
+  const handlePlaylist = async (playlistID) =>
+  {
+
+    const result = await getPlaylistSongs(playlistID)
+    console.log(result.data);
+    actions.changeCurrentPlaylistView(playlistID);
+    history.push(
+      {
+        pathname: `${url}/playlist/${playlistID}`,
+        state: {songs: result.data}
+      }
+    );
   }
 
   return (
@@ -88,10 +103,7 @@ function Sidebar(props) {
               return (
                 <MenuItem
                   key={playlist._id}
-                  onClick={() => {
-                    actions.changeCurrentPlaylistView(playlist._id);
-                    history.push(`${url}/playlist/${playlist._id}`);
-                  }}
+                  onClick={() => handlePlaylist(playlist._id)}
                 >
                   {playlist.playlist_name}
                 </MenuItem>

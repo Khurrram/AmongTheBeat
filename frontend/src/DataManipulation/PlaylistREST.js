@@ -121,3 +121,18 @@ export const deletePlaylist = async (playlistID, accountID) => {
       console.log("deletePlaylist Error");
     });
 };
+
+export const updatePlaylist = async(playlistID, song_ids) => 
+{
+  return instance
+    .post("/api/song/updateplaylist",
+    {
+      playlist_id: playlistID,
+      newsongs: song_ids
+    })
+    .then((res) =>
+    {
+      return res.data;
+    })
+    .catch((err) => {console.log("updatePlaylist Error")});
+}

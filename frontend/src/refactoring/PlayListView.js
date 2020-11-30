@@ -11,9 +11,9 @@ import Button from "@material-ui/core/Button";
 import axios from "axios";
 import { TextField } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
-import { Link, useHistory, useLocation, useParams } from "react-router-dom";
+import { Link, useHistory, useLocation, useParams} from "react-router-dom";
 import { HomeContext } from "./Home";
-import {getPlaylistSongs} from "../DataManipulation/PlaylistREST";
+import {getPlaylistSongs, updatePlaylist} from "../DataManipulation/PlaylistREST";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import SongDisplay from "./SongDisplay"
 
@@ -24,9 +24,10 @@ function PlayListView(props) {
 
   const [disableTitle, setdisableTitle] = useState(false);
   const [playlistName, setPlaylistName] = useState("");
-  const [currSongs, setCurrSongs] = useState({});
 
   const playlistTitle = useRef(null);
+  const location = useLocation();
+  let songs = location.state.songs;
 
   let DEFAULT_VALUE = "DEFAULT";
 
@@ -37,19 +38,6 @@ function PlayListView(props) {
     }
     setPlaylistName(state.currentPlaylist.playlist_name);
   }, [playlistID]);
-
-  useEffect(() =>
-  {
-    const fetchSongs = async () =>
-    {
-      const result = await getPlaylistSongs(state.currentPlaylist._id)
-      setCurrSongs(result)
-      console.log(result.data);
-    }
-    fetchSongs()
-  }, [])
-
-
 
   const dClick = () => {
     setdisableTitle(false);
@@ -65,6 +53,24 @@ function PlayListView(props) {
     // playlistTitle.current = e.target.value;
     actions.editPlaylists(playlistID, e.target.value);
     console.log(e.target.value);
+  };
+
+  const handleOnDragEnd = async (result) => {
+    // if (!result.destination) return;
+    // const items = songs;
+    // const [reordereditem] = items.splice(result.source.index, 1);
+    // items.splice(result.destination.index, 0, reordereditem);
+    // console.log("Items now: ", items);
+
+    // let newids = [];
+    // for (var i = 0; i < items.length; i++) {
+    //   newids.push(items[i]._id + "");
+    // }
+
+    // let pid = playlistID + "";
+
+    // const ans = await updatePlaylist(pid, newids)
+
   };
 
   return (
@@ -109,12 +115,12 @@ function PlayListView(props) {
         <hr />
       </span>
       <SongDiv>
-          {/* {currSongs ? 
+          {songs ? 
             <DragDropContext onDragEnd = {(res) => handleOnDragEnd(res)}>
             <Droppable droppableId = "songs">
               {( provided) => (
               <div id = "inside" {...provided.droppableProps} ref = {provided.innerRef}>
-                {currSongs.map(({song_name,artist_name,_id}, index) => 
+                {songs.map(({song_name,artist_name,_id}, index) => 
                 {
                   return(
                       <Draggable key = {_id} draggableId = {_id} index = {index}>
@@ -128,7 +134,7 @@ function PlayListView(props) {
                           name={song_name} 
                           artist={artist_name} 
                           id={_id} 
-                          playlist_id= {id} 
+                          playlist_id= {playlistID} 
                           type="Playlists" />
                           </CustomP>
                           )}
@@ -143,7 +149,7 @@ function PlayListView(props) {
 
 
 
-          :<p>Loading...</p>} */}
+          :<p>Loading...</p>}
 
       </SongDiv>
     </StyledDiv>
