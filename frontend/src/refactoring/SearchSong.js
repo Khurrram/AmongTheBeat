@@ -2,7 +2,8 @@ import React, {useState, useEffect} from 'react'
 import axios from "axios";
 import styled from "styled-components";
 import { getSessionCookie } from "../CookieHandler";
-import Song from "../Homepage/Song";
+import SongDisplay from "./SongDisplay";
+import {searchTracks} from "../DataManipulation/AccountREST"
 
 const SongDiv = styled.div`
   min-height: 65vh;
@@ -20,14 +21,7 @@ function SearchSong(props)
         const session = getSessionCookie();
         let accessToken = session.accessToken;
         
-        let data2 = {search: search, curraccessToken: accessToken};
-
-        await axios.post("http://localhost:5000/api/searchTracks",data2)
-            .then(function(res)
-            {
-                console.log(res.data);
-                setResults(res.data)
-            }).catch((err) => console.log(err));
+        setResults(await searchTracks(search, accessToken ));
     }, [search])
 
     function artistamt( arr )
@@ -67,7 +61,7 @@ function SearchSong(props)
             {
                 let artists = artistamt(track.artists);
                 return(
-                    <Song 
+                    <SongDisplay
                         name = {track.name}
                         artist = {artists}
                         time = {msToTime(track.duration_ms)}

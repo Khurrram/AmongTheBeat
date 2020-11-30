@@ -48,7 +48,7 @@ function Sidebar(props) {
         <Menu>
           <MenuItem id="fontsize" style={{ padding: "0rem" }}>
             Home
-            <Link to="/lol"></Link>
+            <Link to="/home"></Link>
           </MenuItem>
           <MenuItem id="fontsize">
             Browse

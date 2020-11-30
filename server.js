@@ -355,6 +355,35 @@ app.post("/api/song/addtoplaylist", (req, res) => {
 });
 
 //WE ARE NOW USING GET REQUEST PLAYLIST/*
+//POST for adding song to playlist
+// app.post("/api/playlist/getsongs", (req, res) => {
+//   let playlist_id = req.body.id;
+//   let songs = []
+//     playlistModel.findOne({ _id: playlist_id },
+//       function (err, playlist) {
+//         if (err) {
+//           console.log(err);
+//         } 
+//         else{
+//           for (let i = 0; i < playlist.songs_ids.length; i++) {
+      
+//             songModel.find({_id: playlist.songs_ids[i].song_id }, function(err,song){
+//               if (err) {
+//                 console.log(err);
+//               } 
+//                 songs.push(song[0]);
+//                 if(i === playlist.songs_ids.length-1)
+//                 {
+//                   res.send(songs);
+//                 }
+//             });
+
+//           }
+           
+//         }
+//       }
+//     );
+// });
 
 app.post("/api/song/updateplaylist", (req, res) => {
   let playlist_id = req.body.id;

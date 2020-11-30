@@ -8,6 +8,7 @@ import axios from "axios";
 import { getSessionCookie } from "../CookieHandler"
 import Album from "./Album"
 import SearchSong from "./SearchSong"
+import {browse} from "../DataManipulation/AccountREST"
 
 function BrowseView(props) {
   const [currPlay, setcurrPlay] = useState();
@@ -21,9 +22,8 @@ function BrowseView(props) {
       const session = getSessionCookie();
       let accessToken = session.accessToken;
 
-      let data2 = {curraccessToken: accessToken};
       setLoad(true);
-      const result = await axios.post("http://localhost:5000/api/browse", data2);
+      const result = await browse(accessToken);
       setcurrPlay(result.data);
       setLoad(false);
     }
@@ -39,11 +39,8 @@ function BrowseView(props) {
       const session = getSessionCookie();
       let accessToken = session.accessToken;
 
-      console.log("HERE", accessToken);
-
-      let data2 = {curraccessToken: accessToken};
       setLoad(true);
-      const result = await axios.post("http://localhost:5000/api/browse", data2);
+      const result = await browse(accessToken);
       setcurrPlay(result.data);
       setLoad(false);
 
