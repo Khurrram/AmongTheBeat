@@ -12,9 +12,160 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
-import { ViewPage } from "./HomePage";
+import { HomeContext } from "./Home";
 
-import "./Song.css";
+Modal.setAppElement("#root");
+
+function SongDisplay(props) {
+  const {
+    name,
+    artist,
+    time,
+    playlist,
+    uri,
+    id,
+    playlist_id,
+    update,
+    images,
+  } = props;
+  const session = getSessionCookie();
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [playlists, setPlaylists] = useState([]);
+  const [currSong, setCurrSong] = useState();
+  const { state, actions } = useContext(HomeContext);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  function toggleModal() {
+    setModalIsOpen(!modalIsOpen);
+    if (!modalIsOpen) {
+      let data = {
+        id: session.id,
+        song_name: name,
+        artist_name: artist,
+        uri: uri,
+      };
+
+      axios
+        .post("http://localhost:5000/api/song/getplaylists", data)
+        .then(function (res) {
+          setPlaylists(res.data.playlists);
+          setCurrSong(res.data.song);
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+
+  function handleClick(event) {
+    setAnchorEl(event.currentTarget);
+    // console.log(id);
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  function addtoPlaylist(e, playlistid, uri) {
+    e.preventDefault();
+    console.log("called here");
+    let data = { id: playlistid, song_uri: uri };
+    axios
+      .post("http://localhost:5000/api/song/addtoplaylist", data)
+      .then(function (res) {
+        setModalIsOpen(!modalIsOpen);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function removeSong(e, song) {
+    e.preventDefault();
+    let data = { id: playlist_id, song: song };
+    axios
+      .post("http://localhost:5000/api/song/removefromplaylist", data)
+      .then(function (res) {
+        actions.setPlaylist(res.data);
+        actions.setCurrentPlaylist(res.data);
+
+        axios
+          .post("http://localhost:5000/api/playlist/getsongs", data)
+          .then(function (res) {
+            console.log("called getsongs");
+            actions.setSongs(res.data);
+            actions.setPage(1);
+            actions.setRerender(state.rerender + 1);
+          })
+          .catch((err) => console.log(err));
+        console.log("song is removed");
+        setAnchorEl(null);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  return (
+    <Container>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={toggleModal}
+        contentLabel="Test"
+        style={customStyles}
+      >
+        <ModalHeader>Choose A Playlist To Add To</ModalHeader>
+
+        {/*  JUST SAMPLE FOR TESTING, THIS IS WHERE DATABASE IMPLEMENTATION NEEDS TO BE ADDED */}
+        {playlists.map((playlist) => {
+          return (
+            <ModalContent onClick={(e) => addtoPlaylist(e, playlist._id, uri)}>
+              {playlist.playlist_name}
+            </ModalContent>
+          );
+        })}
+      </Modal>
+
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={(e) => removeSong(e, id)}>Confirm</MenuItem>
+        <MenuItem onClick={() => handleClose()}>Cancel</MenuItem>
+      </Menu>
+
+      <SongInfo>
+        <SongName>{name}</SongName>
+        <SongArtist>{artist}</SongArtist>
+        <SongTime>{time}</SongTime>
+      </SongInfo>
+
+      {playlist ? (
+        <SongAction>
+          <AddIcon />
+        </SongAction>
+      ) : (
+        View(props, toggleModal, handleClick)
+      )}
+    </Container>
+  );
+}
+
+function View(props, toggleModal, handleClick) {
+  return (
+    <SongAction>
+      <StyledHeart></StyledHeart>
+      <StyledQueue />
+      {props.Browse ? (
+        <StyledPlaylistAdd onClick={() => toggleModal()} />
+      ) : (
+        <StyledTrashCan
+          aria-label="more"
+          aria-controls="long-menu"
+          aria-haspopup="true"
+          onClick={(e) => handleClick(e)}
+        />
+      )}
+    </SongAction>
+  );
+}
 
 const Container = styled.div`
   display: flex;
@@ -129,166 +280,4 @@ const ModalContent = styled.div`
   }
 `;
 
-Modal.setAppElement("#root");
-
-function Song(props) {
-  const {
-    name,
-    artist,
-    time,
-    playlist,
-    uri,
-    id,
-    playlist_id,
-    update,
-    images,
-  } = props;
-  const session = getSessionCookie();
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [playlists, setPlaylists] = useState([]);
-  const [currSong, setCurrSong] = useState();
-  const { state, actions } = useContext(ViewPage);
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  function toggleModal() {
-    setModalIsOpen(!modalIsOpen);
-    if (!modalIsOpen) {
-      let data = {
-        id: session.id,
-        song_name: name,
-        artist_name: artist,
-        uri: uri,
-      };
-
-      axios
-        .post("http://localhost:5000/api/song/getplaylists", data)
-        .then(function (res) {
-          setPlaylists(res.data.playlists);
-          setCurrSong(res.data.song);
-        })
-        .catch((err) => console.log(err));
-    }
-  }
-
-  function handleClick(event) {
-    setAnchorEl(event.currentTarget);
-    // console.log(id);
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  function addtoPlaylist(e, playlistid, uri) {
-    e.preventDefault();
-    console.log("called here");
-    let data = { id: playlistid, song_uri: uri };
-    axios
-      .post("http://localhost:5000/api/song/addtoplaylist", data)
-      .then(function (res) {
-        setModalIsOpen(!modalIsOpen);
-      })
-      .catch((err) => console.log(err));
-  }
-
-  function removeSong(e, song) {
-    e.preventDefault();
-    let data = { id: playlist_id, song: song };
-    axios
-      .post("http://localhost:5000/api/song/removefromplaylist", data)
-      .then(function (res) {
-        actions.setPlaylist(res.data);
-        actions.setCurrentPlaylist(res.data);
-
-        axios
-          .post("http://localhost:5000/api/playlist/getsongs", data)
-          .then(function (res) {
-            console.log("called getsongs");
-            actions.setSongs(res.data);
-            actions.setPage(1);
-            actions.setRerender(state.rerender + 1);
-          })
-          .catch((err) => console.log(err));
-        console.log("song is removed");
-        setAnchorEl(null);
-      })
-      .catch((err) => console.log(err));
-  }
-
-  const fixName = (name) =>
-  {
-    let ind = name.indexOf("(feat.")
-    if(ind !== -1)
-    {return name.slice(0,ind);}
-    else
-      return name;
-  }
-
-  return (
-    <Container>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={toggleModal}
-        contentLabel="Test"
-        style={customStyles}
-      >
-        <ModalHeader>Choose A Playlist To Add To</ModalHeader>
-
-        {/*  JUST SAMPLE FOR TESTING, THIS IS WHERE DATABASE IMPLEMENTATION NEEDS TO BE ADDED */}
-        {playlists.map((playlist) => {
-          return (
-            <ModalContent onClick={(e) => addtoPlaylist(e, playlist._id, uri)}>
-              {playlist.playlist_name}
-            </ModalContent>
-          );
-        })}
-      </Modal>
-
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={(e) => removeSong(e, id)}>Confirm</MenuItem>
-        <MenuItem onClick={() => handleClose()}>Cancel</MenuItem>
-      </Menu>
-
-      <SongInfo>
-        <SongName>{fixName(name)}</SongName>
-        <SongArtist>{artist}</SongArtist>
-        <SongTime>{time}</SongTime>
-      </SongInfo>
-
-      {playlist ? (
-        <SongAction>
-          <AddIcon />
-        </SongAction>
-      ) : (
-        View(props, toggleModal, handleClick)
-      )}
-    </Container>
-  );
-}
-
-function View(props, toggleModal, handleClick) {
-  return (
-    <SongAction>
-      <StyledHeart></StyledHeart>
-      <StyledQueue />
-      {props.Browse ? (
-        <StyledPlaylistAdd onClick={() => toggleModal()} />
-      ) : (
-        <StyledTrashCan
-          aria-label="more"
-          aria-controls="long-menu"
-          aria-haspopup="true"
-          onClick={(e) => handleClick(e)}
-        />
-      )}
-    </SongAction>
-  );
-}
-
-export default Song;
+export default SongDisplay;

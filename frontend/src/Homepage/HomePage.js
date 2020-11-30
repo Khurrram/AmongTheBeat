@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useReducer } from "react";
 
 import styled from "styled-components";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PlayNavBar from "./PlayNavBar";
 import HomeSideBar from "./HomeSideBar";
-import AlbumPage from "./AlbumPage";
-import SearchUsers from "./SearchUsers";
-import SearchUsersPage from "./SearchUsersPage";
+// import AlbumPage from "./AlbumPage";
+import SearchUsers from "../refactoring/SearchUsers";
+import SearchUsersPage from "../refactoring/SearchUsersPage";
 import { Link, useHistory } from "react-router-dom";
 import PlayListView from "./PlayListView";
 import test from "../data/test.json";
@@ -93,6 +93,7 @@ function HomePage() {
   const session = getSessionCookie();
 
   const [page, setPage] = useState(5);
+
   const [settings, setSettings] = useState(false);
   const [currentplaylist, setPlaylist] = useState({});
   const [currentsongs, setSongs] = useState([]);
@@ -101,78 +102,100 @@ function HomePage() {
   const [currentalbumsongs, setcurrentalbumSongs] = useState([]);
   const [userresults, setuserResults] = useState("");
   const [urPlaylists, seturPlaylists] = useState({});
-  const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs, rerender, userresults, urPlaylists}, 
-  actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs, setRerender, setuserResults, seturPlaylists} };
+  const value = {
+    state: {
+      page,
+      settings,
+      currentplaylist,
+      currentsongs,
+      currentalbum,
+      currentalbumsongs,
+      rerender,
+      userresults,
+      urPlaylists
+    },
+    actions: {
+      setPage,
+      setSettings,
+      setPlaylist,
+      setSongs,
+      setcurrentAlbum,
+      setcurrentalbumSongs,
+      setRerender,
+      setuserResults,
+      seturPlaylists
+    },
+  };
 
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return;
+    const items = currentsongs;
+    const [reordereditem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reordereditem);
+    console.log("Items now: ", items);
 
-  const handleOnDragEnd = (result) =>
-  {
+    let newids = [];
+    for (var i = 0; i < items.length; i++) {
+      newids.push(items[i]._id + "");
+    }
 
-      if (!result.destination) return;
-      const items = currentsongs;
-      const [reordereditem] = items.splice(result.source.index,1);
-      items.splice(result.destination.index, 0 , reordereditem);
-      console.log("Items now: ", items);
-      
-      let newids = []
-      for(var i = 0; i < items.length; i++)
-      {
-        newids.push(items[i]._id + "");
-      }
+    let pid = currentplaylist._id + "";
+    let data = { id: pid, upsongs: newids };
+    axios
+      .post("http://localhost:5000/api/song/updateplaylist", data)
+      .then(function (res) {
+        console.log("Updated list: ", res.data);
+        setPlaylist(res.data);
+        setSongs(items);
+        setPage(1);
+      })
+      .catch((err) => console.log(err));
+  };
 
-      let pid = currentplaylist._id + "";
-      let data = {id: pid, upsongs: newids};
-      axios
-        .post("http://localhost:5000/api/song/updateplaylist",data)
-          .then(function(res)
-          {
-            console.log("Updated list: ", res.data);
-            setPlaylist(res.data);
-            setSongs(items);
-            setPage(1);
-          })
-            .catch((err) => console.log(err));
-  }
-
-  
   let viewPage;
   if (page === 0) {
-    viewPage = <BrowseView session = {session}/>;
+    viewPage = <BrowseView session={session} />;
   } else if (page === 1) {
-    viewPage = <PlayListView playlist={currentplaylist} playlistName={currentplaylist.playlist_name} playlistTime={0} songs={currentsongs} deletePlaylist={deletePlaylist} handleOnDragEnd={handleOnDragEnd} />;
-  } else if (page === 2)
-    {
-      viewPage = <AlbumPage />
-    }
-    else if (page === 3)
-    {
-      viewPage = <SearchUsers search = {userresults}/>
-    }
-    else if (page === 4)
-    {
-      viewPage = <SearchUsersPage playlist = {urPlaylists}/>
-    }
+    viewPage = (
+      <PlayListView
+        playlist={currentplaylist}
+        playlistName={currentplaylist.playlist_name}
+        playlistTime={0}
+        songs={currentsongs}
+        deletePlaylist={deletePlaylist}
+        handleOnDragEnd={handleOnDragEnd}
+      />
+    );
+  } else if (page === 2) {
+    // viewPage = <AlbumPage />;
+    
+  } 
+  else if (page === 3)
+  {
+    viewPage = <SearchUsers search = {userresults}/>
+  }
+  else if (page === 4)
+  {
+    viewPage = <SearchUsersPage playlist = {urPlaylists}/>
+  }
   else {
     setPage(0);
     viewPage = <BrowseView />;
   }
 
-
   function deletePlaylist(e, id, owner) {
     e.preventDefault();
-    let data = {id: id, owner: owner};
+    let data = { id: id, owner: owner };
     axios
-    .post("http://localhost:5000/api/playlist/delete", data)
-    .then(function (res) {
-      console.log("playlist has been deleted");
-      setPlaylist(res.data);
-      setRerender(rerender+1);
-      setPage(0);
-    })
-    .catch((err) => console.log(err));
+      .post("http://localhost:5000/api/playlist/delete", data)
+      .then(function (res) { 
+        console.log("playlist has been deleted");
+        setPlaylist(res.data);
+        setRerender(rerender + 1);
+        setPage(0);
+      })
+      .catch((err) => console.log(err));
   }
-
-
 
   return (
     <ViewPage.Provider value={value}>
@@ -203,6 +226,5 @@ function HomePage() {
     </ViewPage.Provider>
   );
 }
-
 
 export default HomePage;
