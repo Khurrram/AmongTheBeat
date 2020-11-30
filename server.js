@@ -364,20 +364,29 @@ app.post("/api/song/addtoplaylist", (req, res) => {
 //POST for adding song to playlist
 app.post("/api/playlist/getsongs", (req, res) => {
   let playlist_id = req.body.id;
-
+  let songs = []
     playlistModel.findOne({ _id: playlist_id },
       function (err, playlist) {
-        console.log(playlist.songs_ids)
         if (err) {
           console.log(err);
         } 
-            songModel.find({_id: { $in: playlist.songs_ids} }, function(err,song){
+        else{
+          for (let i = 0; i < playlist.songs_ids.length; i++) {
+      
+            songModel.find({_id: playlist.songs_ids[i].song_id }, function(err,song){
               if (err) {
                 console.log(err);
               } 
-                console.log(song);
-                res.send(song);
+                songs.push(song[0]);
+                if(i === playlist.songs_ids.length-1)
+                {
+                  res.send(songs);
+                }
             });
+
+          }
+           
+        }
       }
     );
 });
