@@ -354,46 +354,48 @@ app.post("/api/song/addtoplaylist", (req, res) => {
   });
 });
 
-//POST for retrieving songs from playlist
-app.post("/api/playlist/getsongs", (req, res) => {
-  let playlist_id = req.body.id;
+//WE ARE NOW USING GET REQUEST PLAYLIST/*
 
-    // playlistModel.findOne({ _id: playlist_id },
-    //   function (err, playlist) {
-    //     console.log(playlist.songs_ids)
-    //     if (err) {
-    //       console.log(err);
-    //     } 
-    //         songModel.find({_id: { $in: playlist.songs_ids.song_id} }, function(err,song){
-    //           if (err) {
-    //             console.log(err);
-    //           } 
-    //             console.log(song);
-    //             res.send(song);
-    //         });
-    //   }
-    // );
+// //POST for retrieving songs from playlist
+// app.post("/api/playlist/getsongs", (req, res) => {
+//   let playlist_id = req.body.id;
 
-  playlistModel.aggregate([
-    {"$match": { _id: playlist.id }},
-    {"$unwind": "$order"},
-    {"$sort": {
-      "songs_ids.order":-1
-    }},
-    {"$group": {
-      "songs_ids": {
-        "$push": "$songs_ids"
-      },
-      "_id": 1
-    }},
-    {"$project": {
-      "_id":0,
-      "Items": 1
-    }}], function(err,res) {
-      console.log(res);
-      res.send(res);
-    });
-});
+//     // playlistModel.findOne({ _id: playlist_id },
+//     //   function (err, playlist) {
+//     //     console.log(playlist.songs_ids)
+//     //     if (err) {
+//     //       console.log(err);
+//     //     } 
+//     //         songModel.find({_id: { $in: playlist.songs_ids.song_id} }, function(err,song){
+//     //           if (err) {
+//     //             console.log(err);
+//     //           } 
+//     //             console.log(song);
+//     //             res.send(song);
+//     //         });
+//     //   }
+//     // );
+
+//   playlistModel.aggregate([
+//     {"$match": { _id: playlist.id }},
+//     {"$unwind": "$order"},
+//     {"$sort": {
+//       "songs_ids.order":-1
+//     }},
+//     {"$group": {
+//       "songs_ids": {
+//         "$push": "$songs_ids"
+//       },
+//       "_id": 1
+//     }},
+//     {"$project": {
+//       "_id":0,
+//       "Items": 1
+//     }}], function(err,res) {
+//       console.log(res);
+//       res.send(res);
+//     });
+// });
 
 app.post("/api/song/updateplaylist", (req, res) => {
   let playlist_id = req.body.id;
@@ -412,58 +414,44 @@ app.post("/api/song/updateplaylist", (req, res) => {
     );
 });
 
+const findSong = async function(params) {
+  return await songModel.findOne({_id: params}).exec();
+}
+
+async function findSongArray(songs_ids) {
+  var songs = [];
+  for (let i = 0; i < songs_ids.length; i++) {
+    songs.push(await findSong(songs_ids[i]));
+  }
+  const promise = await Promise.all(songs);
+  return promise;
+}
 
 //POST for adding song to playlist
-app.get("/playlist/*", (req, response) => {
+app.get("/playlist/*", (req, res) => {
   console.log(req.url);
   // console.log("in get " + req.query.id);
   let playlist_id = req.query.id;
-  let songs = [];
 
-  const findPlaylist = playlistModel.findById({_id: playlist_id});
-  findPlaylist.then(function(playlist) {
-    let length = playlist.songs_ids.length;
-    console.log("length " + length);
-    let count = 0;
-    let pointer = 0;
-    while (count < length) {
-      if (playlist.songs_ids[pointer].order == count) {
-        console.log("found");
-        console.log(playlist.songs_ids[pointer].order);
-        songModel.findById({_id: playlist.songs_ids[pointer].song_id}, function(err, song) {
-          songs.push(song);
-          count++;
-          console.log("in songModel");
+    playlistModel.findOne({ _id: playlist_id },
+      function (err, playlist) {
+        if (err) {
+          console.log(err);
+        }
+
+        var songs = [];
+        playlistsongs = playlist.songs_ids.sort((a,b) => (a.order > b.order) ? 1 : -1);
+        
+        let length = playlist.songs_ids.length;
+        for (let i = 0; i < length; i++) {
+          songs.push(playlistsongs[i].song_id);
+        }
+
+        findSongArray(songs).then(function(result) {
+          console.log(result);
+          res.send(result);
         });
-      } else {
-        pointer++;
-      }
-      if (pointer == length-1) {
-        pointer = 0;
-      }
-    }
-
-    console.log(songs);
-  });
-  // const sorted = playlistModel.aggregate([
-  //   {"$match": { _id: playlist_id }},
-  //   {"$unwind": "$songs_ids"},
-  //   {"$sort": {
-  //     "songs_ids.order":-1
-  //   }},
-  //   {"$group": {
-  //     "_id": "$_id",
-  //     "songs": {
-  //       "$push": "$songs_ids"
-  //     }
-  //   }},
-  //   {"$project": {
-  //     "songs_ids":"$songs"
-  //   }}]);
-
-    // sorted.then(function(result) {
-    //   console.log("result" + result);
-    // })
+});
 });
 
 //POST for removing song from playlist
