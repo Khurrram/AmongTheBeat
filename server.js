@@ -298,7 +298,6 @@ app.post("/api/song/getplaylists", (req, res) => {
           console.log(err);
       } else {
         songModel.findOne({SpotifyURI : uri}, function (err, song) {
-          // console.log(song);
           songHold = song;
           if (song == null) {
             songModel.create({
@@ -310,22 +309,15 @@ app.post("/api/song/getplaylists", (req, res) => {
             let data = {playlists : playlists, song: id};
             res.send(data);
           } else {
-            playlistModel.find({songs_ids : song._id}, function (err, playlist){
+            playlistModel.find({"songs_ids.song_id" : song._id}, function (err, playlist){
               if (err) { console.log(err); }
-              // console.log(playlists);
-              // console.log(playlist);
               for (let i = 0; i < playlists.length; i++) {
                 for (let j = 0; j < playlist.length; j++) {
-                  console.log("playlist id: " + playlist[j]._id);
-                  console.log("playlists id: " +playlists[i]._id);
-                  if (playlists[i]._id+"" === playlist[j]._id+"") {
-                    console.log("playlist found");
+                  if (playlists[i]._id+"" === playlist[j]._id+"") { //playlist found
                     playlists.splice(i,1);
                   }
                 }
               }
-              // console.log(playlists);
-              // console.log(songHold._id);
               let data = {playlists : playlists, song: songHold._id};
               res.send(data);
             });
@@ -342,26 +334,29 @@ app.post("/api/song/getplaylists", (req, res) => {
 app.post("/api/song/addtoplaylist", (req, res) => {
   let playlist_id = req.body.id;
   let uri = req.body.song_uri;
+  const getLength = playlistModel.findById({_id: playlist_id}); // query for getting length
+  const findSong = songModel.findOne({SpotifyURI : uri}); // query for getting song from songs collection
 
-  console.log("add to playlist is called");
-  songModel.findOne({SpotifyURI : uri}, function (err, song) {
-    console.log(song._id);
-    playlistModel.findOneAndUpdate(
-      { _id: playlist_id },
-      { $push: { songs_ids: song._id } },
-      function (err, playlist) {
-        if (err) {
-          console.log(err);
-        } else {
-          res.send(playlist_id);
+  getLength.then(function(length) {
+    findSong.then(function(song){
+      playlistModel.findOneAndUpdate(
+        { _id: playlist_id },
+        { $push: { songs_ids: [{song_id: song._id, order: length.songs_ids.length }] } },
+        function (err, playlist) {
+          if (err) {
+            console.log(err);
+          } else {
+            res.send(playlist_id);
+          }
         }
-        console.log(playlist);
-      }
-    );
+      );
+    });
   });
 });
 
+//WE ARE NOW USING GET REQUEST PLAYLIST/*
 //POST for adding song to playlist
+<<<<<<< HEAD
 app.post("/api/playlist/getsongs", (req, res) => {
   let playlist_id = req.body.id;
     // playlistModel.findOne({ _id: playlist_id },
@@ -396,6 +391,36 @@ app.post("/api/playlist/getsongs", (req, res) => {
         res.send(response);
       });
 });
+=======
+// app.post("/api/playlist/getsongs", (req, res) => {
+//   let playlist_id = req.body.id;
+//   let songs = []
+//     playlistModel.findOne({ _id: playlist_id },
+//       function (err, playlist) {
+//         if (err) {
+//           console.log(err);
+//         } 
+//         else{
+//           for (let i = 0; i < playlist.songs_ids.length; i++) {
+      
+//             songModel.find({_id: playlist.songs_ids[i].song_id }, function(err,song){
+//               if (err) {
+//                 console.log(err);
+//               } 
+//                 songs.push(song[0]);
+//                 if(i === playlist.songs_ids.length-1)
+//                 {
+//                   res.send(songs);
+//                 }
+//             });
+
+//           }
+           
+//         }
+//       }
+//     );
+// });
+>>>>>>> HomePage_k
 
 app.post("/api/song/updateplaylist", (req, res) => {
   let playlist_id = req.body.id;
@@ -414,28 +439,44 @@ app.post("/api/song/updateplaylist", (req, res) => {
     );
 });
 
+const findSong = async function(params) {
+  return await songModel.findOne({_id: params}).exec();
+}
+
+async function findSongArray(songs_ids) {
+  var songs = [];
+  for (let i = 0; i < songs_ids.length; i++) {
+    songs.push(await findSong(songs_ids[i]));
+  }
+  const promise = await Promise.all(songs);
+  return promise;
+}
 
 //POST for adding song to playlist
 app.get("/playlist/*", (req, res) => {
   console.log(req.url);
-  // console.log("in get");
+  // console.log("in get " + req.query.id);
   let playlist_id = req.query.id;
 
     playlistModel.findOne({ _id: playlist_id },
       function (err, playlist) {
-        console.log(playlist.songs_ids)
         if (err) {
           console.log(err);
-        } 
-            songModel.find({_id: { $in: playlist.songs_ids} }, function(err,song){
-              if (err) {
-                console.log(err);
-              } 
-                console.log(song);
-                res.send(song);
-            });
-      }
-    );
+        }
+
+        var songs = [];
+        playlistsongs = playlist.songs_ids.sort((a,b) => (a.order > b.order) ? 1 : -1);
+        
+        let length = playlist.songs_ids.length;
+        for (let i = 0; i < length; i++) {
+          songs.push(playlistsongs[i].song_id);
+        }
+
+        findSongArray(songs).then(function(result) {
+          console.log(result);
+          res.send(result);
+        });
+});
 });
 
 //POST for removing song from playlist

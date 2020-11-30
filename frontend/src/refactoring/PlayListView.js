@@ -39,6 +39,22 @@ function PlayListView(props) {
     setPlaylistName(state.currentPlaylist.playlist_name);
   }, [playlistID]);
 
+<<<<<<< HEAD
+=======
+  useEffect(() =>
+  {
+    const fetchSongs = async () =>
+    {
+      const result = await getPlaylistSongs(state.currentPlaylist._id)
+      setCurrSongs(result)
+      // console.log(result.data);
+    }
+    fetchSongs()
+  }, [])
+
+
+
+>>>>>>> HomePage_k
   const dClick = () => {
     setdisableTitle(false);
     playlistTitle.current.focus();
