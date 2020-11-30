@@ -15,7 +15,6 @@ import { getSessionCookie } from "../CookieHandler";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
 import { PlaylistAdd } from "@material-ui/icons";
-import { getSessionCookie } from "../CookieHandler"
 
 export const HomeContext = React.createContext();
 
@@ -29,11 +28,7 @@ function Home() {
     deletePlaylists,
     editPlaylists,
     changeCurrentPlaylistView,
-<<<<<<< HEAD
-  } = usePlaylists(getSessionCookie().id);
-=======
   } = usePlaylists(session.id);
->>>>>>> joshua
 
   const contextValue = {
     state: { playlists, currentPlaylist },

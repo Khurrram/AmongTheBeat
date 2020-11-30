@@ -44,7 +44,7 @@ function PlayListView(props) {
     {
       const result = await getPlaylistSongs(state.currentPlaylist._id)
       setCurrSongs(result)
-      console.log(result.data);
+      // console.log(result.data);
     }
     fetchSongs()
   }, [])
