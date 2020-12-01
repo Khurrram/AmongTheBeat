@@ -6,6 +6,9 @@ import {
   editPlaylist,
   getPlaylists,
   updatePlaylistSongs,
+  addSongToPlaylist,
+  removeSongFromPlaylist,
+  getValidSongPlaylists,
 } from "./PlaylistREST";
 import axios from "axios";
 
@@ -41,6 +44,28 @@ const usePlaylists = (userID) => {
     });
   };
 
+  const addSongToPlaylistID = (playlistID, songURI) => {
+    addSongToPlaylist(playlistID, songURI).then(() => {
+      getPlaylists(id).then((response) => {
+        setPlaylists(response.data);
+      });
+    });
+  };
+
+  const removeSongFromPlaylistID = (playlistID, songURI) => {
+    removeSongFromPlaylist(playlistID, songURI).then(() => {
+      getPlaylists(id).then((response) => {
+        setPlaylists(response.data);
+      });
+    });
+  };
+
+  const getValidPlaylists = (userID, songName, artistName, uri) => {
+    getValidSongPlaylists(userID, songName, artistName, uri).then((res) => {
+      return res.data;
+    });
+  };
+
   const changeCurrentPlaylistView = (playlistID) => {
     if (playlistID == -1) {
       setCurrentPlaylist({});
@@ -68,24 +93,6 @@ const usePlaylists = (userID) => {
     // console.log(playlists);
   }, []);
 
-  const handleOnDragEnd = (result, currentSongs) => {
-    if (!result.destination) return;
-    const items = currentSongs;
-    const [reordereditem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reordereditem);
-    console.log("Items now: ", items);
-    let newids = [];
-    for (var i = 0; i < items.length; i++) {
-      newids.push(items[i]._id + "");
-    }
-    let pid = currentPlaylist._id + "";
-    let data = { id: pid, upsongs: newids };
-
-    updatePlaylistSongs(pid, newids).then((res) => {
-      //currentPlaylist(res);
-    });
-  };
-
   return {
     playlists,
     currentPlaylist,
@@ -93,7 +100,8 @@ const usePlaylists = (userID) => {
     deletePlaylists,
     editPlaylists,
     changeCurrentPlaylistView,
-    handleOnDragEnd,
+    removeSongFromPlaylistID,
+    addSongToPlaylistID,
   };
 };
 

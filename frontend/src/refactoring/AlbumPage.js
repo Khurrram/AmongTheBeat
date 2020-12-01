@@ -3,10 +3,15 @@ import styled from "styled-components";
 import SongDisplay from "./SongDisplay"
 import Avatar from "@material-ui/core/Avatar";
 import { HomeContext } from "./Home";
+import { Route, useLocation } from "react-router-dom";
 
 function AlbumPage(props)
 {
     const { state, actions } = useContext(HomeContext);
+    const location = useLocation();
+    let playlists = location.state.playlist;
+    let name = location.state.name;
+    let images = location.state.images;
 
     function artistamt( arr )
     {
@@ -42,8 +47,8 @@ function AlbumPage(props)
         <StyledDiv>
       
         <span>
-        <StylAvatar style={{variant: 'square', height: '5em', width: '5em' }} src = {state.currentalbum.images[0].url}/>
-            <h1>{state.currentalbum.name}</h1>
+        <StylAvatar style={{variant: 'square', height: '5em', width: '5em' }} src = {images[0].url}/>
+            <h1>{name}</h1>
         </span>
         <StyledSpan>
             <Title>Title</Title>
@@ -54,7 +59,7 @@ function AlbumPage(props)
         </span>
         <SongDiv>
             {
-                state.currentalbumsongs.map((song) => 
+                playlists.map((song) => 
                 {
                     let artists = artistamt(song.track.artists);
                     return(

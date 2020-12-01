@@ -18,7 +18,7 @@ import usePlaylists from "../DataManipulation/usePlaylists";
 import SearchUsers from "./SearchUsers";
 import SearchUsersPage from "./SearchUsersPage";
 import AlbumPage from "./AlbumPage";
-
+import { getSessionCookie } from "../CookieHandler";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
 import { PlaylistAdd } from "@material-ui/icons";
@@ -29,6 +29,7 @@ function Home() {
   const history = useHistory();
   const params = useParams();
   let { path, url } = useRouteMatch();
+  const session = getSessionCookie();
   let {
     playlists,
     currentPlaylist,
@@ -38,6 +39,7 @@ function Home() {
     changeCurrentPlaylistView,
     handleOnDragEnd,
   } = usePlaylists("5fc56658a000602ef0ee4332");
+  // } = usePlaylists(session.id);
 
   const contextValue = {
     state: { playlists, currentPlaylist },

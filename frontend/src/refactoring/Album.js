@@ -4,11 +4,14 @@ import axios from "axios";
 import Avatar from "@material-ui/core/Avatar";
 import { getSessionCookie } from "../CookieHandler";
 import { HomeContext } from "./Home";
+import { Route, useRouteMatch, Link, useHistory } from "react-router-dom";
 
 function Album(props)
 {
     const { state, actions } = useContext(HomeContext);
     const {name, playlistid, images, description} = props;
+    let { path, url } = useRouteMatch();
+    let history = useHistory();
 
     const getSong = async () =>
     {
@@ -24,6 +27,16 @@ function Album(props)
             {
                 result = res.data
             }).catch((err) => console.log(err));
+
+        console.log("Results: ", result);
+        history.push({
+          pathname:`${url}/${result.id}`,
+          state: {
+            playlist: result.tracks.items,
+            name: result.name,
+            images: result.images
+          }
+        });
 
     } 
 

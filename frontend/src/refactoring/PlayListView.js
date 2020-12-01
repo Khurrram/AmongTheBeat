@@ -13,28 +13,37 @@ import EditIcon from "@material-ui/icons/Edit";
 import { Link, useHistory, useLocation, useParams } from "react-router-dom";
 import { HomeContext } from "./Home";
 import useSongs from "../DataManipulation/useSongs";
-import { getPlaylistSongs } from "../DataManipulation/PlaylistREST";
 import SongContainer from "./SongContainer";
+import {
+  getPlaylistSongs,
+  updatePlaylist,
+} from "../DataManipulation/PlaylistREST";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import SongDisplay from "./SongDisplay";
 
 function PlayListView(props) {
   const { state, actions } = useContext(HomeContext);
+  const history = useHistory();
   const { playlistID } = useParams();
   const [disableTitle, setdisableTitle] = useState(false);
   const [playlistName, setPlaylistName] = useState("");
   const playlistTitle = useRef(null);
-  const [test, settest] = useState([]);
-  const {
-    songs,
-    addSongToPlaylistID,
-    removeSongFromPlaylistID,
-    getPlaylistIDSongs,
-  } = useSongs(playlistID);
+  // const {
+  //   songs,
+  //   addSongToPlaylistID,
+  //   removeSongFromPlaylistID,
+  //   getPlaylistIDSongs,
+  // } = useSongs(playlistID);
+  const location = useLocation();
+
+  let songs = location.state.songs;
+  let songs_ids = location.state.songs_ids;
+  const [currSongs, setCurrSongs] = useState(songs);
 
   let DEFAULT_VALUE = "DEFAULT";
   useLayoutEffect(() => {
     if (state.currentPlaylist.playlist_name === undefined) {
-      // actions.changeCurrentPlaylistView(-1);
-      actions.history.push(`/lol`);
+      history.push("/home");
     }
     return () => {
       actions.changeCurrentPlaylistView(-1);
@@ -44,6 +53,9 @@ function PlayListView(props) {
   // THIS IS FOR GETTING NEW PLAYLIST TITLE
   useEffect(() => {
     setPlaylistName("" + state.currentPlaylist.playlist_name);
+    songs = location.state.songs;
+    songs_ids = location.state.songs_ids;
+    setCurrSongs(songs);
   }, [playlistID]);
 
   const dClick = () => {
@@ -59,6 +71,36 @@ function PlayListView(props) {
     setdisableTitle(true);
     // playlistTitle.current = e.target.value;
     actions.editPlaylists(playlistID, playlistName);
+  };
+
+  const handleOnDragEnd = async (result) => {
+    if (!result.destination) return;
+    const items = currSongs;
+    const [reordereditem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reordereditem);
+
+    let newsong_ids = songs_ids;
+
+    const [reordersong] = newsong_ids.splice(result.source.index, 1);
+    newsong_ids.splice(result.destination.index, 0, reordersong);
+
+    for (var i = 0; i < items.length; i++) {
+      for (var j = 0; j < newsong_ids.length; j++) {
+        if (items[i]._id === newsong_ids[j].song_id) {
+          newsong_ids[j].order = i;
+        }
+      }
+    }
+
+    newsong_ids.sort(function (a, b) {
+      return a.order - b.order;
+    });
+
+    let pid = playlistID + "";
+
+    const ans = await updatePlaylist(pid, newsong_ids);
+
+    setCurrSongs(items);
   };
 
   return (
@@ -86,7 +128,7 @@ function PlayListView(props) {
         <StyledTrash
           onClick={() => {
             actions.deletePlaylists(playlistID);
-            actions.history.push("/lol");
+            history.push("/home");
           }}
         />
         <h6 id="timestamp">{DEFAULT_VALUE}</h6>
@@ -105,11 +147,44 @@ function PlayListView(props) {
         <hr />
       </span>
       <SongDiv>
-        {songs &&
-          songs.map((song) => {
-            console.log(song);
-            return <h2>lol</h2>;
-          })}
+        {currSongs ? (
+          <DragDropContext onDragEnd={(res) => handleOnDragEnd(res)}>
+            <Droppable droppableId="songs">
+              {(provided) => (
+                <div
+                  id="inside"
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {currSongs.map(({ song_name, artist_name, _id }, index) => {
+                    return (
+                      <Draggable key={_id} draggableId={_id} index={index}>
+                        {(provided) => (
+                          <CustomP
+                            {...provided.draggableProps}
+                            ref={provided.innerRef}
+                            {...provided.dragHandleProps}
+                          >
+                            <SongDisplay
+                              name={song_name}
+                              artist={artist_name}
+                              id={_id}
+                              playlist_id={playlistID}
+                              type="Playlists"
+                            />
+                          </CustomP>
+                        )}
+                      </Draggable>
+                    );
+                  })}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        ) : (
+          <p>Loading...</p>
+        )}
       </SongDiv>
     </StyledDiv>
   );

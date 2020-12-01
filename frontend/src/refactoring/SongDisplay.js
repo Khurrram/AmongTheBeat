@@ -13,10 +13,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
 import { HomeContext } from "./Home";
+import { addSongToPlaylist } from "../DataManipulation/PlaylistREST";
 
 Modal.setAppElement("#root");
 
-function SongComponent(props) {
+function SongDisplay(props) {
   const {
     name,
     artist,
@@ -64,17 +65,13 @@ function SongComponent(props) {
     setAnchorEl(null);
   };
 
-  function addtoPlaylist(e, playlistid, uri) {
-    // e.preventDefault();
-    // console.log("called here");
-    // let data = { id: playlistid, song_uri: uri };
-    // axios
-    //   .post("http://localhost:5000/api/song/addtoplaylist", data)
-    //   .then(function (res) {
-    //     setModalIsOpen(!modalIsOpen);
-    //   })
-    //   .catch((err) => console.log(err));
-  }
+  const addtoPlaylist = async (e, playlistid, uri) => {
+    e.preventDefault();
+    console.log("called here");
+    let data = { id: playlistid, song_uri: uri };
+    const ans = await addSongToPlaylist(playlistid, uri);
+    setModalIsOpen(!modalIsOpen);
+  };
 
   function removeSong(e, song) {
     // e.preventDefault();
@@ -279,4 +276,4 @@ const ModalContent = styled.div`
   }
 `;
 
-export default SongComponent;
+export default SongDisplay;

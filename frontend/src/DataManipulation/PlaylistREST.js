@@ -3,7 +3,7 @@ import { instance } from "./AccountREST";
 
 export const getPlaylistSongs = async (playlistID) => {
   return instance
-    .post("/api/playlist/getsongs", { id: playlistID })
+    .post("api/playlist/getplaylistsongs", { id: playlistID })
     .then((res) => {
       return res;
     })
@@ -12,15 +12,16 @@ export const getPlaylistSongs = async (playlistID) => {
     });
 };
 
-export const getOwner = async (username) => 
-{
+export const getOwner = async (username) => {
   return instance
-    .post("/api/playlist/getowner", {username: username})
+    .post("/api/playlist/getowner", { username: username })
     .then((res) => {
       return res;
     })
-    .catch((err) => {console.log("getOwner Error")})
-}
+    .catch((err) => {
+      console.log("getOwner Error");
+    });
+};
 
 export const createPlaylist = async (accountID) => {
   return instance
@@ -129,5 +130,19 @@ export const updatePlaylistSongs = async (playlistID, updatedSongs) => {
     })
     .catch((error) => {
       console.log("updatePlaylistSongs Error");
+    });
+};
+
+export const updatePlaylist = async (playlistID, song_ids) => {
+  return instance
+    .post("/api/song/updateplaylist", {
+      playlistID: playlistID,
+      song_ids: song_ids,
+    })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log("updatePlaylist Error");
     });
 };

@@ -62,3 +62,21 @@ export const getUsername = async (accountID) => {
       console.log("changePassword Error");
     });
 };
+
+export const browse = async( accessToken) =>
+{
+  return instance
+    .post("/api/browse", {curraccessToken: accessToken})
+}
+
+export const searchTracks = async (search, accessToken) => {
+  return instance
+    .post("/api/searchTracks", 
+    {
+      search: search,
+      curraccessToken: accessToken
+    }).then((res) => {
+      return res.data
+    }).catch((err) => console.log("searchTracks ERR"));
+
+}

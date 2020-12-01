@@ -1,64 +1,62 @@
-import React, {useState, useEffect, useContext, useRef} from 'react'
+import React, { useState, useEffect, useContext, useRef } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import SongDisplay from "./SongDisplay";
-import {getPlaylists, getPlaylistSongs} from "../DataManipulation/PlaylistREST";
+import {
+  getPlaylists,
+  getPlaylistSongs,
+} from "../DataManipulation/PlaylistREST";
 import { Link, useHistory, useLocation, useRouteMatch } from "react-router-dom";
 
-function SearchUsersPage(props)
-{
-    const [songs, setSongs] = useState();
-    const songsRef = useRef(songs);
+function SearchUsersPage(props) {
+  const [songs, setSongs] = useState();
+  const songsRef = useRef(songs);
 
-    const location = useLocation();
-    let playlist = location.state.playlist;
+  const location = useLocation();
+  let playlist = location.state.playlist;
 
-    useEffect(() =>
-    {
-        const getSongs = async() =>
-        {
-            let result = await getPlaylistSongs(playlist._id)
-            songsRef.current = result.data
-            setSongs(songsRef.current)
-        };
-        getSongs();
-    },[])
-    return(
-        <StyledDiv>
-            <span>
-                <h1>{playlist.playlist_name}</h1>
-            </span>
+  useEffect(() => {
+    const getSongs = async () => {
+      let result = await getPlaylistSongs(playlist._id);
+      songsRef.current = result.data;
+      setSongs(songsRef.current);
+    };
+    getSongs();
+  }, []);
+  return (
+    <StyledDiv>
+      <span>
+        <h1>{playlist.playlist_name}</h1>
+      </span>
 
-            <StyledSpan>
-                <Title>Title</Title>
-                <Artist>Artist</Artist>
-             </StyledSpan>
+      <StyledSpan>
+        <Title>Title</Title>
+        <Artist>Artist</Artist>
+      </StyledSpan>
 
-             <span>
-                <hr />
-            </span>
+      <span>
+        <hr />
+      </span>
 
-            <SongDiv>
-            {
-                songs? 
-                songs.map((song) => 
-                {
-                    return(
-                        <SongDisplay
-                            name = {song.song_name}
-                            artist = {song.artist_name}
-                            uri = {song.SpotifyURI}
-                            id = {song._id}
-                            Browse = {true}
-                        />
-                    );
-                })
-                :<p>Loading...</p>
-            }
-            </SongDiv>
-
-        </StyledDiv>
-    );
+      <SongDiv>
+        {songs ? (
+          songs.map((song) => {
+            return (
+              <SongDisplay
+                name={song.song_name}
+                artist={song.artist_name}
+                uri={song.SpotifyURI}
+                id={song._id}
+                Browse={true}
+              />
+            );
+          })
+        ) : (
+          <p>Loading...</p>
+        )}
+      </SongDiv>
+    </StyledDiv>
+  );
 }
 
 const StyledDiv = styled.div`
@@ -121,4 +119,4 @@ const Title = styled.h6`
   grid-row-end: 1;
 `;
 
-export default SearchUsersPage
+export default SearchUsersPage;

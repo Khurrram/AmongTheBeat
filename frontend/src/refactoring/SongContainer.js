@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { HomeContext } from "./Home";
-import SongDisplay from "./SongComponent";
+import SongDisplay from "./SongDisplay";
 
 function SongContainer(props) {
   const { state, actions } = useContext(HomeContext);

@@ -17,6 +17,7 @@ import { Route, useRouteMatch, Link, useHistory } from "react-router-dom";
 import { getSessionCookie } from "../CookieHandler";
 import axios from "axios";
 import { HomeContext } from "./Home";
+import { getPlaylistSongs } from "../DataManipulation/PlaylistREST";
 
 import "react-pro-sidebar/dist/css/styles.css";
 
@@ -29,13 +30,25 @@ function Sidebar(props) {
   let data = { id: session.id };
   let [searchresults, setSearchResults] = useState("");
 
-  const handleSearch = () =>
-  {
+  const handleSearch = () => {
     history.push({
-      pathname:`${url}/searchuser`,
-      state: {search: searchresults}
+      pathname: `${url}/searchuser`,
+      state: { search: searchresults },
     });
-  }
+  };
+
+  const handlePlaylist = (playlistID, playlist) => {
+    getPlaylistSongs(playlistID).then((result) => {
+      actions.changeCurrentPlaylistView(playlistID);
+      history.push({
+        pathname: `${url}/playlist/${playlistID}`,
+        state: {
+          songs: result.data,
+          songs_ids: playlist.songs_ids,
+        },
+      });
+    });
+  };
 
   return (
     <ProSidebar>
@@ -48,18 +61,18 @@ function Sidebar(props) {
         <Menu>
           <MenuItem id="fontsize" style={{ padding: "0rem" }}>
             Home
-            <Link to="/lol"></Link>
+            <Link to="/home"></Link>
           </MenuItem>
           <MenuItem id="fontsize">
             Browse
             <Link to={`${url}/browse`}></Link>
           </MenuItem>
-          <StyledSearh 
-          placeholder="Search User" 
-          value = {searchresults}
-          onChange = {(val) => setSearchResults(val)}
-          onCancelSearch = {() => setSearchResults("")}
-          onRequestSearch = {() => handleSearch()}
+          <StyledSearh
+            placeholder="Search User"
+            value={searchresults}
+            onChange={(val) => setSearchResults(val)}
+            onCancelSearch={() => setSearchResults("")}
+            onRequestSearch={() => handleSearch()}
           />
         </Menu>
         <Separator width="90%" color="white"></Separator>
@@ -88,10 +101,7 @@ function Sidebar(props) {
               return (
                 <MenuItem
                   key={playlist._id}
-                  onClick={() => {
-                    actions.changeCurrentPlaylistView(playlist._id);
-                    history.push(`${url}/playlist/${playlist._id}`);
-                  }}
+                  onClick={() => handlePlaylist(playlist._id, playlist)}
                 >
                   {playlist.playlist_name}
                 </MenuItem>
