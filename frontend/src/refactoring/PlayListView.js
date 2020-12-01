@@ -31,7 +31,6 @@ function PlayListView(props) {
   let songs = location.state.songs;
   let songs_ids = location.state.songs_ids;
   const [currSongs, setCurrSongs] = useState(songs);
-  const [currSongIDS, setCurrSongIDS] = useState(songs_ids);
 
   let DEFAULT_VALUE = "DEFAULT";
 
@@ -65,7 +64,7 @@ function PlayListView(props) {
     const [reordereditem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reordereditem);
 
-    let newsong_ids = currSongIDS;
+    let newsong_ids = songs_ids;
 
     const [reordersong] = newsong_ids.splice(result.source.index, 1);
     newsong_ids.splice(result.destination.index,0 , reordersong);
@@ -81,14 +80,16 @@ function PlayListView(props) {
       }
     }
 
-    let pid = playlistID + "";
+    newsong_ids.sort(function(a,b){
+      return a.order - b.order;
+    });
     
+
+    let pid = playlistID + "";
+
     const ans = await updatePlaylist(pid, newsong_ids)
-    console.log(ans)
 
     setCurrSongs(items);
-    setCurrSongIDS(newsong_ids);
-
 
   };
 

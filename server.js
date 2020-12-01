@@ -387,8 +387,6 @@ app.post("/api/song/addtoplaylist", (req, res) => {
 
 app.post("/api/song/updateplaylist", (req, res) => {
 
-  console.log(req.body.playlistID)
-
     playlistModel.findByIdAndUpdate(
       {_id: req.body.playlistID},
       {$set: {songs_ids: req.body.song_ids}},

@@ -124,8 +124,6 @@ export const deletePlaylist = async (playlistID, accountID) => {
 
 export const updatePlaylist = async(playlistID, song_ids) => 
 {
-  console.log("here", playlistID);
-  console.log("song_ids:", song_ids)
   return instance
     .post("/api/song/updateplaylist",
     {

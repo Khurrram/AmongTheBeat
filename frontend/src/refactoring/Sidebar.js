@@ -40,9 +40,7 @@ function Sidebar(props) {
 
   const handlePlaylist = async (playlistID, playlist) =>
   {
-    console.log(playlist);
     const result = await getPlaylistSongs(playlistID)
-    console.log(result.data);
     actions.changeCurrentPlaylistView(playlistID);
     history.push(
       {
