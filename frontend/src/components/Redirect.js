@@ -14,8 +14,8 @@ function RedirectPage() {
             return initial;
         }, {});
 
-    setSessionCookie({ id: session.id, username: session.username, accessToken: accessToken.access_token})
-    window.location.href = "/lol";
+    setSessionCookie({ id: session.id, username: session.username, accessToken: accessToken.access_token});
+    window.location.href = "/home";
     return null;
 }
   

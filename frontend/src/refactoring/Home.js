@@ -14,6 +14,7 @@ import AlbumPage from "./AlbumPage";
 import { getSessionCookie } from "../CookieHandler";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
+import SpotifyPlayerContainer from './SpotifyPlayerContainer'
 import { PlaylistAdd } from "@material-ui/icons";
 
 export const HomeContext = React.createContext();
@@ -44,6 +45,7 @@ function Home() {
       <HomeContainer>
         <SideBar playlists={playlists} />
         <ContentWindow>
+          <SpotifyPlayerContainer />
           <Navbar>
             <StyledAvatar>f</StyledAvatar>
             <StyledSettingIcon />
