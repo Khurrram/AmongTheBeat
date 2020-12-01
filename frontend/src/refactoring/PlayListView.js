@@ -8,31 +8,42 @@ import React, {
 import styled from "styled-components";
 import TrashIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
-import axios from "axios";
 import { TextField } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import { Link, useHistory, useLocation, useParams } from "react-router-dom";
 import { HomeContext } from "./Home";
+import useSongs from "../DataManipulation/useSongs";
+import { getPlaylistSongs } from "../DataManipulation/PlaylistREST";
+import SongContainer from "./SongContainer";
 
 function PlayListView(props) {
   const { state, actions } = useContext(HomeContext);
   const { playlistID } = useParams();
-  const history = useHistory();
-
   const [disableTitle, setdisableTitle] = useState(false);
   const [playlistName, setPlaylistName] = useState("");
-
   const playlistTitle = useRef(null);
+  const [test, settest] = useState([]);
+  const {
+    songs,
+    addSongToPlaylistID,
+    removeSongFromPlaylistID,
+    getPlaylistIDSongs,
+  } = useSongs(playlistID);
 
   let DEFAULT_VALUE = "DEFAULT";
-
-  // THIS IS FOR GETTING INITIAL PLAYLIST TITLE
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (state.currentPlaylist.playlist_name === undefined) {
-      console.log("lo0");
-      history.push("/lol");
+      // actions.changeCurrentPlaylistView(-1);
+      actions.history.push(`/lol`);
     }
-    setPlaylistName(state.currentPlaylist.playlist_name);
+    return () => {
+      actions.changeCurrentPlaylistView(-1);
+    };
+  }, []);
+
+  // THIS IS FOR GETTING NEW PLAYLIST TITLE
+  useEffect(() => {
+    setPlaylistName("" + state.currentPlaylist.playlist_name);
   }, [playlistID]);
 
   const dClick = () => {
@@ -47,8 +58,7 @@ function PlayListView(props) {
   const saveTitle = (e) => {
     setdisableTitle(true);
     // playlistTitle.current = e.target.value;
-    actions.editPlaylists(playlistID, e.target.value);
-    console.log(e.target.value);
+    actions.editPlaylists(playlistID, playlistName);
   };
 
   return (
@@ -66,7 +76,7 @@ function PlayListView(props) {
               onBlur={saveTitle}
             />
           ) : (
-            <div></div>
+            <div>null</div>
           )}
         </div>
 
@@ -76,12 +86,14 @@ function PlayListView(props) {
         <StyledTrash
           onClick={() => {
             actions.deletePlaylists(playlistID);
-            history.push("/lol");
+            actions.history.push("/lol");
           }}
         />
         <h6 id="timestamp">{DEFAULT_VALUE}</h6>
         <h6>
-          {/* {state.currentsongs.length + " "} */}
+          {state.currentPlaylist.songs_ids
+            ? state.currentPlaylist.songs_ids.length + " "
+            : "null "}
           Songs
         </h6>
       </span>
@@ -92,7 +104,13 @@ function PlayListView(props) {
       <span>
         <hr />
       </span>
-      <SongDiv></SongDiv>
+      <SongDiv>
+        {songs &&
+          songs.map((song) => {
+            console.log(song);
+            return <h2>lol</h2>;
+          })}
+      </SongDiv>
     </StyledDiv>
   );
 }

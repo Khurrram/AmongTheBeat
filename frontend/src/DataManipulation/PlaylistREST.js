@@ -1,3 +1,4 @@
+import { UpdateSharp } from "@material-ui/icons";
 import { instance } from "./AccountREST";
 
 export const getPlaylistSongs = async (playlistID) => {
@@ -23,8 +24,6 @@ export const createPlaylist = async (accountID) => {
 };
 
 export const editPlaylist = async (playlistID, newPlayListName) => {
-  console.log("rest");
-  console.log(playlistID);
   return instance
     .post("/api/playlist/editname", {
       id: playlistID,
@@ -109,5 +108,16 @@ export const deletePlaylist = async (playlistID, accountID) => {
     })
     .catch((error) => {
       console.log("deletePlaylist Error");
+    });
+};
+
+export const updatePlaylistSongs = async (playlistID, updatedSongs) => {
+  return (instance.post("/api/song/updateplaylist"),
+  { id: playlistID, upsongs: updatedSongs })
+    .then((res) => {
+      return res;
+    })
+    .catch((error) => {
+      console.log("updatePlaylistSongs Error");
     });
 };

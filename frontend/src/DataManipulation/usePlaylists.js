@@ -5,18 +5,19 @@ import {
   deletePlaylist,
   editPlaylist,
   getPlaylists,
+  updatePlaylistSongs,
 } from "./PlaylistREST";
+import axios from "axios";
 
-const initalPlaylistState = {
-  playlists: [],
-};
+// const initalPlaylistState = {
+//   playlists: [],
+// };
 
 const usePlaylists = (userID) => {
   const id = userID;
-  const [state, dispatch] = useReducer(playlistsReducer, initalPlaylistState);
+  // const [state, dispatch] = useReducer(playlistsReducer, initalPlaylistState);
   const [playlists, setPlaylists] = useState([]);
   const [currentPlaylist, setCurrentPlaylist] = useState({});
-  const [actionCounter, setActionCounter] = useState(0);
 
   const createPlaylists = () => {
     createPlaylist(id).then(() => {
@@ -41,10 +42,14 @@ const usePlaylists = (userID) => {
   };
 
   const changeCurrentPlaylistView = (playlistID) => {
-    let playlist = playlists.find((obj) => {
-      return obj._id === playlistID;
-    });
-    setCurrentPlaylist(playlist);
+    if (playlistID == -1) {
+      setCurrentPlaylist({});
+    } else {
+      let playlist = playlists.find((obj) => {
+        return obj._id === playlistID;
+      });
+      setCurrentPlaylist(playlist);
+    }
 
     getPlaylists(id).then((response) => {
       setPlaylists(response.data);
@@ -63,27 +68,22 @@ const usePlaylists = (userID) => {
     // console.log(playlists);
   }, []);
 
-  const handleOnDragEnd = (result) => {
-    // if (!result.destination) return;
-    // const items = currentsongs;
-    // const [reordereditem] = items.splice(result.source.index, 1);
-    // items.splice(result.destination.index, 0, reordereditem);
-    // console.log("Items now: ", items);
-    // let newids = [];
-    // for (var i = 0; i < items.length; i++) {
-    //   newids.push(items[i]._id + "");
-    // }
-    // let pid = currentplaylist._id + "";
-    // let data = { id: pid, upsongs: newids };
-    // axios
-    //   .post("http://localhost:5000/api/song/updateplaylist", data)
-    //   .then(function (res) {
-    //     console.log("Updated list: ", res.data);
-    //     // setPlaylist(res.data);
-    //     // setSongs(items);
-    //     // setPage(1);
-    //   })
-    //   .catch((err) => console.log(err));
+  const handleOnDragEnd = (result, currentSongs) => {
+    if (!result.destination) return;
+    const items = currentSongs;
+    const [reordereditem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reordereditem);
+    console.log("Items now: ", items);
+    let newids = [];
+    for (var i = 0; i < items.length; i++) {
+      newids.push(items[i]._id + "");
+    }
+    let pid = currentPlaylist._id + "";
+    let data = { id: pid, upsongs: newids };
+
+    updatePlaylistSongs(pid, newids).then((res) => {
+      //currentPlaylist(res);
+    });
   };
 
   return {
@@ -93,6 +93,7 @@ const usePlaylists = (userID) => {
     deletePlaylists,
     editPlaylists,
     changeCurrentPlaylistView,
+    handleOnDragEnd,
   };
 };
 

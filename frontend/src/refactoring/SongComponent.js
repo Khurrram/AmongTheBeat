@@ -12,13 +12,12 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
-import { ViewPage } from "./HomePage";
 
-import "./Song.css";
+// import "./Song.css";
 
 Modal.setAppElement("#root");
 
-function SongDisplay(props) {
+function SongComponent(props) {
   const {
     name,
     artist,
@@ -34,12 +33,12 @@ function SongDisplay(props) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [playlists, setPlaylists] = useState([]);
   const [currSong, setCurrSong] = useState();
-  const { state, actions } = useContext(ViewPage);
+  // const { state, actions } = useContext(ViewPage);
   const [anchorEl, setAnchorEl] = useState(null);
 
   function toggleModal() {
-    setModalIsOpen(!modalIsOpen);
-    if (!modalIsOpen) {
+    setModalIsOpen(true);
+    if (true) {
       let data = {
         id: session.id,
         song_name: name,
@@ -47,13 +46,13 @@ function SongDisplay(props) {
         uri: uri,
       };
 
-      axios
-        .post("http://localhost:5000/api/song/getplaylists", data)
-        .then(function (res) {
-          setPlaylists(res.data.playlists);
-          setCurrSong(res.data.song);
-        })
-        .catch((err) => console.log(err));
+      // axios
+      //   .post("http://localhost:5000/api/song/getplaylists", data)
+      //   .then(function (res) {
+      //     // setPlaylists(res.data.playlists);
+      //     // setCurrSong(res.data.song);
+      //   })
+      //   .catch((err) => console.log(err));
     }
   }
 
@@ -67,39 +66,38 @@ function SongDisplay(props) {
   };
 
   function addtoPlaylist(e, playlistid, uri) {
-    e.preventDefault();
-    console.log("called here");
-    let data = { id: playlistid, song_uri: uri };
-    axios
-      .post("http://localhost:5000/api/song/addtoplaylist", data)
-      .then(function (res) {
-        setModalIsOpen(!modalIsOpen);
-      })
-      .catch((err) => console.log(err));
+    // e.preventDefault();
+    // console.log("called here");
+    // let data = { id: playlistid, song_uri: uri };
+    // axios
+    //   .post("http://localhost:5000/api/song/addtoplaylist", data)
+    //   .then(function (res) {
+    //     setModalIsOpen(!modalIsOpen);
+    //   })
+    //   .catch((err) => console.log(err));
   }
 
   function removeSong(e, song) {
-    e.preventDefault();
-    let data = { id: playlist_id, song: song };
-    axios
-      .post("http://localhost:5000/api/song/removefromplaylist", data)
-      .then(function (res) {
-        actions.setPlaylist(res.data);
-        actions.setCurrentPlaylist(res.data);
-
-        axios
-          .post("http://localhost:5000/api/playlist/getsongs", data)
-          .then(function (res) {
-            console.log("called getsongs");
-            actions.setSongs(res.data);
-            actions.setPage(1);
-            actions.setRerender(state.rerender + 1);
-          })
-          .catch((err) => console.log(err));
-        console.log("song is removed");
-        setAnchorEl(null);
-      })
-      .catch((err) => console.log(err));
+    // e.preventDefault();
+    // let data = { id: playlist_id, song: song };
+    // axios
+    //   .post("http://localhost:5000/api/song/removefromplaylist", data)
+    //   .then(function (res) {
+    //     // actions.setPlaylist(res.data);
+    //     // actions.setCurrentPlaylist(res.data);
+    //     axios
+    //       .post("http://localhost:5000/api/playlist/getsongs", data)
+    //       .then(function (res) {
+    //         console.log("called getsongs");
+    //         // actions.setSongs(res.data);
+    //         // actions.setPage(1);
+    //         // actions.setRerender(state.rerender + 1);
+    //       })
+    //       .catch((err) => console.log(err));
+    //     console.log("song is removed");
+    //     setAnchorEl(null);
+    //   })
+    //   .catch((err) => console.log(err));
   }
 
   return (
@@ -282,4 +280,4 @@ const ModalContent = styled.div`
   }
 `;
 
-export default SongDisplay;
+export default SongComponent;

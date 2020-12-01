@@ -1,6 +1,13 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { Router, Switch, Route, useRouteMatch } from "react-router-dom";
+import {
+  Router,
+  Switch,
+  Route,
+  useRouteMatch,
+  useHistory,
+  useParams,
+} from "react-router-dom";
 import SideBar from "./Sidebar";
 import PlayListView from "./PlayListView";
 import PlayNavBar from "../Homepage/PlayNavBar";
@@ -16,6 +23,8 @@ import { PlaylistAdd } from "@material-ui/icons";
 export const HomeContext = React.createContext();
 
 function Home() {
+  const history = useHistory();
+  const params = useParams();
   let { path, url } = useRouteMatch();
   let {
     playlists,
@@ -24,7 +33,8 @@ function Home() {
     deletePlaylists,
     editPlaylists,
     changeCurrentPlaylistView,
-  } = usePlaylists("5fac7f0f4b43e0761cc2103b");
+    handleOnDragEnd,
+  } = usePlaylists("5fc56658a000602ef0ee4332");
 
   const contextValue = {
     state: { playlists, currentPlaylist },
@@ -33,6 +43,7 @@ function Home() {
       deletePlaylists,
       editPlaylists,
       changeCurrentPlaylistView,
+      history,
     },
   };
   return (
@@ -52,13 +63,11 @@ function Home() {
               <Route exact path={`${path}/browse`}>
                 <BrowseView></BrowseView>
               </Route>
-              <Route
-                exact
-                path={`${path}/playlist/:playlistID`}
-                component={PlayListView}
-              />
+              <Route exact path={`${path}/playlist/:playlistID`}>
+                <PlayListView key={params.playlistID}></PlayListView>
+              </Route>
               <Route exact path={`${path}/user/:userID`}>
-                <UserPlaylistView></UserPlaylistView>
+                <UserPlaylistView key={params.userID}></UserPlaylistView>
               </Route>
             </Switch>
           </ContentWindow>
