@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { Router, Switch, Route, useRouteMatch } from "react-router-dom";
 import SideBar from "./Sidebar";
@@ -11,15 +11,18 @@ import usePlaylists from "../DataManipulation/usePlaylists";
 import SearchUsers from "./SearchUsers";
 import SearchUsersPage from "./SearchUsersPage";
 import AlbumPage from "./AlbumPage";
+import LikePage from "./LikedSongs";
 import { getSessionCookie } from "../CookieHandler";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
 import SpotifyPlayerContainer from './SpotifyPlayerContainer'
 import { PlaylistAdd } from "@material-ui/icons";
+import SettingsView from "../Homepage/SettingView"
 
 export const HomeContext = React.createContext();
 
 function Home() {
+  const [settings, setSettings] = useState(false);
   let { path, url } = useRouteMatch();
   const session = getSessionCookie();
   let {
@@ -29,6 +32,9 @@ function Home() {
     deletePlaylists,
     editPlaylists,
     changeCurrentPlaylistView,
+    removeSongFromPlaylistID,
+    addSongToPlaylistID,
+    getValidPlaylists
   } = usePlaylists(session.id);
 
   const contextValue = {
@@ -38,6 +44,9 @@ function Home() {
       deletePlaylists,
       editPlaylists,
       changeCurrentPlaylistView,
+      removeSongFromPlaylistID,
+      addSongToPlaylistID,
+      getValidPlaylists
     },
   };
   return (
@@ -48,9 +57,10 @@ function Home() {
           <SpotifyPlayerContainer />
           <Navbar>
             <StyledAvatar>f</StyledAvatar>
-            <StyledSettingIcon />
+            <StyledSettingIcon onClick={()=>setSettings(true)}/>
           </Navbar>
           <ContentWindow>
+            {settings && <SettingsView></SettingsView>}
             <Switch>
               <Route exact path={`${path}`}>
                 <HomeDashView></HomeDashView>
@@ -61,6 +71,10 @@ function Home() {
 
               <Route exact path = {`${path}/browse/:albumID`}>
                 <AlbumPage />
+              </Route>
+
+              <Route exact path = {`${path}/likedsongs`}>
+                <LikePage />
               </Route>
 
               <Route

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import Avatar from "@material-ui/core/Avatar";
 import HeartIcon from "@material-ui/icons/Favorite";
@@ -13,6 +13,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
 import { HomeContext } from "./Home";
+import {addSongToPlaylist} from  "../DataManipulation/PlaylistREST"
+import {useRouteMatch, useHistory } from "react-router-dom";
 
 Modal.setAppElement("#root");
 
@@ -64,40 +66,16 @@ function SongDisplay(props) {
     setAnchorEl(null);
   };
 
-  function addtoPlaylist(e, playlistid, uri) {
+  const addtoPlaylist = async(e, playlistid, uri) =>{
     e.preventDefault();
-    console.log("called here");
-    let data = { id: playlistid, song_uri: uri };
-    axios
-      .post("http://localhost:5000/api/song/addtoplaylist", data)
-      .then(function (res) {
-        setModalIsOpen(!modalIsOpen);
-      })
-      .catch((err) => console.log(err));
+    actions.addSongToPlaylistID(playlistid, uri)
+    setModalIsOpen(!modalIsOpen);
   }
 
-  function removeSong(e, song) {
+  function removeSong(e, playlistid, songid) {
     e.preventDefault();
-    let data = { id: playlist_id, song: song };
-    axios
-      .post("http://localhost:5000/api/song/removefromplaylist", data)
-      .then(function (res) {
-        actions.setPlaylist(res.data);
-        actions.setCurrentPlaylist(res.data);
-
-        axios
-          .post("http://localhost:5000/api/playlist/getsongs", data)
-          .then(function (res) {
-            console.log("called getsongs");
-            actions.setSongs(res.data);
-            actions.setPage(1);
-            actions.setRerender(state.rerender + 1);
-          })
-          .catch((err) => console.log(err));
-        console.log("song is removed");
-        setAnchorEl(null);
-      })
-      .catch((err) => console.log(err));
+    actions.removeSongFromPlaylistID(playlistid, songid);
+    handleClose();
   }
 
   return (
@@ -127,7 +105,7 @@ function SongDisplay(props) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={(e) => removeSong(e, id)}>Confirm</MenuItem>
+        <MenuItem onClick={(e) => removeSong(e, playlist_id, id)}>Confirm</MenuItem>
         <MenuItem onClick={() => handleClose()}>Cancel</MenuItem>
       </Menu>
 

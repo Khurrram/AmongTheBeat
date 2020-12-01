@@ -31,6 +31,10 @@ const userSchema = new Schema({
     },
     history: {
         type: Array
+    },
+    liked_songs:
+    {
+        type: Array
     }
 
 });

@@ -80,3 +80,15 @@ export const searchTracks = async (search, accessToken) => {
     }).catch((err) => console.log("searchTracks ERR"));
 
 }
+
+export const getLikedSongs = async(accountID) =>
+ {
+   return instance
+    .post("/api/user/likedsongs",
+    {
+      id: accountID
+    }).then((res) =>
+    {
+      return res.data
+    }).catch((err) => console.log("getLikedSongs ERR"));
+ } 

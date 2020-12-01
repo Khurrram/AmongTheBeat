@@ -11,9 +11,9 @@ import Button from "@material-ui/core/Button";
 import axios from "axios";
 import { TextField } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
-import { Link, useHistory, useLocation, useParams } from "react-router-dom";
+import { Link, useHistory, useLocation, useParams} from "react-router-dom";
 import { HomeContext } from "./Home";
-import {getPlaylistSongs} from "../DataManipulation/PlaylistREST";
+import {getPlaylistSongs, updatePlaylist} from "../DataManipulation/PlaylistREST";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import SongDisplay from "./SongDisplay"
 
@@ -24,30 +24,32 @@ function PlayListView(props) {
 
   const [disableTitle, setdisableTitle] = useState(false);
   const [playlistName, setPlaylistName] = useState("");
-  const [currSongs, setCurrSongs] = useState({});
 
   const playlistTitle = useRef(null);
+
+  const [currSongs, setCurrSongs] = useState();
+  const [currSongIDS, setCurrSongIDS] = useState(state.currentPlaylist.songs_ids);
 
   let DEFAULT_VALUE = "DEFAULT";
 
   // THIS IS FOR GETTING INITIAL PLAYLIST TITLE
+
   useEffect(() => {
     if (state.currentPlaylist.playlist_name === undefined) {
       history.push("/home");
     }
     setPlaylistName(state.currentPlaylist.playlist_name);
+    
   }, [playlistID]);
 
   useEffect(() =>
   {
-    const fetchSongs = async () =>
-    {
-      const result = await getPlaylistSongs(state.currentPlaylist._id)
-      setCurrSongs(result)
-      // console.log(result.data);
+    const fetchSongs = async() => {
+      const response = await getPlaylistSongs(playlistID)
+      setCurrSongs(response.data);
     }
-    fetchSongs()
-  }, [])
+    fetchSongs();
+  },[state.playlists])
 
 
 
@@ -65,6 +67,38 @@ function PlayListView(props) {
     // playlistTitle.current = e.target.value;
     actions.editPlaylists(playlistID, e.target.value);
     console.log(e.target.value);
+  };
+
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return;
+    const items = currSongs;
+    const [reordereditem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reordereditem);
+
+    let newsong_ids = currSongIDS;
+    const [reordersong] = newsong_ids.splice(result.source.index, 1);
+    newsong_ids.splice(result.destination.index,0 , reordersong);
+
+    for (var i = 0; i < items.length; i++)
+    {
+      for(var j = 0; j < newsong_ids.length; j++)
+      {
+        if(items[i]._id === newsong_ids[j].song_id)
+        {
+          newsong_ids[j].order = i;
+        }
+      }
+    }
+    newsong_ids.sort(function(a,b){
+      return a.order - b.order;
+    });
+    
+    let pid = playlistID + "";
+    updatePlaylist(pid, newsong_ids).then((res) =>
+    {
+      setCurrSongs(items);
+      setCurrSongIDS(newsong_ids)
+    })
   };
 
   return (
@@ -97,7 +131,7 @@ function PlayListView(props) {
         />
         <h6 id="timestamp">{DEFAULT_VALUE}</h6>
         <h6>
-          {/* {state.currentsongs.length + " "} */}
+          {state.currentPlaylist.songs_ids.length + " "}
           Songs
         </h6>
       </span>
@@ -109,7 +143,7 @@ function PlayListView(props) {
         <hr />
       </span>
       <SongDiv>
-          {/* {currSongs ? 
+          {currSongs ? 
             <DragDropContext onDragEnd = {(res) => handleOnDragEnd(res)}>
             <Droppable droppableId = "songs">
               {( provided) => (
@@ -128,7 +162,7 @@ function PlayListView(props) {
                           name={song_name} 
                           artist={artist_name} 
                           id={_id} 
-                          playlist_id= {id} 
+                          playlist_id= {playlistID} 
                           type="Playlists" />
                           </CustomP>
                           )}
@@ -143,7 +177,7 @@ function PlayListView(props) {
 
 
 
-          :<p>Loading...</p>} */}
+          :<p>Loading...</p>}
 
       </SongDiv>
     </StyledDiv>

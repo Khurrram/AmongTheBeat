@@ -167,6 +167,20 @@ app.post("/api/user/changepass", (req, res) => {
   );
 });
 
+app.post("/api/user/likedsongs", (req,res) =>
+{
+  userModel.find(
+    {_id: req.body.id},
+    function(err,user)
+    {
+      if(err){console.log(err)}
+      else
+      {
+        res.send(user[0])}
+    }
+    )
+})
+
 //POST for creating new playlist
 app.post("/api/playlist/createPlaylist", (req, res) => {
   let owner_id = req.body.id;
@@ -342,11 +356,12 @@ app.post("/api/song/addtoplaylist", (req, res) => {
       playlistModel.findOneAndUpdate(
         { _id: playlist_id },
         { $push: { songs_ids: [{song_id: song._id, order: length.songs_ids.length }] } },
+        {new: true},
         function (err, playlist) {
           if (err) {
             console.log(err);
           } else {
-            res.send(playlist_id);
+            res.send(playlist);
           }
         }
       );
@@ -386,12 +401,10 @@ app.post("/api/song/addtoplaylist", (req, res) => {
 // });
 
 app.post("/api/song/updateplaylist", (req, res) => {
-  let playlist_id = req.body.id;
-  let newsongs= req.body.upsongs;
 
     playlistModel.findByIdAndUpdate(
-      {_id: playlist_id},
-      {$set: {songs_ids: newsongs}},
+      {_id: req.body.playlistID},
+      {$set: {songs_ids: req.body.song_ids}},
       {new:true},
       function (err, playlist) {
         if (err) {
@@ -415,12 +428,10 @@ async function findSongArray(songs_ids) {
   return promise;
 }
 
-//POST for adding song to playlist
-app.get("/playlist/*", (req, res) => {
-  console.log(req.url);
+//POST for getting songs from playlist
+app.post("/api/playlist/getplaylistsongs", (req, res) => {
   // console.log("in get " + req.query.id);
-  let playlist_id = req.query.id;
-
+  let playlist_id = req.body.id;
     playlistModel.findOne({ _id: playlist_id },
       function (err, playlist) {
         if (err) {
@@ -436,7 +447,6 @@ app.get("/playlist/*", (req, res) => {
         }
 
         findSongArray(songs).then(function(result) {
-          console.log(result);
           res.send(result);
         });
 });
@@ -446,16 +456,20 @@ app.get("/playlist/*", (req, res) => {
 app.post("/api/song/removefromplaylist", (req, res) => {
   let playlist_id = req.body.id;
   let song_id = req.body.song;
-  console.log("song id: " + song_id);
     playlistModel.findById({ _id: playlist_id}, function (
     err,
     playlist
   ) {
     const songs = playlist.songs_ids;
-    var index = songs.indexOf(song_id+"");
-    console.log("index : " + index);
+    var index;
+    for(var i = 0; i < songs.length; i++)
+    {
+      if(songs[i].song_id === song_id)
+      {
+        index = i;
+      }
+    }
     songs.splice(index,1);
-    console.log("before " + songs);
     playlistModel.findByIdAndUpdate({ _id: playlist_id}, {$set: {songs_ids: songs}}, {new:true}, function (
       err,
       playlist
@@ -463,7 +477,6 @@ app.post("/api/song/removefromplaylist", (req, res) => {
       if (err) {
           console.log(err);
       } else {
-        console.log("after " + playlist.songs_ids);
         res.send(playlist);
       }
     });
