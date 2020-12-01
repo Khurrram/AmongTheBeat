@@ -14,7 +14,7 @@ import { HistoryRounded } from "@material-ui/icons";
 
 function SettingView(props) {
   const history = useHistory();
-  const { state, actions } = useContext(ViewPage);
+  // const { state, actions } = useContext(ViewPage);
   const session = useContext(SessionContext);
 
   const [test1, setTest1] = useState(false);
@@ -46,9 +46,9 @@ function SettingView(props) {
     <SidebarDiv>
       <StyledBackIcon
         fontSize="large"
-        onClick={() => {
-          actions.setSettings(false);
-        }}
+        // onClick={() => {
+        //   actions.setSettings(false);
+        // }}
       />
       <SettingDiv>
         <AccountDiv>

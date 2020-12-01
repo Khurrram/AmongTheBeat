@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { Router, Switch, Route, useRouteMatch } from "react-router-dom";
 import SideBar from "./Sidebar";
@@ -16,10 +16,12 @@ import { getSessionCookie } from "../CookieHandler";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
 import { PlaylistAdd } from "@material-ui/icons";
+import SettingsView from "../Homepage/SettingView"
 
 export const HomeContext = React.createContext();
 
 function Home() {
+  const [settings, setSettings] = useState(false);
   let { path, url } = useRouteMatch();
   const session = getSessionCookie();
   let {
@@ -53,9 +55,10 @@ function Home() {
         <ContentWindow>
           <Navbar>
             <StyledAvatar>f</StyledAvatar>
-            <StyledSettingIcon />
+            <StyledSettingIcon onClick={()=>setSettings(true)}/>
           </Navbar>
           <ContentWindow>
+            {settings && <SettingsView></SettingsView>}
             <Switch>
               <Route exact path={`${path}`}>
                 <HomeDashView></HomeDashView>
