@@ -38,21 +38,12 @@ function Sidebar(props) {
     });
   }
 
-  const handlePlaylist = async (playlistID, playlist) =>
-  {
-    const result = await getPlaylistSongs(playlistID)
+  const handlePlaylist = (playlistID) => {
     actions.changeCurrentPlaylistView(playlistID);
-    history.push(
-      {
-        pathname: `${url}/playlist/${playlistID}`,
-        state: 
-          {
-            songs: result.data,
-            songs_ids: playlist.songs_ids
-          }
-      }
-    );
-  }
+    history.push({
+      pathname: `${url}/playlist/${playlistID}`,
+    });
+  };
 
   return (
     <ProSidebar>
@@ -71,6 +62,12 @@ function Sidebar(props) {
             Browse
             <Link to={`${url}/browse`}></Link>
           </MenuItem>
+
+          <MenuItem id="fontsize">
+            Favorites
+            <Link to={`${url}/likedsongs`}></Link>
+          </MenuItem>
+
           <StyledSearh 
           placeholder="Search User" 
           value = {searchresults}
@@ -105,7 +102,7 @@ function Sidebar(props) {
               return (
                 <MenuItem
                   key={playlist._id}
-                  onClick={() => handlePlaylist(playlist._id, playlist)}
+                  onClick={() => handlePlaylist(playlist._id)}
                 >
                   {playlist.playlist_name}
                 </MenuItem>

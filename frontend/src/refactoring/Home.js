@@ -11,6 +11,7 @@ import usePlaylists from "../DataManipulation/usePlaylists";
 import SearchUsers from "./SearchUsers";
 import SearchUsersPage from "./SearchUsersPage";
 import AlbumPage from "./AlbumPage";
+import LikePage from "./LikedSongs";
 import { getSessionCookie } from "../CookieHandler";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -28,6 +29,9 @@ function Home() {
     deletePlaylists,
     editPlaylists,
     changeCurrentPlaylistView,
+    removeSongFromPlaylistID,
+    addSongToPlaylistID,
+    getValidPlaylists
   } = usePlaylists(session.id);
 
   const contextValue = {
@@ -37,6 +41,9 @@ function Home() {
       deletePlaylists,
       editPlaylists,
       changeCurrentPlaylistView,
+      removeSongFromPlaylistID,
+      addSongToPlaylistID,
+      getValidPlaylists
     },
   };
   return (
@@ -59,6 +66,10 @@ function Home() {
 
               <Route exact path = {`${path}/browse/:albumID`}>
                 <AlbumPage />
+              </Route>
+
+              <Route exact path = {`${path}/likedsongs`}>
+                <LikePage />
               </Route>
 
               <Route

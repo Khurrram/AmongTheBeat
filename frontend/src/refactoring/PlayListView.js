@@ -26,21 +26,32 @@ function PlayListView(props) {
   const [playlistName, setPlaylistName] = useState("");
 
   const playlistTitle = useRef(null);
-  const location = useLocation();
 
-  let songs = location.state.songs;
-  let songs_ids = location.state.songs_ids;
-  const [currSongs, setCurrSongs] = useState(songs);
+  const [currSongs, setCurrSongs] = useState();
+  const [currSongIDS, setCurrSongIDS] = useState(state.currentPlaylist.songs_ids);
 
   let DEFAULT_VALUE = "DEFAULT";
 
   // THIS IS FOR GETTING INITIAL PLAYLIST TITLE
+
   useEffect(() => {
     if (state.currentPlaylist.playlist_name === undefined) {
       history.push("/home");
     }
     setPlaylistName(state.currentPlaylist.playlist_name);
+    
   }, [playlistID]);
+
+  useEffect(() =>
+  {
+    const fetchSongs = async() => {
+      const response = await getPlaylistSongs(playlistID)
+      setCurrSongs(response.data);
+    }
+    fetchSongs();
+  },[state.playlists])
+
+
 
   const dClick = () => {
     setdisableTitle(false);
@@ -58,14 +69,13 @@ function PlayListView(props) {
     console.log(e.target.value);
   };
 
-  const handleOnDragEnd = async (result) => {
+  const handleOnDragEnd = (result) => {
     if (!result.destination) return;
     const items = currSongs;
     const [reordereditem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reordereditem);
 
-    let newsong_ids = songs_ids;
-
+    let newsong_ids = currSongIDS;
     const [reordersong] = newsong_ids.splice(result.source.index, 1);
     newsong_ids.splice(result.destination.index,0 , reordersong);
 
@@ -79,18 +89,16 @@ function PlayListView(props) {
         }
       }
     }
-
     newsong_ids.sort(function(a,b){
       return a.order - b.order;
     });
     
-
     let pid = playlistID + "";
-
-    const ans = await updatePlaylist(pid, newsong_ids)
-
-    setCurrSongs(items);
-
+    updatePlaylist(pid, newsong_ids).then((res) =>
+    {
+      setCurrSongs(items);
+      setCurrSongIDS(newsong_ids)
+    })
   };
 
   return (
@@ -123,7 +131,7 @@ function PlayListView(props) {
         />
         <h6 id="timestamp">{DEFAULT_VALUE}</h6>
         <h6>
-          {/* {state.currentsongs.length + " "} */}
+          {state.currentPlaylist.songs_ids.length + " "}
           Songs
         </h6>
       </span>
