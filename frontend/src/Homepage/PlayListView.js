@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import Song from "./Song";
 import TrashIcon from "@material-ui/icons/Delete";
@@ -135,6 +135,11 @@ function PlayListView(props) {
       })
       .catch((err) => console.log(err));
   }
+
+  useEffect( () =>
+  {
+    actions.setuserResults("")
+  }, [])
 
   return (
     <StyledDiv>

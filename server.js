@@ -5,8 +5,6 @@ const userModel = require("./models/userModel.js");
 const playlistModel = require("./models/playlistModel.js");
 const songModel = require("./models/songModel.js");
 const app = express();
-const passport = require("passport"),
-  SpotifyStrategy = require("passport-spotify").Strategy;
 
 app.use(express.json());
 app.use(cors());
@@ -26,22 +24,6 @@ const port = process.env.PORT || 5000;
 mongoose.set("useFindAndModify", false);
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
-
-passport.serializeUser(function (user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function (obj, done) {
-  done(null, obj);
-});
-
-app.post("/api/getToken", (req, res) => {
-  userModel.findById({ _id: req.body._id }, function (err, user) {
-    if (user) {
-      res.send(user);
-    } else console.log("ERROR, ", err);
-  });
-});
 
 app.post("/api/browse", (req, res) => {
   spotifyApi.setAccessToken(req.body.curraccessToken);
@@ -65,6 +47,17 @@ app.post("/api/openalbum", (req, res) => {
     };
 });
 
+app.post("/api/searchTracks", (req, res) => {
+  spotifyApi.setAccessToken(req.body.curraccessToken);
+  const search = "track:" + req.body.search;
+  spotifyApi.searchTracks(search).then(function (data) {
+    res.send(data.body);
+  }),
+    function (err) {
+      console.log("Something went wrong!, ", err);
+    };
+});
+
 app.post("/api/register", (req, res) => {
   userModel.findOne(
     { $or: [{ username: req.body.username }, { email: req.body.email }] },
@@ -79,76 +72,6 @@ app.post("/api/register", (req, res) => {
           password: req.body.password,
         });
         res.send(id + "");
-
-        passport.use(
-          new SpotifyStrategy(
-            {
-              clientID: "6e6168bb4f424095b42f948f1e303b69",
-              clientSecret: "d0083b4ff5b743f5888468fe02c2ba9c",
-              callbackURL: "http://localhost:5000/auth/spotify/callback",
-            },
-            function (accessToken, refreshToken, expires_in, profile, done) {
-              process.nextTick(function () {
-                spotifyApi.setAccessToken(accessToken);
-
-                userModel.findOneAndUpdate(
-                  { username: req.body.username },
-                  { $set: { accessToken: accessToken } },
-                  { strict: false },
-                  function (err, user) {
-                    if (err) {
-                      console.log("Error!, ", err);
-                    } else {
-                    }
-                  }
-                );
-                return done(null, profile);
-              });
-            }
-          )
-        );
-
-        app.use(passport.initialize());
-        app.use(passport.session());
-
-        app.get(
-          "/auth/spotify",
-          passport.authenticate("spotify", {
-            scope: [
-              "user-read-email",
-              "user-read-private",
-              "user-read-recently-played",
-              "user-read-playback-state",
-              "user-top-read",
-              "user-read-currently-playing",
-              "user-follow-read",
-              "user-library-read",
-              "streaming",
-            ],
-            showDialog: true,
-          })
-        );
-
-        app.get(
-          "/auth/spotify/callback",
-          passport.authenticate("spotify", {
-            failureRedirect: "/",
-            scope: [
-              "user-read-email",
-              "user-read-private",
-              "user-read-recently-played",
-              "user-read-playback-state",
-              "user-top-read",
-              "user-read-currently-playing",
-              "user-follow-read",
-              "user-library-read",
-              "streaming",
-            ],
-          }),
-          function (req, res) {
-            res.redirect("http://localhost:3000/home");
-          }
-        );
       } else {
         res.send(-1 + "");
       }
@@ -157,86 +80,20 @@ app.post("/api/register", (req, res) => {
 });
 
 app.post("/api/login", (req, res) => {
-  userModel.findOne({ username: req.body.username }, function (err, user) {
-    if (user != null) {
-      if (user.accountType == -1) {
-        res.send("banned");
+  userModel.findOne(
+    { username: req.body.username, password: req.body.password },
+    function (err, user) {
+      if (user != null) {
+        if (user.accountType == -1) {
+          res.send("banned");
+        } else {
+          res.send(user._id + "");
+        }
       } else {
-        res.send(user._id + "");
-        passport.use(
-          new SpotifyStrategy(
-            {
-              clientID: "6e6168bb4f424095b42f948f1e303b69",
-              clientSecret: "d0083b4ff5b743f5888468fe02c2ba9c",
-              callbackURL: "http://localhost:5000/auth/spotify/callback",
-            },
-            function (accessToken, refreshToken, expires_in, profile, done) {
-              process.nextTick(function () {
-                spotifyApi.setAccessToken(accessToken);
-
-                userModel.findOneAndUpdate(
-                  { username: req.body.username },
-                  { $set: { accessToken: accessToken } },
-                  { strict: false },
-                  function (err, user) {
-                    if (err) {
-                      console.log("Error!, ", err);
-                    } else {
-                    }
-                  }
-                );
-                return done(null, profile);
-              });
-            }
-          )
-        );
-
-        app.use(passport.initialize());
-        app.use(passport.session());
-
-        app.get(
-          "/auth/spotify",
-          passport.authenticate("spotify", {
-            scope: [
-              "user-read-email",
-              "user-read-private",
-              "user-read-recently-played",
-              "user-read-playback-state",
-              "user-top-read",
-              "user-read-currently-playing",
-              "user-follow-read",
-              "user-library-read",
-              "streaming",
-            ],
-            showDialog: true,
-          })
-        );
-
-        app.get(
-          "/auth/spotify/callback",
-          passport.authenticate("spotify", {
-            failureRedirect: "/",
-            scope: [
-              "user-read-email",
-              "user-read-private",
-              "user-read-recently-played",
-              "user-read-playback-state",
-              "user-top-read",
-              "user-read-currently-playing",
-              "user-follow-read",
-              "user-library-read",
-              "streaming",
-            ],
-          }),
-          function (req, res) {
-            res.redirect("http://localhost:3000/home");
-          }
-        );
+        res.send("notFound");
       }
-    } else {
-      res.send("notFound");
     }
-  });
+  );
 });
 
 app.post("/api/usersList", (req, res) => {
@@ -393,6 +250,19 @@ app.post("/api/playlist/delete", (req, res) => {
   });
 });
 
+//POST for finding the owner that matches a string query
+app.post("/api/playlist/getowner", (req, res) => {
+  let username = req.body.username;
+
+  userModel.find({ username: username }, function (err, user) {
+    if (err) {
+      res.send("No User Found");
+    } else {
+      res.send(user);
+    }
+  });
+});
+
 //POST for getting playlists of a specific user
 app.post("/api/playlist/getplaylists", (req, res) => {
   let owner_id = req.body.id;
@@ -420,7 +290,6 @@ app.post("/api/song/getplaylists", (req, res) => {
       console.log(err);
     } else {
       songModel.findOne({ SpotifyURI: uri }, function (err, song) {
-        // console.log(song);
         songHold = song;
         if (song == null) {
           songModel.create({
@@ -432,27 +301,24 @@ app.post("/api/song/getplaylists", (req, res) => {
           let data = { playlists: playlists, song: id };
           res.send(data);
         } else {
-          playlistModel.find({ songs_ids: song._id }, function (err, playlist) {
-            if (err) {
-              console.log(err);
-            }
-            // console.log(playlists);
-            // console.log(playlist);
-            for (let i = 0; i < playlists.length; i++) {
-              for (let j = 0; j < playlist.length; j++) {
-                console.log("playlist id: " + playlist[j]._id);
-                console.log("playlists id: " + playlists[i]._id);
-                if (playlists[i]._id + "" === playlist[j]._id + "") {
-                  console.log("playlist found");
-                  playlists.splice(i, 1);
+          playlistModel.find(
+            { "songs_ids.song_id": song._id },
+            function (err, playlist) {
+              if (err) {
+                console.log(err);
+              }
+              for (let i = 0; i < playlists.length; i++) {
+                for (let j = 0; j < playlist.length; j++) {
+                  if (playlists[i]._id + "" === playlist[j]._id + "") {
+                    //playlist found
+                    playlists.splice(i, 1);
+                  }
                 }
               }
+              let data = { playlists: playlists, song: songHold._id };
+              res.send(data);
             }
-            // console.log(playlists);
-            // console.log(songHold._id);
-            let data = { playlists: playlists, song: songHold._id };
-            res.send(data);
-          });
+          );
         }
       });
     }
@@ -463,32 +329,67 @@ app.post("/api/song/getplaylists", (req, res) => {
 app.post("/api/song/addtoplaylist", (req, res) => {
   let playlist_id = req.body.id;
   let uri = req.body.song_uri;
+  const getLength = playlistModel.findById({ _id: playlist_id }); // query for getting length
+  const findSong = songModel.findOne({ SpotifyURI: uri }); // query for getting song from songs collection
 
-  console.log("add to playlist is called");
-  songModel.findOne({ SpotifyURI: uri }, function (err, song) {
-    console.log(song._id);
-    playlistModel.findOneAndUpdate(
-      { _id: playlist_id },
-      { $push: { songs_ids: song._id } },
-      function (err, playlist) {
-        if (err) {
-          console.log(err);
-        } else {
-          res.send(playlist_id);
+  getLength.then(function (length) {
+    findSong.then(function (song) {
+      playlistModel.findOneAndUpdate(
+        { _id: playlist_id },
+        {
+          $push: {
+            songs_ids: [{ song_id: song._id, order: length.songs_ids.length }],
+          },
+        },
+        function (err, playlist) {
+          if (err) {
+            console.log(err);
+          } else {
+            res.send(playlist_id);
+          }
         }
-        console.log(playlist);
-      }
-    );
+      );
+    });
   });
 });
 
+//WE ARE NOW USING GET REQUEST PLAYLIST/*
+//POST for adding song to playlist
+// app.post("/api/playlist/getsongs", (req, res) => {
+//   let playlist_id = req.body.id;
+//   let songs = []
+//     playlistModel.findOne({ _id: playlist_id },
+//       function (err, playlist) {
+//         if (err) {
+//           console.log(err);
+//         }
+//         else{
+//           for (let i = 0; i < playlist.songs_ids.length; i++) {
+
+//             songModel.find({_id: playlist.songs_ids[i].song_id }, function(err,song){
+//               if (err) {
+//                 console.log(err);
+//               }
+//                 songs.push(song[0]);
+//                 if(i === playlist.songs_ids.length-1)
+//                 {
+//                   res.send(songs);
+//                 }
+//             });
+
+//           }
+
+//         }
+//       }
+//     );
+// });
+
 app.post("/api/song/updateplaylist", (req, res) => {
-  let playlist_id = req.body.id;
-  let newsongs = req.body.upsongs;
+  console.log(req.body.playlistID);
 
   playlistModel.findByIdAndUpdate(
-    { _id: playlist_id },
-    { $set: { songs_ids: newsongs } },
+    { _id: req.body.playlistID },
+    { $set: { songs_ids: req.body.song_ids } },
     { new: true },
     function (err, playlist) {
       if (err) {
@@ -499,59 +400,43 @@ app.post("/api/song/updateplaylist", (req, res) => {
   );
 });
 
-//POST for adding song to playlist
-app.post("/api/playlist/getsongs", (req, res) => {
+const findSong = async function (params) {
+  return await songModel.findOne({ _id: params }).exec();
+};
+
+async function findSongArray(songs_ids) {
+  var songs = [];
+  for (let i = 0; i < songs_ids.length; i++) {
+    songs.push(await findSong(songs_ids[i]));
+  }
+  const promise = await Promise.all(songs);
+  return promise;
+}
+
+//POST for getting songs from playlist
+app.post("/api/playlist/getplaylistsongs", (req, res) => {
+  // console.log("in get " + req.query.id);
   let playlist_id = req.body.id;
-  let songs = [];
   playlistModel.findOne({ _id: playlist_id }, function (err, playlist) {
     if (err) {
       console.log(err);
-    } else {
-      for (let i = 0; i < playlist.songs_ids.length; i++) {
-        songModel.find(
-          { _id: playlist.songs_ids[i].song_id },
-          function (err, song) {
-            if (err) {
-              console.log(err);
-            }
-            songs.push(song[0]);
-            if (songs.length === playlist.songs_ids.length) {
-              res.send(songs);
-              songs = [];
-            }
-          }
-        );
-      }
     }
+
+    var songs = [];
+    playlistsongs = playlist.songs_ids.sort((a, b) =>
+      a.order > b.order ? 1 : -1
+    );
+
+    let length = playlist.songs_ids.length;
+    for (let i = 0; i < length; i++) {
+      songs.push(playlistsongs[i].song_id);
+    }
+
+    findSongArray(songs).then(function (result) {
+      res.send(result);
+    });
   });
 });
-
-// app.post("/api/playlist/getsongs", (req, res) => {
-//   let playlist_id = req.body.id;
-//   let songs = [];
-//   console.log("add to playlist is called");
-//     playlistModel.findOne({ _id: playlist_id },
-//       function (err, playlist) {
-//         console.log(playlist.songs_ids)
-//         if (err) {
-//           console.log(err);
-//         }
-//           for (let i = playlist.songs_id -1; i >= 0; i--) {
-//             // console.log(playlist.songs_ids[i]);
-//             songModel.findById({_id: playlist.songs_ids[i] }, function(err,song){
-//               console.log(song);
-//               if (err) {
-//                 console.log(err);
-//               }
-//                 // songs.push(song);
-//                 console.log(song);
-//                 // res.send(song);
-//             });
-//           }
-//           // res.send(songs);
-//       }
-//     );
-// });
 
 //POST for removing song from playlist
 app.post("/api/song/removefromplaylist", (req, res) => {

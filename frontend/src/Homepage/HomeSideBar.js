@@ -6,6 +6,7 @@ import SearchBar from "material-ui-search-bar";
 import test from "../data/test.json";
 import { ViewPage } from "./HomePage";
 import { Add } from "@material-ui/icons";
+import { useHistory } from "react-router-dom";
 
 import {
   ProSidebar as Sidebar,
@@ -40,7 +41,7 @@ const StyledSearh = styled(SearchBar)`
 `;
 
 function HomeSideBar(props) {
-  // const { state, actions } = useContext(ViewPage);
+  const { state, actions } = useContext(ViewPage);
   const [playlists, setPlaylists] = useState([]);
   const [createNew, setCreateNew] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -73,18 +74,32 @@ function HomeSideBar(props) {
       .catch((err) => console.log(err));
   }
 
-  function currentplaylist(playlist) {
-    let data = { id: playlist._id };
-    console.log("current playlist is clicked");
-    axios
-      .post("http://localhost:5000/api/playlist/getsongs", data)
-      .then(function (res) {
-        console.log("getsongs " + res.data);
-        // actions.setSongs(res.data);
-        // actions.setPlaylist(playlist);
-        // actions.setPage(1);
-      })
-      .catch((err) => console.log(err));
+  // function currentplaylist(playlist) {
+  //   let data = { id: playlist._id };
+  //   console.log("current playlist is clicked");
+  //   axios
+  //     .get("http://localhost:5000/playlist/", {params: params})
+  //     .then(function (res) {
+  //       console.log("getsongs " + res.data);
+  //       // actions.setSongs(res.data);
+  //       // actions.setPlaylist(playlist);
+  //       // actions.setPage(1);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
+
+  const setUser = (val) =>
+  {
+    if (val.trim() !== "")
+    {
+      actions.setuserResults(val);
+      actions.setPage(3);
+    }
+    else
+    {
+      actions.setuserResults("")
+      actions.setPage(0);
+    }
   }
 
   return (
@@ -104,7 +119,11 @@ function HomeSideBar(props) {
           >
             Browse
           </MenuItem>
-          <StyledSearh placeholder="Search User" />
+          <StyledSearh placeholder="Search User" 
+            value = {state.userresults}
+            onChange = {(val) => setUser(val)}
+            onCancelSearch = {() => setUser("")}
+          />
         </Menu>
         <hr width="90%" color="black"></hr>
         <Menu>

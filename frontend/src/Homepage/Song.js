@@ -215,6 +215,15 @@ function Song(props) {
       .catch((err) => console.log(err));
   }
 
+  const fixName = (name) =>
+  {
+    let ind = name.indexOf("(feat.")
+    if(ind !== -1)
+    {return name.slice(0,ind);}
+    else
+      return name;
+  }
+
   return (
     <Container>
       <Modal
@@ -247,7 +256,7 @@ function Song(props) {
       </Menu>
 
       <SongInfo>
-        <SongName>{name}</SongName>
+        <SongName>{fixName(name)}</SongName>
         <SongArtist>{artist}</SongArtist>
         <SongTime>{time}</SongTime>
       </SongInfo>

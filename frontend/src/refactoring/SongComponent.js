@@ -12,8 +12,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
-
-// import "./Song.css";
+import { HomeContext } from "./Home";
 
 Modal.setAppElement("#root");
 
@@ -33,7 +32,7 @@ function SongComponent(props) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [playlists, setPlaylists] = useState([]);
   const [currSong, setCurrSong] = useState();
-  // const { state, actions } = useContext(ViewPage);
+  const { state, actions } = useContext(HomeContext);
   const [anchorEl, setAnchorEl] = useState(null);
 
   function toggleModal() {

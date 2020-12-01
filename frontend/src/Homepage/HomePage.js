@@ -5,7 +5,9 @@ import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PlayNavBar from "./PlayNavBar";
 import HomeSideBar from "./HomeSideBar";
-import AlbumPage from "./AlbumPage";
+// import AlbumPage from "./AlbumPage";
+import SearchUsers from "../refactoring/SearchUsers";
+import SearchUsersPage from "../refactoring/SearchUsersPage";
 import { Link, useHistory } from "react-router-dom";
 import PlayListView from "./PlayListView";
 import test from "../data/test.json";
@@ -90,7 +92,7 @@ export const ViewPage = React.createContext();
 function HomePage() {
   const session = getSessionCookie();
 
-  const [page, setPage] = useState(3);
+  const [page, setPage] = useState(5);
 
   const [settings, setSettings] = useState(false);
   const [currentplaylist, setPlaylist] = useState({});
@@ -98,6 +100,8 @@ function HomePage() {
   const [currentalbum, setcurrentAlbum] = useState({});
   const [rerender, setRerender] = useState(0);
   const [currentalbumsongs, setcurrentalbumSongs] = useState([]);
+  const [userresults, setuserResults] = useState("");
+  const [urPlaylists, seturPlaylists] = useState({});
   const value = {
     state: {
       page,
@@ -107,6 +111,8 @@ function HomePage() {
       currentalbum,
       currentalbumsongs,
       rerender,
+      userresults,
+      urPlaylists
     },
     actions: {
       setPage,
@@ -116,6 +122,8 @@ function HomePage() {
       setcurrentAlbum,
       setcurrentalbumSongs,
       setRerender,
+      setuserResults,
+      seturPlaylists
     },
   };
 
@@ -159,8 +167,18 @@ function HomePage() {
       />
     );
   } else if (page === 2) {
-    viewPage = <AlbumPage />;
-  } else {
+    // viewPage = <AlbumPage />;
+    
+  } 
+  else if (page === 3)
+  {
+    viewPage = <SearchUsers search = {userresults}/>
+  }
+  else if (page === 4)
+  {
+    viewPage = <SearchUsersPage playlist = {urPlaylists}/>
+  }
+  else {
     setPage(0);
     viewPage = <BrowseView />;
   }
@@ -170,7 +188,7 @@ function HomePage() {
     let data = { id: id, owner: owner };
     axios
       .post("http://localhost:5000/api/playlist/delete", data)
-      .then(function (res) {
+      .then(function (res) { 
         console.log("playlist has been deleted");
         setPlaylist(res.data);
         setRerender(rerender + 1);

@@ -4,6 +4,7 @@ import MoodPage from "./MoodPage/MoodPage";
 import LandingPage from "./LandingPage/LandingPage";
 import SettingsPage from "./components/Settings";
 import AdminPage from "./components/Admin";
+import RedirectPage from "./components/Redirect"
 import Test from "./data/testdrag";
 import Home from "./refactoring/Home";
 

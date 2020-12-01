@@ -27,6 +27,15 @@ function Sidebar(props) {
 
   let history = useHistory();
   let data = { id: session.id };
+  let [searchresults, setSearchResults] = useState("");
+
+  const handleSearch = () =>
+  {
+    history.push({
+      pathname:`${url}/searchuser`,
+      state: {search: searchresults}
+    });
+  }
 
   return (
     <ProSidebar>
@@ -45,7 +54,13 @@ function Sidebar(props) {
             Browse
             <Link to={`${url}/browse`}></Link>
           </MenuItem>
-          <StyledSearh placeholder="Search User" />
+          <StyledSearh 
+          placeholder="Search User" 
+          value = {searchresults}
+          onChange = {(val) => setSearchResults(val)}
+          onCancelSearch = {() => setSearchResults("")}
+          onRequestSearch = {() => handleSearch()}
+          />
         </Menu>
         <Separator width="90%" color="white"></Separator>
         <Menu>
