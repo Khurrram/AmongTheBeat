@@ -356,42 +356,6 @@ app.post("/api/song/addtoplaylist", (req, res) => {
 
 //WE ARE NOW USING GET REQUEST PLAYLIST/*
 //POST for adding song to playlist
-<<<<<<< HEAD
-app.post("/api/playlist/getsongs", (req, res) => {
-  let playlist_id = req.body.id;
-    // playlistModel.findOne({ _id: playlist_id },
-    //   function (err, playlist) {
-    //     if (err) {
-    //       console.log(err);
-    //     } 
-    //     else{
-          
-           
-    //     }
-    //   }
-    // );
-
-    playlistModel.aggregate([
-      {"$match": { _id: playlist_id }},
-      {"$unwind": "$order"},
-      {"$sort": {
-        "songs_ids.order":-1
-      }},
-      {"$group": {
-        "songs_ids": {
-          "$push": "$songs_ids"
-        },
-        "_id": 1
-      }},
-      {"$project": {
-        "_id":0,
-        "Items": 1
-      }}], function(err,response) {
-        console.log(response);
-        res.send(response);
-      });
-});
-=======
 // app.post("/api/playlist/getsongs", (req, res) => {
 //   let playlist_id = req.body.id;
 //   let songs = []
@@ -420,15 +384,14 @@ app.post("/api/playlist/getsongs", (req, res) => {
 //       }
 //     );
 // });
->>>>>>> HomePage_k
 
 app.post("/api/song/updateplaylist", (req, res) => {
-  let playlist_id = req.body.id;
-  let newsongs= req.body.upsongs;
+
+  console.log(req.body.playlistID)
 
     playlistModel.findByIdAndUpdate(
-      {_id: playlist_id},
-      {$set: {songs_ids: newsongs}},
+      {_id: req.body.playlistID},
+      {$set: {songs_ids: req.body.song_ids}},
       {new:true},
       function (err, playlist) {
         if (err) {
@@ -452,12 +415,10 @@ async function findSongArray(songs_ids) {
   return promise;
 }
 
-//POST for adding song to playlist
-app.get("/playlist/*", (req, res) => {
-  console.log(req.url);
+//POST for getting songs from playlist
+app.post("/api/playlist/getplaylistsongs", (req, res) => {
   // console.log("in get " + req.query.id);
-  let playlist_id = req.query.id;
-
+  let playlist_id = req.body.id;
     playlistModel.findOne({ _id: playlist_id },
       function (err, playlist) {
         if (err) {
@@ -473,7 +434,6 @@ app.get("/playlist/*", (req, res) => {
         }
 
         findSongArray(songs).then(function(result) {
-          console.log(result);
           res.send(result);
         });
 });

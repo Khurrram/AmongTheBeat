@@ -2,7 +2,7 @@ import { instance } from "./AccountREST";
 
 export const getPlaylistSongs = async (playlistID) => {
   return instance
-    .post("/api/playlist/getsongs", { id: playlistID })
+    .post("api/playlist/getplaylistsongs", { id: playlistID })
     .then((res) => {
       return res;
     })
@@ -124,11 +124,13 @@ export const deletePlaylist = async (playlistID, accountID) => {
 
 export const updatePlaylist = async(playlistID, song_ids) => 
 {
+  console.log("here", playlistID);
+  console.log("song_ids:", song_ids)
   return instance
     .post("/api/song/updateplaylist",
     {
-      playlist_id: playlistID,
-      newsongs: song_ids
+      playlistID: playlistID,
+      song_ids: song_ids
     })
     .then((res) =>
     {

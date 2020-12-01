@@ -27,7 +27,11 @@ function PlayListView(props) {
 
   const playlistTitle = useRef(null);
   const location = useLocation();
+
   let songs = location.state.songs;
+  let songs_ids = location.state.songs_ids;
+  const [currSongs, setCurrSongs] = useState(songs);
+  const [currSongIDS, setCurrSongIDS] = useState(songs_ids);
 
   let DEFAULT_VALUE = "DEFAULT";
 
@@ -39,22 +43,6 @@ function PlayListView(props) {
     setPlaylistName(state.currentPlaylist.playlist_name);
   }, [playlistID]);
 
-<<<<<<< HEAD
-=======
-  useEffect(() =>
-  {
-    const fetchSongs = async () =>
-    {
-      const result = await getPlaylistSongs(state.currentPlaylist._id)
-      setCurrSongs(result)
-      // console.log(result.data);
-    }
-    fetchSongs()
-  }, [])
-
-
-
->>>>>>> HomePage_k
   const dClick = () => {
     setdisableTitle(false);
     playlistTitle.current.focus();
@@ -72,20 +60,35 @@ function PlayListView(props) {
   };
 
   const handleOnDragEnd = async (result) => {
-    // if (!result.destination) return;
-    // const items = songs;
-    // const [reordereditem] = items.splice(result.source.index, 1);
-    // items.splice(result.destination.index, 0, reordereditem);
-    // console.log("Items now: ", items);
+    if (!result.destination) return;
+    const items = currSongs;
+    const [reordereditem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reordereditem);
 
-    // let newids = [];
-    // for (var i = 0; i < items.length; i++) {
-    //   newids.push(items[i]._id + "");
-    // }
+    let newsong_ids = currSongIDS;
 
-    // let pid = playlistID + "";
+    const [reordersong] = newsong_ids.splice(result.source.index, 1);
+    newsong_ids.splice(result.destination.index,0 , reordersong);
 
-    // const ans = await updatePlaylist(pid, newids)
+    for (var i = 0; i < items.length; i++)
+    {
+      for(var j = 0; j < newsong_ids.length; j++)
+      {
+        if(items[i]._id === newsong_ids[j].song_id)
+        {
+          newsong_ids[j].order = i;
+        }
+      }
+    }
+
+    let pid = playlistID + "";
+    
+    const ans = await updatePlaylist(pid, newsong_ids)
+    console.log(ans)
+
+    setCurrSongs(items);
+    setCurrSongIDS(newsong_ids);
+
 
   };
 
@@ -131,12 +134,12 @@ function PlayListView(props) {
         <hr />
       </span>
       <SongDiv>
-          {songs ? 
+          {currSongs ? 
             <DragDropContext onDragEnd = {(res) => handleOnDragEnd(res)}>
             <Droppable droppableId = "songs">
               {( provided) => (
               <div id = "inside" {...provided.droppableProps} ref = {provided.innerRef}>
-                {songs.map(({song_name,artist_name,_id}, index) => 
+                {currSongs.map(({song_name,artist_name,_id}, index) => 
                 {
                   return(
                       <Draggable key = {_id} draggableId = {_id} index = {index}>

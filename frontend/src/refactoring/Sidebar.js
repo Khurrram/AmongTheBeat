@@ -38,16 +38,20 @@ function Sidebar(props) {
     });
   }
 
-  const handlePlaylist = async (playlistID) =>
+  const handlePlaylist = async (playlistID, playlist) =>
   {
-
+    console.log(playlist);
     const result = await getPlaylistSongs(playlistID)
     console.log(result.data);
     actions.changeCurrentPlaylistView(playlistID);
     history.push(
       {
         pathname: `${url}/playlist/${playlistID}`,
-        state: {songs: result.data}
+        state: 
+          {
+            songs: result.data,
+            songs_ids: playlist.songs_ids
+          }
       }
     );
   }
@@ -103,7 +107,7 @@ function Sidebar(props) {
               return (
                 <MenuItem
                   key={playlist._id}
-                  onClick={() => handlePlaylist(playlist._id)}
+                  onClick={() => handlePlaylist(playlist._id, playlist)}
                 >
                   {playlist.playlist_name}
                 </MenuItem>
