@@ -182,7 +182,7 @@ function PlayListView(props) {
         <Droppable droppableId = "songs">
           {( provided) => (
           <div id = "inside" {...provided.droppableProps} ref = {provided.innerRef}>
-            {state.currentsongs.map(({song_name,artist_name,_id}, index) => 
+            {state.currentsongs.map(({song_name,artist_name,_id,SpotifyURI}, index) => 
             {
               return(
                   <Draggable key = {_id} draggableId = {_id} index = {index}>
@@ -196,6 +196,7 @@ function PlayListView(props) {
                       name={song_name} 
                       artist={artist_name} 
                       id={_id} 
+                      uri={SpotifyURI}
                       playlist_id= {id} 
                       type="Playlists" />
                       </CustomP>

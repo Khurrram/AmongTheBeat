@@ -101,8 +101,49 @@ function HomePage() {
   const [currentalbumsongs, setcurrentalbumSongs] = useState([]);
   const [userresults, setuserResults] = useState("");
   const [urPlaylists, seturPlaylists] = useState({});
+  const [player, setPlayer] = useState();
   const value = { state: { page, settings, currentplaylist, currentsongs, currentalbum, currentalbumsongs, rerender, userresults, urPlaylists}, 
   actions: { setPage, setSettings, setPlaylist, setSongs, setcurrentAlbum, setcurrentalbumSongs, setRerender, setuserResults, seturPlaylists} };
+
+
+
+
+  useEffect( () =>
+  {
+    const token = session.accessToken;
+    if (window.Spotify !== null) {
+      console.log(window.Spotify);
+      var player = new window.Spotify.Player({
+        name: "AmongTheBeat Player",
+        getOAuthToken: cb => { cb(token); },
+      });
+  
+      player.connect();
+      setPlayer(player);
+      createEventHandlers();
+    }    
+  }, [])
+
+  function createEventHandlers() {
+    player.on('initialization_error', e => { console.error(e); });
+    player.on('authentication_error', e => {
+      console.error(e);
+      this.setState({ loggedIn: false });
+    });
+    player.on('account_error', e => { console.error(e); });
+    player.on('playback_error', e => { console.error(e); });
+  
+    // Playback status updates
+    player.on('player_state_changed', state => { console.log(state); });
+  
+    // Ready
+    player.on('ready', data => {
+      let { device_id } = data;
+      console.log("Let the music play on!");
+      console.log(data);
+      // this.setState({ deviceId: device_id });
+    });
+  }
 
 
   const handleOnDragEnd = (result) =>
@@ -171,7 +212,6 @@ function HomePage() {
     })
     .catch((err) => console.log(err));
   }
-
 
 
   return (

@@ -492,7 +492,8 @@ function SpotifyBox(props) {
     "user-read-currently-playing",
     "user-follow-read",
     "user-library-read",
-    "streaming"
+    "streaming",
+    "user-modify-playback-state"
   ];
   return (
     <CardPanel className="box-dim hoverable">

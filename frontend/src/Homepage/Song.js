@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Avatar from "@material-ui/core/Avatar";
 import HeartIcon from "@material-ui/icons/Favorite";
 import TrashIcon from "@material-ui/icons/Delete";
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
 import AddIcon from "@material-ui/icons/Add";
@@ -209,6 +210,25 @@ function Song(props) {
       return name;
   }
 
+  function View(props, toggleModal, handleClick) {
+    return (
+      <SongAction >
+        <PlayCircleOutlineIcon onClick={() => playSong(uri)}></PlayCircleOutlineIcon>
+        <StyledHeart></StyledHeart>
+        <StyledQueue />
+        {props.Browse ? (
+          <StyledPlaylistAdd onClick={() => toggleModal()} />
+        ) : (
+          <StyledTrashCan aria-label="more"
+                     aria-controls="long-menu"
+                     aria-haspopup="true"
+                     onClick={(e) => handleClick(e)}
+                      />
+        )}
+      </SongAction>
+    );
+  }
+
   return (
     <Container>
       <Modal
@@ -253,22 +273,16 @@ function Song(props) {
   );
 }
 
-function View(props, toggleModal, handleClick) {
-  return (
-    <SongAction >
-      <StyledHeart></StyledHeart>
-      <StyledQueue />
-      {props.Browse ? (
-        <StyledPlaylistAdd onClick={() => toggleModal()} />
-      ) : (
-        <StyledTrashCan aria-label="more"
-                   aria-controls="long-menu"
-                   aria-haspopup="true"
-                   onClick={(e) => handleClick(e)}
-                    />
-      )}
-    </SongAction>
-  );
+function playSong(uri) {
+  axios.put("https://api.spotify.com/v1/me/player/play", { "context_uri": uri+""} )
+  .then(function(res, error) {
+    console.log("song now playing");
+    console.log(error);
+    console.log(res);
+  })
+  // .catch(function(error) {
+  //   console.log(error);
+  // });
 }
 
 export default Song;
