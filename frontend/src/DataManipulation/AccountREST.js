@@ -89,6 +89,46 @@ export const getLikedSongs = async(accountID) =>
       id: accountID
     }).then((res) =>
     {
-      return res.data
+      return res.data;
     }).catch((err) => console.log("getLikedSongs ERR"));
- } 
+ }
+ 
+export const findLikedSong = async(accountID, songID) =>
+{
+  return instance
+    .post("/api/user/findlikedsong",
+    {
+      accountID: accountID,
+      songID: songID
+    }).then((res) =>
+    {
+      return res.data;
+    }).catch((err) => console.log("findLikedSongs ERR"));
+}
+
+export const addLikedSong = async(accountID, songID) =>
+{
+  return instance
+    .post("/api/user/addlikedsong",
+    {
+      accountID: accountID,
+      songID: songID
+    }).then((res) =>
+    {
+      return res.data;
+    }).catch((err) => console.log("addLikedSongs ERR"));
+}
+
+export const removeLikedSong = async(accountID, songID) =>
+{
+  return instance
+    .post("/api/user/removelikedsong",
+    {
+      accountID: accountID,
+      songID, songID
+    }).then((res) =>
+    {
+      return res.data
+    }).catch((err) => console.log("removeLikedSong ERR"))
+}
+

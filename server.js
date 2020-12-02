@@ -176,9 +176,73 @@ app.post("/api/user/likedsongs", (req,res) =>
       if(err){console.log(err)}
       else
       {
-        res.send(user[0])}
+        const arr = user[0].liked_songs
+        songModel.find(
+          {_id: arr},
+          function(err, song)
+          {
+            if(err){console.log("here", err)}
+            else
+            {
+              res.send(song);
+            }
+          }
+      )}
+  })
+});
+
+app.post("/api/user/findlikedsong", (req,res) =>
+{
+  userModel.find(
+    {_id: req.body.accountID},
+    function(err,user)
+    {
+      if(err){console.log(err)}
+      else
+      {
+        songModel.find(
+          {_id: req.body.songID},
+          function(err,song)
+          {
+            if(err){res.send("Not Found")}
+            else{
+              const userarr = user[0].liked_songs
+              const currsong = song[0]._id.toString();
+              const inLikedSongs = (song) => song === currsong  
+              var ind = userarr.findIndex(inLikedSongs);
+              if(ind === -1){res.send("Not Found")}
+              else{res.send("Found")}
+            }
+          })
+      }
     }
-    )
+  )
+});
+
+app.post("/api/user/addlikedsong", (req, res) => 
+{
+  userModel.findOneAndUpdate(
+    {_id: req.body.accountID},
+    { $push : {liked_songs: req.body.songID}},
+    function(err,user)
+    {
+      if(err){console.log(err)}
+      res.send("Success");
+    }
+  )
+})
+
+app.post("/api/user/removelikedsong", (req,res) =>
+{
+  userModel.findOneAndUpdate(
+    {_id: req.body.accountID},
+    {$pull : {liked_songs: req.body.songID}},
+    function(err, user)
+    {
+      if(err){console.log(err)}
+      res.send("Success");
+    }
+  )
 })
 
 //POST for creating new playlist
@@ -301,7 +365,7 @@ app.post("/api/song/getplaylists", (req, res) => {
   let song_name = req.body.song_name;
   let artist_name = req.body.artist_name;
   let uri = req.body.uri;
-  let id = new mongoose.Types.ObjectId();
+  let id = req.body.song_id
   let songHold;
 
   playlistModel.find({ owner_id : owner_id }, function (

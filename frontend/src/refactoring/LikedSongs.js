@@ -1,10 +1,11 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useRef} from 'react';
 import styled from "styled-components";
 import { getSessionCookie } from "../CookieHandler"
 import SongDisplay from "./SongDisplay";
 import {getLikedSongs} from "../DataManipulation/AccountREST"
 import { Link, useHistory, useLocation, useParams} from "react-router-dom";
 import {SessionContext} from "../App"
+import { TrainRounded } from '@material-ui/icons';
 
 function LikedSongs()
 {
@@ -13,12 +14,11 @@ function LikedSongs()
 
     useEffect(() =>
     {
-        getLikedSongs(session.id).then((res)=>
-        {
-            setSongs(res.liked_songs)
-        })
-
-    },[])
+      getLikedSongs(session.id).then((res) =>
+      {
+        setSongs(res);
+      })
+    },[songs])
 
 
     return(
@@ -37,17 +37,22 @@ function LikedSongs()
             </span>
 
             <SongDiv>
-                {songs ? 
-                    songs.map((song) =>
-                    {
-                        <SongDisplay
-                          name={song.song_name} 
-                          artist={song.artist_name} 
-                          id={song._id} 
-                        //   playlist_id= {playlistID} 
-                          type="Browse" />
-                    })
-                :<p>Loading...</p>}
+              {
+              songs? 
+              songs.map((song) => 
+              {
+                  return(
+                      <SongDisplay
+                          name = {song.song_name}
+                          artist = {song.artist_name}
+                          uri = {song.SpotifyURI}
+                          id = {song._id}
+                          Browse = {true}
+                      />
+                  );
+              })
+              :<p>Loading...</p>
+              }
 
             </SongDiv>
         </StyledDiv>

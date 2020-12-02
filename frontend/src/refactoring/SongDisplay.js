@@ -14,6 +14,7 @@ import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
 import { HomeContext } from "./Home";
 import {addSongToPlaylist} from  "../DataManipulation/PlaylistREST"
+import {findLikedSong, addLikedSong, removeLikedSong} from "../DataManipulation/AccountREST";
 import {useRouteMatch, useHistory } from "react-router-dom";
 
 Modal.setAppElement("#root");
@@ -36,6 +37,7 @@ function SongDisplay(props) {
   const [currSong, setCurrSong] = useState();
   const { state, actions } = useContext(HomeContext);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [liked, setLiked] = useState(false);
 
   function toggleModal() {
     setModalIsOpen(!modalIsOpen);
@@ -45,6 +47,7 @@ function SongDisplay(props) {
         song_name: name,
         artist_name: artist,
         uri: uri,
+        song_id: id
       };
 
       axios
@@ -76,6 +79,33 @@ function SongDisplay(props) {
     e.preventDefault();
     actions.removeSongFromPlaylistID(playlistid, songid);
     handleClose();
+  }
+
+  useEffect(() =>
+  {
+    findLikedSong(session.id, id).then((res) =>
+    {
+      if(res === "Not Found"){setLiked(false)}
+      else{setLiked(true)}
+    })
+  },[])
+
+  const likeSong = () => 
+  {
+    addLikedSong(session.id, id).then((res) =>
+    {
+      console.log(res)
+      setLiked(true);
+    })
+  }
+
+  const unlikeSong = () =>
+  {
+    removeLikedSong(session.id, id).then((res) =>
+    {
+      console.log(res)
+      setLiked(false);
+    })
   }
 
   return (
@@ -115,33 +145,22 @@ function SongDisplay(props) {
         <SongTime>{time}</SongTime>
       </SongInfo>
 
-      {playlist ? (
-        <SongAction>
-          <AddIcon />
-        </SongAction>
-      ) : (
-        View(props, toggleModal, handleClick)
-      )}
-    </Container>
-  );
-}
-
-function View(props, toggleModal, handleClick) {
-  return (
-    <SongAction>
-      <StyledHeart></StyledHeart>
-      <StyledQueue />
-      {props.Browse ? (
-        <StyledPlaylistAdd onClick={() => toggleModal()} />
-      ) : (
-        <StyledTrashCan
-          aria-label="more"
-          aria-controls="long-menu"
-          aria-haspopup="true"
-          onClick={(e) => handleClick(e)}
-        />
-      )}
+      <SongAction>
+        {liked? <LikedHeart onClick = {() => unlikeSong()}/> : <UnlikedHeart onClick = {() => likeSong()}/>}
+        <StyledQueue />
+        {props.Browse ? (
+          <StyledPlaylistAdd onClick={() => toggleModal()} />
+        ) : (
+          <StyledTrashCan
+            aria-label="more"
+            aria-controls="long-menu"
+            aria-haspopup="true"
+            onClick={(e) => handleClick(e)}
+          />
+        )}
     </SongAction>
+      
+    </Container>
   );
 }
 
@@ -172,14 +191,23 @@ const SongInfo = styled.div`
   color: white;
 `;
 
-const StyledHeart = styled(HeartIcon)`
+const UnlikedHeart = styled(HeartIcon)`
   margin-right: 1rem;
-  color: ${(props) => (props.fav ? "red" : "grey")};
+  color: ${"grey"};
 
   &:hover {
-    color: ${(props) => (props.fav ? "grey" : "red")};
+    color: ${"red"};
   }
 `;
+
+const LikedHeart = styled(HeartIcon)`
+  margin-right: 1rem;
+  color: ${"red"};
+
+  &:hover {
+    color: ${"grey"};
+  }
+  `;
 
 const StyledPlaylistAdd = styled(PlaylistAddIcon)`
   color: ${"white"};
