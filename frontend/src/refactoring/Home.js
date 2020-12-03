@@ -67,7 +67,7 @@ function Home() {
                 <BrowseView></BrowseView>
               </Route>
 
-              <Route exact path = {`${path}/browse/:albumID`}>
+              <Route exact path = {`${path}/browse/album`}>
                 <AlbumPage />
               </Route>
 

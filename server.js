@@ -178,7 +178,7 @@ app.post("/api/user/likedsongs", (req,res) =>
       {
         const arr = user[0].liked_songs
         songModel.find(
-          {_id: arr},
+          {SpotifyURI : {$in: arr}},
           function(err, song)
           {
             if(err){console.log("here", err)}
@@ -201,17 +201,24 @@ app.post("/api/user/findlikedsong", (req,res) =>
       else
       {
         songModel.find(
-          {_id: req.body.songID},
+          {SpotifyURI : req.body.uri},
           function(err,song)
           {
-            if(err){res.send("Not Found")}
+            if(err){console.log(err)}
             else{
-              const userarr = user[0].liked_songs
-              const currsong = song[0]._id.toString();
-              const inLikedSongs = (song) => song === currsong  
-              var ind = userarr.findIndex(inLikedSongs);
-              if(ind === -1){res.send("Not Found")}
-              else{res.send("Found")}
+              if(song === null || song === undefined || song.length === 0)
+              {
+                res.send("Not Found")
+              }
+              else
+              {
+                const userarr = user[0].liked_songs
+                const currsong = song[0].SpotifyURI;
+                const inLikedSongs = (song) => song === currsong  
+                var ind = userarr.findIndex(inLikedSongs);
+                if(ind === -1){res.send("Not Found")}
+                else{res.send("Found")}
+              }
             }
           })
       }
@@ -221,22 +228,41 @@ app.post("/api/user/findlikedsong", (req,res) =>
 
 app.post("/api/user/addlikedsong", (req, res) => 
 {
+  let owner_id = req.body.accountID;
+  let songname = req.body.song_name;
+  let artistname = req.body.artist_name;
+  let uri = req.body.uri;
+  let id = new mongoose.Types.ObjectId();
+
   userModel.findOneAndUpdate(
-    {_id: req.body.accountID},
-    { $push : {liked_songs: req.body.songID}},
+    {_id: owner_id},
+    { $push : {liked_songs: uri}},
+    {new: true},
     function(err,user)
     {
       if(err){console.log(err)}
-      res.send("Success");
-    }
-  )
+      
+      songModel.findOne({SpotifyURI : uri}, function (err, song) {
+        if(err){console.log(err)}
+        else if (song === null) {
+          songModel.create({
+            _id: id,
+            song_name: songname,
+            artist_name: artistname,
+            SpotifyURI : uri
+          })
+          res.send("Success")
+        }
+        else
+        {res.send("Success");}
+      })
+  })
 })
-
 app.post("/api/user/removelikedsong", (req,res) =>
 {
   userModel.findOneAndUpdate(
     {_id: req.body.accountID},
-    {$pull : {liked_songs: req.body.songID}},
+    {$pull : {liked_songs: req.body.uri}},
     function(err, user)
     {
       if(err){console.log(err)}
@@ -365,7 +391,7 @@ app.post("/api/song/getplaylists", (req, res) => {
   let song_name = req.body.song_name;
   let artist_name = req.body.artist_name;
   let uri = req.body.uri;
-  let id = req.body.song_id
+  let id = new mongoose.Types.ObjectId();
   let songHold;
 
   playlistModel.find({ owner_id : owner_id }, function (

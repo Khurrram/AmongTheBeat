@@ -93,42 +93,57 @@ export const getLikedSongs = async(accountID) =>
     }).catch((err) => console.log("getLikedSongs ERR"));
  }
  
-export const findLikedSong = async(accountID, songID) =>
+export const findLikedSong = async(accountID, uri) =>
 {
   return instance
     .post("/api/user/findlikedsong",
     {
       accountID: accountID,
-      songID: songID
+      uri: uri
     }).then((res) =>
     {
       return res.data;
     }).catch((err) => console.log("findLikedSongs ERR"));
 }
 
-export const addLikedSong = async(accountID, songID) =>
+export const addLikedSong = async(accountID, name, artist, uri) =>
 {
   return instance
     .post("/api/user/addlikedsong",
     {
       accountID: accountID,
-      songID: songID
+      song_name: name,
+      artist_name: artist,
+      uri: uri
     }).then((res) =>
     {
       return res.data;
     }).catch((err) => console.log("addLikedSongs ERR"));
 }
 
-export const removeLikedSong = async(accountID, songID) =>
+export const removeLikedSong = async(accountID, uri) =>
 {
   return instance
     .post("/api/user/removelikedsong",
     {
       accountID: accountID,
-      songID, songID
+      uri: uri
     }).then((res) =>
     {
       return res.data
     }).catch((err) => console.log("removeLikedSong ERR"))
+}
+
+export const openAlbum = async(playlistID, accessToken) =>
+{
+  return instance
+      .post("/api/openalbum", 
+      {
+        id: playlistID,
+        curraccessToken: accessToken
+      }).then((res) =>
+      {
+        return res.data
+      }).catch((err) => console.log("openAlbum ERR"));
 }
 

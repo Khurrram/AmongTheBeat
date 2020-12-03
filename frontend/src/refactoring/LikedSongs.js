@@ -11,6 +11,7 @@ function LikedSongs()
 {
     const session = useContext(SessionContext);
     const [songs, setSongs] = useState();
+    const [rerender, setRerender] = useState(0);
 
     useEffect(() =>
     {
@@ -18,8 +19,16 @@ function LikedSongs()
       {
         setSongs(res);
       })
-    },[songs])
+      
+    },[rerender])
 
+    useEffect(() =>
+    {
+      return( () => 
+      {
+        setSongs(null);
+      })
+    },[])
 
     return(
         <StyledDiv>
@@ -48,6 +57,8 @@ function LikedSongs()
                           uri = {song.SpotifyURI}
                           id = {song._id}
                           Browse = {true}
+                          rerender = {rerender}
+                          setrerender = {setRerender}
                       />
                   );
               })

@@ -47,7 +47,6 @@ function SongDisplay(props) {
         song_name: name,
         artist_name: artist,
         uri: uri,
-        song_id: id
       };
 
       axios
@@ -83,28 +82,45 @@ function SongDisplay(props) {
 
   useEffect(() =>
   {
-    findLikedSong(session.id, id).then((res) =>
+    findLikedSong(session.id, uri).then((res) =>
     {
       if(res === "Not Found"){setLiked(false)}
       else{setLiked(true)}
+    })
+
+  },[])
+
+  useEffect( () =>
+  {
+    return(() =>
+    {
+      setLiked(false);
     })
   },[])
 
   const likeSong = () => 
   {
-    addLikedSong(session.id, id).then((res) =>
+    addLikedSong(session.id, name, artist, uri).then((res) =>
     {
-      console.log(res)
+      console.log("Success");
       setLiked(true);
     })
   }
 
   const unlikeSong = () =>
   {
-    removeLikedSong(session.id, id).then((res) =>
+    removeLikedSong(session.id, uri).then((res) =>
     {
-      console.log(res)
-      setLiked(false);
+      console.log("Success");
+
+      if(props.rerender !== undefined)
+      {
+        props.setrerender(props.rerender + 1);
+      }
+      else
+      {
+        setLiked(false);
+      }
     })
   }
 
