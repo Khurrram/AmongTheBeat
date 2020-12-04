@@ -21,10 +21,13 @@ import SettingsView from "../Homepage/SettingView";
 import Axios from "axios";
 
 export const HomeContext = React.createContext();
+export const SongContext = React.createContext();
 
 function Home() {
   const [settings, setSettings] = useState(false);
   const [reload, setReload] = useState(false);
+  const [playingCurrentSong, setPlayingCurrentSong] = useState("");
+  const [playing, setPlaying] = useState(true);
   let { path, url } = useRouteMatch();
   const session = getSessionCookie();
   let {
@@ -38,6 +41,11 @@ function Home() {
     addSongToPlaylistID,
     getValidPlaylists,
   } = usePlaylists(session.id);
+
+  const songContextValue = {
+    songState: { playingCurrentSong },
+    songActions: { setPlayingCurrentSong },
+  };
 
   const contextValue = {
     state: { playlists, currentPlaylist },
@@ -53,57 +61,59 @@ function Home() {
   };
   return (
     <HomeContext.Provider value={contextValue}>
-      <HomeContainer>
-        <SideBar playlists={playlists} />
-        <ContentWindow>
-          <SpotifyPlayerContainer />
-          <Navbar>
-            <StyledAvatar>
-              <SpotifyProfile accessToken={session.accessToken} />
-            </StyledAvatar>
-            <StyledSettingIcon onClick={() => setSettings(true)} />
-          </Navbar>
+      <SongContext.Provider value={songContextValue}>
+        <HomeContainer>
+          <SideBar playlists={playlists} />
           <ContentWindow>
-            {settings && <SettingsView></SettingsView>}
-            <Switch>
-              <Route exact path={`${path}`}>
-                <HomeDashView></HomeDashView>
-              </Route>
-              <Route exact path={`${path}/browse`}>
-                <BrowseView></BrowseView>
-              </Route>
+            <SpotifyPlayerContainer />
+            <Navbar>
+              <StyledAvatar>
+                <SpotifyProfile accessToken={session.accessToken} />
+              </StyledAvatar>
+              <StyledSettingIcon onClick={() => setSettings(true)} />
+            </Navbar>
+            <ContentWindow>
+              {settings && <SettingsView></SettingsView>}
+              <Switch>
+                <Route exact path={`${path}`}>
+                  <HomeDashView></HomeDashView>
+                </Route>
+                <Route exact path={`${path}/browse`}>
+                  <BrowseView></BrowseView>
+                </Route>
 
-              <Route exact path={`${path}/browse/album`}>
-                <AlbumPage />
-              </Route>
+                <Route exact path={`${path}/browse/album`}>
+                  <AlbumPage />
+                </Route>
 
-              <Route exact path={`${path}/likedsongs`}>
-                <LikePage />
-              </Route>
+                <Route exact path={`${path}/likedsongs`}>
+                  <LikePage />
+                </Route>
 
-              <Route
-                exact
-                path={`${path}/playlist/:playlistID`}
-                component={PlayListView}
-              />
-              <Route exact path={`${path}/user/:userID`}>
-                <UserPlaylistView></UserPlaylistView>
-              </Route>
+                <Route
+                  exact
+                  path={`${path}/playlist/:playlistID`}
+                  component={PlayListView}
+                />
+                <Route exact path={`${path}/user/:userID`}>
+                  <UserPlaylistView></UserPlaylistView>
+                </Route>
 
-              <Route exact path={`${path}/searchuser`}>
-                <SearchUsers />
-              </Route>
+                <Route exact path={`${path}/searchuser`}>
+                  <SearchUsers />
+                </Route>
 
-              <Route exact path={`${path}/searchuser/:ownerID`}>
-                <SearchUsersPage />
-              </Route>
-            </Switch>
+                <Route exact path={`${path}/searchuser/:ownerID`}>
+                  <SearchUsersPage />
+                </Route>
+              </Switch>
+            </ContentWindow>
+            <Footer>
+              <PlayNavBar></PlayNavBar>
+            </Footer>
           </ContentWindow>
-          <Footer>
-            <PlayNavBar></PlayNavBar>
-          </Footer>
-        </ContentWindow>
-      </HomeContainer>
+        </HomeContainer>
+      </SongContext.Provider>
     </HomeContext.Provider>
   );
 }

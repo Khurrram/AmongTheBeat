@@ -5,9 +5,9 @@ import HeartIcon from "@material-ui/icons/Favorite";
 import TrashIcon from "@material-ui/icons/Delete";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
-import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
-import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
-import PlayForWorkIcon from '@material-ui/icons/PlayForWork';
+import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled";
+import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled";
+import PlayForWorkIcon from "@material-ui/icons/PlayForWork";
 import AddIcon from "@material-ui/icons/Add";
 import { Button } from "react-materialize";
 import Modal from "react-modal";
@@ -15,15 +15,26 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
-import { buttonClicked, pauseSong, queueSong} from "../DataManipulation/PlayerREST"
+import { SongContext } from "./Home";
+import {
+  loadPlaylist,
+  pauseSong,
+  queueSong,
+  resumeSong,
+} from "../DataManipulation/PlayerREST";
 import { HomeContext } from "./Home";
-import {addSongToPlaylist} from  "../DataManipulation/PlaylistREST"
-import {findLikedSong, addLikedSong, removeLikedSong} from "../DataManipulation/AccountREST";
-import {useRouteMatch, useHistory } from "react-router-dom";
+import { addSongToPlaylist } from "../DataManipulation/PlaylistREST";
+import {
+  findLikedSong,
+  addLikedSong,
+  removeLikedSong,
+} from "../DataManipulation/AccountREST";
+import { useRouteMatch, useHistory } from "react-router-dom";
 
 Modal.setAppElement("#root");
 
 function SongDisplay(props) {
+  const { songState, songActions } = useContext(SongContext);
   const {
     name,
     artist,
@@ -42,6 +53,7 @@ function SongDisplay(props) {
   const { state, actions } = useContext(HomeContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const [liked, setLiked] = useState(false);
+  const [playState, setPlayState] = useState(true);
 
   function toggleModal() {
     setModalIsOpen(!modalIsOpen);
@@ -72,11 +84,11 @@ function SongDisplay(props) {
     setAnchorEl(null);
   };
 
-  const addtoPlaylist = async(e, playlistid, uri) =>{
+  const addtoPlaylist = async (e, playlistid, uri) => {
     e.preventDefault();
-    actions.addSongToPlaylistID(playlistid, uri)
+    actions.addSongToPlaylistID(playlistid, uri);
     setModalIsOpen(!modalIsOpen);
-  }
+  };
 
   function removeSong(e, playlistid, songid) {
     e.preventDefault();
@@ -84,49 +96,40 @@ function SongDisplay(props) {
     handleClose();
   }
 
-  useEffect(() =>
-  {
-    findLikedSong(session.id, uri).then((res) =>
-    {
-      if(res === "Not Found"){setLiked(false)}
-      else{setLiked(true)}
-    })
+  useEffect(() => {
+    findLikedSong(session.id, uri).then((res) => {
+      if (res === "Not Found") {
+        setLiked(false);
+      } else {
+        setLiked(true);
+      }
+    });
+  }, []);
 
-  },[])
-
-  useEffect( () =>
-  {
-    return(() =>
-    {
+  useEffect(() => {
+    return () => {
       setLiked(false);
-    })
-  },[])
+    };
+  }, []);
 
-  const likeSong = () => 
-  {
-    addLikedSong(session.id, name, artist, uri).then((res) =>
-    {
+  const likeSong = () => {
+    addLikedSong(session.id, name, artist, uri).then((res) => {
       console.log("Success");
       setLiked(true);
-    })
-  }
+    });
+  };
 
-  const unlikeSong = () =>
-  {
-    removeLikedSong(session.id, uri).then((res) =>
-    {
+  const unlikeSong = () => {
+    removeLikedSong(session.id, uri).then((res) => {
       console.log("Success");
 
-      if(props.rerender !== undefined)
-      {
+      if (props.rerender !== undefined) {
         props.setrerender(props.rerender + 1);
-      }
-      else
-      {
+      } else {
         setLiked(false);
       }
-    })
-  }
+    });
+  };
 
   return (
     <Container>
@@ -155,20 +158,40 @@ function SongDisplay(props) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={(e) => removeSong(e, playlist_id, id)}>Confirm</MenuItem>
+        <MenuItem onClick={(e) => removeSong(e, playlist_id, id)}>
+          Confirm
+        </MenuItem>
         <MenuItem onClick={() => handleClose()}>Cancel</MenuItem>
       </Menu>
 
       <SongInfo>
-        <PlayCircleFilledIcon onClick={() => buttonClicked(playlist,uri)} />
-        <PauseCircleFilledIcon onClick={() => pauseSong()} />
+        {songState.playingCurrentSong === uri ? (
+          <PauseCircleFilledIcon
+            onClick={() => {
+              songActions.setPlayingCurrentSong("");
+              pauseSong();
+            }}
+          />
+        ) : (
+          <PlayCircleFilledIcon
+            onClick={() => {
+              songActions.setPlayingCurrentSong(uri);
+              loadPlaylist(playlist, uri);
+            }}
+          />
+        )}
+
         <SongName>{name}</SongName>
         <SongArtist>{artist}</SongArtist>
         <SongTime>{time}</SongTime>
       </SongInfo>
 
       <SongAction>
-        {liked? <LikedHeart onClick = {() => unlikeSong()}/> : <UnlikedHeart onClick = {() => likeSong()}/>}
+        {liked ? (
+          <LikedHeart onClick={() => unlikeSong()} />
+        ) : (
+          <UnlikedHeart onClick={() => likeSong()} />
+        )}
         <StyledQueue onClick={() => queueSong(uri)} />
         {props.Browse ? (
           <StyledPlaylistAdd onClick={() => toggleModal()} />
@@ -180,8 +203,7 @@ function SongDisplay(props) {
             onClick={(e) => handleClick(e)}
           />
         )}
-    </SongAction>
-      
+      </SongAction>
     </Container>
   );
 }
@@ -229,7 +251,7 @@ const LikedHeart = styled(HeartIcon)`
   &:hover {
     color: ${"grey"};
   }
-  `;
+`;
 
 const StyledPlaylistAdd = styled(PlaylistAddIcon)`
   color: ${"white"};

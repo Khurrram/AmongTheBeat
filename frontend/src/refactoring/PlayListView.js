@@ -11,11 +11,14 @@ import Button from "@material-ui/core/Button";
 import axios from "axios";
 import { TextField } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
-import { Link, useHistory, useLocation, useParams} from "react-router-dom";
+import { Link, useHistory, useLocation, useParams } from "react-router-dom";
 import { HomeContext } from "./Home";
-import {getPlaylistSongs, updatePlaylist} from "../DataManipulation/PlaylistREST";
+import {
+  getPlaylistSongs,
+  updatePlaylist,
+} from "../DataManipulation/PlaylistREST";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import SongDisplay from "./SongDisplay"
+import SongDisplay from "./SongDisplay";
 
 function PlayListView(props) {
   const { state, actions } = useContext(HomeContext);
@@ -28,7 +31,9 @@ function PlayListView(props) {
   const playlistTitle = useRef(null);
 
   const [currSongs, setCurrSongs] = useState();
-  const [currSongIDS, setCurrSongIDS] = useState(state.currentPlaylist.songs_ids);
+  const [currSongIDS, setCurrSongIDS] = useState(
+    state.currentPlaylist.songs_ids
+  );
 
   let DEFAULT_VALUE = "DEFAULT";
 
@@ -39,19 +44,15 @@ function PlayListView(props) {
       history.push("/home");
     }
     setPlaylistName(state.currentPlaylist.playlist_name);
-    
   }, [playlistID]);
 
-  useEffect(() =>
-  {
-    const fetchSongs = async() => {
-      const response = await getPlaylistSongs(playlistID)
+  useEffect(() => {
+    const fetchSongs = async () => {
+      const response = await getPlaylistSongs(playlistID);
       setCurrSongs(response.data);
-    }
+    };
     fetchSongs();
-  },[state.playlists])
-
-
+  }, [state.playlists]);
 
   const dClick = () => {
     setdisableTitle(false);
@@ -77,28 +78,24 @@ function PlayListView(props) {
 
     let newsong_ids = currSongIDS;
     const [reordersong] = newsong_ids.splice(result.source.index, 1);
-    newsong_ids.splice(result.destination.index,0 , reordersong);
+    newsong_ids.splice(result.destination.index, 0, reordersong);
 
-    for (var i = 0; i < items.length; i++)
-    {
-      for(var j = 0; j < newsong_ids.length; j++)
-      {
-        if(items[i]._id === newsong_ids[j].song_id)
-        {
+    for (var i = 0; i < items.length; i++) {
+      for (var j = 0; j < newsong_ids.length; j++) {
+        if (items[i]._id === newsong_ids[j].song_id) {
           newsong_ids[j].order = i;
         }
       }
     }
-    newsong_ids.sort(function(a,b){
+    newsong_ids.sort(function (a, b) {
       return a.order - b.order;
     });
-    
+
     let pid = playlistID + "";
-    updatePlaylist(pid, newsong_ids).then((res) =>
-    {
+    updatePlaylist(pid, newsong_ids).then((res) => {
       setCurrSongs(items);
-      setCurrSongIDS(newsong_ids)
-    })
+      setCurrSongIDS(newsong_ids);
+    });
   };
 
   return (
@@ -131,7 +128,8 @@ function PlayListView(props) {
         />
         <h6 id="timestamp">{DEFAULT_VALUE}</h6>
         <h6>
-          {state.currentPlaylist.songs_ids && state.currentPlaylist.songs_ids.length + " "}
+          {state.currentPlaylist.songs_ids &&
+            state.currentPlaylist.songs_ids.length + " "}
           Songs
         </h6>
       </span>
@@ -143,44 +141,48 @@ function PlayListView(props) {
         <hr />
       </span>
       <SongDiv>
-          {currSongs ? 
-            <DragDropContext onDragEnd = {(res) => handleOnDragEnd(res)}>
-            <Droppable droppableId = "songs">
-              {( provided) => (
-              <div id = "inside" {...provided.droppableProps} ref = {provided.innerRef}>
-                {currSongs.map(({song_name,artist_name,_id, SpotifyURI}, index) => 
-                {
-                  return(
-                      <Draggable key = {_id} draggableId = {_id} index = {index}>
+        {currSongs ? (
+          <DragDropContext onDragEnd={(res) => handleOnDragEnd(res)}>
+            <Droppable droppableId="songs">
+              {(provided) => (
+                <div
+                  id="inside"
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {currSongs.map(
+                    ({ song_name, artist_name, _id, SpotifyURI }, index) => {
+                      return (
+                        <Draggable key={_id} draggableId={_id} index={index}>
                           {(provided) => (
-                          <CustomP
-                          {...provided.draggableProps}
-                          ref = {provided.innerRef}
-                          {...provided.dragHandleProps}
-                          >
-                          <SongDisplay
-                          name={song_name} 
-                          artist={artist_name} 
-                          id={_id} 
-                          playlist_id= {playlistID}
-                          uri = {SpotifyURI}
-                          playlist = {currSongs}
-                          type="Playlists" />
-                          </CustomP>
+                            <CustomP
+                              {...provided.draggableProps}
+                              ref={provided.innerRef}
+                              {...provided.dragHandleProps}
+                            >
+                              <SongDisplay
+                                name={song_name}
+                                artist={artist_name}
+                                id={_id}
+                                playlist_id={playlistID}
+                                uri={SpotifyURI}
+                                playlist={currSongs}
+                                type="Playlists"
+                              />
+                            </CustomP>
                           )}
-                      </Draggable>
-                  );
-                })}
-              {provided.placeholder}
-              </div>
+                        </Draggable>
+                      );
+                    }
+                  )}
+                  {provided.placeholder}
+                </div>
               )}
             </Droppable>
-        </DragDropContext>
-
-
-
-          :<p>Loading...</p>}
-
+          </DragDropContext>
+        ) : (
+          <p>Loading...</p>
+        )}
       </SongDiv>
     </StyledDiv>
   );
