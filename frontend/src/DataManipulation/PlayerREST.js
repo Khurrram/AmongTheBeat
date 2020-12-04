@@ -159,7 +159,6 @@ export const resumeSong = async () => {
   )
     .then((ev) => {
       console.log("resuming song");
-      console.log(ev);
     })
     .catch((error) => {
       console.log(error);
@@ -168,6 +167,13 @@ export const resumeSong = async () => {
 };
 
 export const buttonClicked = (playlist, uri) => {
+  console.log("button clicked :" + uri);
+
+  if (playlist === undefined) {
+    playSong(uri);
+    return;
+  }
+
   if (currentPos === 0) {
     loadPlaylist(playlist, uri);
   } else {
@@ -188,14 +194,13 @@ export const pauseSong = async () => {
     }
   )
     .then((ev) => {
-      console.log("pause song: " + ev.body);
-      return true;
+      console.log("pause song: " + ev);
     })
     .catch((error) => {
       console.log(error);
-      return false;
       // ...
     });
+  return "song_paused";
 };
 
 export const playNextSong = () => {
@@ -247,10 +252,6 @@ export const queueSong = (uri) => {
   songQueue.enqueue(uri);
   console.log("queued next song");
 };
-
-// export const getSong = () => {
-//     return playnowSong;
-// }
 
 export const setSong = (song) => {
   setPlayNav(song);
