@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState, useLayoutEffect } from "react";
 import styled from "styled-components";
 import { Router, Switch, Route, useRouteMatch } from "react-router-dom";
 import SideBar from "./Sidebar";
@@ -16,7 +16,8 @@ import { getSessionCookie } from "../CookieHandler";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
 import { PlaylistAdd } from "@material-ui/icons";
-import SettingsView from "../Homepage/SettingView"
+import SettingsView from "../Homepage/SettingView";
+import Axios from "axios";
 
 export const HomeContext = React.createContext();
 
@@ -33,7 +34,7 @@ function Home() {
     changeCurrentPlaylistView,
     removeSongFromPlaylistID,
     addSongToPlaylistID,
-    getValidPlaylists
+    getValidPlaylists,
   } = usePlaylists(session.id);
 
   const contextValue = {
@@ -45,7 +46,7 @@ function Home() {
       changeCurrentPlaylistView,
       removeSongFromPlaylistID,
       addSongToPlaylistID,
-      getValidPlaylists
+      getValidPlaylists,
     },
   };
   return (
@@ -54,8 +55,10 @@ function Home() {
         <SideBar playlists={playlists} />
         <ContentWindow>
           <Navbar>
-            <StyledAvatar>f</StyledAvatar>
-            <StyledSettingIcon onClick={()=>setSettings(true)}/>
+            <StyledAvatar>
+              <SpotifyProfile accessToken={session.accessToken} />
+            </StyledAvatar>
+            <StyledSettingIcon onClick={() => setSettings(true)} />
           </Navbar>
           <ContentWindow>
             {settings && <SettingsView></SettingsView>}
@@ -67,11 +70,11 @@ function Home() {
                 <BrowseView></BrowseView>
               </Route>
 
-              <Route exact path = {`${path}/browse/album`}>
+              <Route exact path={`${path}/browse/album`}>
                 <AlbumPage />
               </Route>
 
-              <Route exact path = {`${path}/likedsongs`}>
+              <Route exact path={`${path}/likedsongs`}>
                 <LikePage />
               </Route>
 
@@ -84,14 +87,13 @@ function Home() {
                 <UserPlaylistView></UserPlaylistView>
               </Route>
 
-              <Route exact path = {`${path}/searchuser`}>
+              <Route exact path={`${path}/searchuser`}>
                 <SearchUsers />
               </Route>
 
-              <Route exact path = {`${path}/searchuser/:ownerID`}>
+              <Route exact path={`${path}/searchuser/:ownerID`}>
                 <SearchUsersPage />
               </Route>
-
             </Switch>
           </ContentWindow>
           <Footer>
@@ -102,6 +104,30 @@ function Home() {
     </HomeContext.Provider>
   );
 }
+
+function SpotifyProfile(props) {
+  const [url, setUrl] = useState("");
+
+  useLayoutEffect(() => {
+    console.log(props);
+    Axios.get("https://api.spotify.com/v1/me", {
+      headers: {
+        Authorization: "Bearer " + props.accessToken,
+      },
+    })
+      .then((response) => {
+        setUrl(response.data.images[0].url);
+        console.log(response.data.images[0].url);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  return <StyledImg src={url} />;
+}
+
+const StyledImg = styled.img`
+  width: 48px;
+`;
 
 const HomeContainer = styled.div`
   height: 100vmin;
@@ -156,8 +182,10 @@ const StyledSettingIcon = styled(SettingsIcon)`
 
 const StyledAvatar = styled(Avatar)`
   &&& {
-    max-height: 40px;
-    max-width: 40px;
+    max-height: 48px;
+    max-width: 48px;
+    height: 48px;
+    width: 48px;
   }
 `;
 
