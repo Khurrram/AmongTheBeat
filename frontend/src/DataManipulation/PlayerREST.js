@@ -133,6 +133,14 @@ export const resumeSong = async () => { //resumes song
     })
 }
 
+export const buttonClicked = (playlist,uri) => {
+    if (currentPos === 0) {
+        loadPlaylist(playlist,uri);
+    } else {
+        resumeSong();
+    }
+    return "song_played";
+}
 
 export const pauseSong = async () => {
     fetch("https://api.spotify.com/v1/me/player/pause?" +
@@ -147,6 +155,7 @@ export const pauseSong = async () => {
         console.log(error);
         // ...
     })
+    return "song_paused";
 }
 
 export const playNextSong = () => { //play next song, dequeue either playlistqueue or songqueue before calling playSong
