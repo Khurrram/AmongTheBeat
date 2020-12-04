@@ -15,7 +15,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
-import { loadPlaylist, pauseSong, queueSong, resumeSong } from "../DataManipulation/PlayerREST"
+import { buttonClicked, pauseSong, queueSong} from "../DataManipulation/PlayerREST"
 import { HomeContext } from "./Home";
 import {addSongToPlaylist} from  "../DataManipulation/PlaylistREST"
 import {findLikedSong, addLikedSong, removeLikedSong} from "../DataManipulation/AccountREST";
@@ -160,9 +160,8 @@ function SongDisplay(props) {
       </Menu>
 
       <SongInfo>
-        <PlayCircleFilledIcon onClick={() => loadPlaylist(playlist,uri)} />
+        <PlayCircleFilledIcon onClick={() => buttonClicked(playlist,uri)} />
         <PauseCircleFilledIcon onClick={() => pauseSong()} />
-        <PlayForWorkIcon onClick={() => resumeSong()} />
         <SongName>{name}</SongName>
         <SongArtist>{artist}</SongArtist>
         <SongTime>{time}</SongTime>
