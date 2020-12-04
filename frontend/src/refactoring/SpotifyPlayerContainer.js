@@ -1,18 +1,8 @@
 import Script from 'react-load-script'
 import React from 'react'
-import { getSessionCookie } from '../CookieHandler'
+import { getSessionCookie, setSessionCookie } from '../CookieHandler'
 
 function SpotifyPlayerContainer() {
-
-    // window.onSpotifyWebPlaybackSDKReady = () => {
-    //     console.log("SDK Callback");
-    //     // const token = '[My Spotify Web API access token]';
-    //     // const player = new Spotify.Player({
-    //     //   name: 'Web Playback SDK Quick Start Player',
-    //     //   getOAuthToken: cb => { cb(token); }
-    //     // });
-    // }
-  
 
     window.onSpotifyWebPlaybackSDKReady = () => {
         console.log("SDK Callback");
@@ -20,7 +10,8 @@ function SpotifyPlayerContainer() {
         const token = session.accessToken;
         const player = new window.Spotify.Player({
             name: 'AmongTheBeat Player',
-            getOAuthToken: cb => { cb(token) }
+            getOAuthToken: cb => { cb(token) },
+            volume: 0.25
         });
 
             // Error handling
@@ -35,6 +26,7 @@ function SpotifyPlayerContainer() {
             // Ready
             player.addListener('ready', ({ device_id }) => {
                 console.log('Ready with Device ID', device_id);
+                setSessionCookie({ id: session.id, username: session.username, accessToken: session.accessToken, deviceID: device_id});
             });
 
             // Not Ready
@@ -49,7 +41,6 @@ function SpotifyPlayerContainer() {
     return (
         <Script 
             url="https://sdk.scdn.co/spotify-player.js"
-            // onLoad={handleScriptLoad}
         />
     )
 }

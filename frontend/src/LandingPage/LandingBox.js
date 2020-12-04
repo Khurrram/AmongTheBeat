@@ -484,15 +484,23 @@ function SpotifyBox(props) {
   const response_type ="code";
   const redirect_uri = "http://localhost:3000/redirect";
   const scope = [
-    "user-read-email",
-    "user-read-private",
-    "user-read-recently-played",
-    "user-read-playback-state",
-    "user-top-read",
-    "user-read-currently-playing",
-    "user-follow-read",
-    "user-library-read",
-    "streaming"
+    'user-read-recently-played',
+    'user-top-read',
+    'user-read-playback-position',
+    'user-read-playback-state',
+    'user-modify-playback-state',
+    'user-read-currently-playing',
+    'streaming',
+    'playlist-modify-public',
+    'playlist-modify-private',
+    'playlist-read-private',
+    'playlist-read-collaborative',
+    'user-follow-modify',
+    'user-follow-read',
+    'user-library-modify',
+    'user-library-read',
+    'user-read-email',
+    'user-read-private'
   ];
   return (
     <CardPanel className="box-dim hoverable">

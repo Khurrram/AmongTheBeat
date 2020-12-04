@@ -5,6 +5,8 @@ import HeartIcon from "@material-ui/icons/Favorite";
 import TrashIcon from "@material-ui/icons/Delete";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
+import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
 import AddIcon from "@material-ui/icons/Add";
 import { Button } from "react-materialize";
 import Modal from "react-modal";
@@ -12,6 +14,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
+import { playSong, pauseSong } from "../DataManipulation/PlayerREST"
 import { HomeContext } from "./Home";
 import {addSongToPlaylist} from  "../DataManipulation/PlaylistREST"
 import {useRouteMatch, useHistory } from "react-router-dom";
@@ -110,6 +113,8 @@ function SongDisplay(props) {
       </Menu>
 
       <SongInfo>
+        <PlayCircleFilledIcon onClick={() => playSong(uri)} />
+        <PauseCircleFilledIcon onClick={() => pauseSong()} />
         <SongName>{name}</SongName>
         <SongArtist>{artist}</SongArtist>
         <SongTime>{time}</SongTime>
