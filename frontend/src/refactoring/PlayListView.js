@@ -164,6 +164,7 @@ function PlayListView(props) {
                           id={_id} 
                           playlist_id= {playlistID}
                           uri = {SpotifyURI}
+                          playlist = {currSongs}
                           type="Playlists" />
                           </CustomP>
                           )}
