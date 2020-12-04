@@ -109,11 +109,11 @@ export const loadPlaylist = (playlist, uri) => {// loads playlist to playlistQue
         }
     }
     playlistQueue.clear();
-    if (index != -1 && index != playlist.length-1) {
-        for (let i = index+1; i < playlist.length; i++) {
+    if (index != -1) {
+        for (let i = index; i < playlist.length; i++) {
             playlistQueue.enqueue(playlist[i].SpotifyURI);
     }
-    playSong(uri);
+    playSong(playlistQueue.dequeue());
 }
 }
 
