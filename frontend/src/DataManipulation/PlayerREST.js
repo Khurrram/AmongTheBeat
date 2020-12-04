@@ -62,7 +62,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     }
 
     if (state) {
-      setSong(state.track_window.current_track.name);
+      setSong(state.track_window.current_track);
     }
 
     if (
@@ -167,17 +167,19 @@ export const resumeSong = async () => {
 };
 
 export const buttonClicked = (playlist, uri) => {
-  console.log("button clicked :" + uri);
-
+  console.log("button clicked :" + playlist);
+  if (uri != currentSong) {
+    currentPos = 0;
+  }
   if (playlist === undefined) {
     playSong(uri);
-    return;
-  }
-
-  if (currentPos === 0) {
-    loadPlaylist(playlist, uri);
+    console.log("playlist undefined");
   } else {
-    resumeSong();
+    if (currentPos === 0) {
+      loadPlaylist(playlist, uri);
+    } else {
+      resumeSong();
+    }
   }
   return "song_played";
 };

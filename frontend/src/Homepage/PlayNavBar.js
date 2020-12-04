@@ -25,10 +25,14 @@ function PlayNavBar(props) {
   const [repeat, setRepeat] = useState(false);
   setSongFunction(setSong);
 
+  useEffect(() => {
+    songActions.setPlayingCurrentSong(song.uri);
+  }, [song]);
+
   return (
     <NavBarInfo>
       <Avatar variant="rounded">D</Avatar>
-      <span>{song}</span>
+      <span>{song.name}</span>
       {songState.playing ? (
         <span>
           <PauseIcon
@@ -48,10 +52,6 @@ function PlayNavBar(props) {
           />
         </span>
       )}
-
-      {/* <span>
-        <PlaylistAddIcon />
-      </span> */}
 
       {repeat ? (
         <span>
