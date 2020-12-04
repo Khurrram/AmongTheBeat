@@ -13,28 +13,13 @@ function Album(props)
     let { path, url } = useRouteMatch();
     let history = useHistory();
 
-    const getSong = async () =>
+    const getSong = () =>
     {
-        const session = getSessionCookie();
-        let accessToken = session.accessToken;
-        console.log("accesstoken:", accessToken)
-        let data2 = {id: playlistid, curraccessToken: accessToken};
-        console.log("here", data2);
 
-        let result = ""
-        await axios.post("http://localhost:5000/api/openalbum",data2)
-            .then(function(res)
-            {
-                result = res.data
-            }).catch((err) => console.log(err));
-
-        console.log("Results: ", result);
         history.push({
-          pathname:`${url}/${result.id}`,
+          pathname:`${url}/album`,
           state: {
-            playlist: result.tracks.items,
-            name: result.name,
-            images: result.images
+            playlistid:  playlistid
           }
         });
 

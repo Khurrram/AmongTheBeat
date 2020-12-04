@@ -3,15 +3,42 @@ import styled from "styled-components";
 import SongDisplay from "./SongDisplay"
 import Avatar from "@material-ui/core/Avatar";
 import { HomeContext } from "./Home";
+import { getSessionCookie } from "../CookieHandler";
 import { Route, useLocation } from "react-router-dom";
+import {openAlbum} from "../DataManipulation/AccountREST"
 
 function AlbumPage(props)
 {
     const { state, actions } = useContext(HomeContext);
     const location = useLocation();
-    let playlists = location.state.playlist;
-    let name = location.state.name;
-    let images = location.state.images;
+    let playlistid = location.state.playlistid;
+
+    const [playlists, setPlaylists] = useState();
+    const [name, setName] = useState("");
+    const [images, setImages] = useState();
+
+    useEffect(() =>
+    {
+      const session = getSessionCookie();
+      let accessToken = session.accessToken;
+      openAlbum(playlistid, accessToken).then((res) =>
+      {
+        let result = res;
+        setPlaylists(result.tracks.items);
+        setName(result.name);
+        setImages(result.images)
+      })
+    },[])
+
+    useEffect(() =>
+    {
+      return( () =>
+      {
+        setPlaylists(null);
+        setName("");
+        setImages(null);
+      })
+    },[])
 
     function artistamt( arr )
     {
@@ -47,7 +74,7 @@ function AlbumPage(props)
         <StyledDiv>
       
         <span>
-        <StylAvatar style={{variant: 'square', height: '5em', width: '5em' }} src = {images[0].url}/>
+        {images ? <StylAvatar style={{variant: 'square', height: '5em', width: '5em' }} src = {images[0].url} /> : <p>Loading...</p>}
             <h1>{name}</h1>
         </span>
         <StyledSpan>
@@ -59,20 +86,23 @@ function AlbumPage(props)
         </span>
         <SongDiv>
             {
+              playlists? 
                 playlists.map((song) => 
                 {
-                    let artists = artistamt(song.track.artists);
-                    return(
-                        <SongDisplay
-                            name = {song.track.name}
-                            artist = {artists}
-                            time = {msToTime(song.track.duration_ms)}
-                            uri = {song.track.uri}
-                            id = {song.track.id}
-                            Browse = {true}
-                        />
-                    );
+                  let artists = artistamt(song.track.artists);
+                  
+                  return(
+                      <SongDisplay
+                          name = {song.track.name}
+                          artist = {artists}
+                          time = {msToTime(song.track.duration_ms)}
+                          uri = {song.track.uri}
+                          id = {song.track.id}
+                          Browse = {true}
+                      />
+                  );
                 })
+                :<p>Loading...</p>
             }
         </SongDiv>
         </StyledDiv>

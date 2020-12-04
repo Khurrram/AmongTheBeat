@@ -176,9 +176,99 @@ app.post("/api/user/likedsongs", (req,res) =>
       if(err){console.log(err)}
       else
       {
-        res.send(user[0])}
+        const arr = user[0].liked_songs
+        songModel.find(
+          {SpotifyURI : {$in: arr}},
+          function(err, song)
+          {
+            if(err){console.log("here", err)}
+            else
+            {
+              res.send(song);
+            }
+          }
+      )}
+  })
+});
+
+app.post("/api/user/findlikedsong", (req,res) =>
+{
+  userModel.find(
+    {_id: req.body.accountID},
+    function(err,user)
+    {
+      if(err){console.log(err)}
+      else
+      {
+        songModel.find(
+          {SpotifyURI : req.body.uri},
+          function(err,song)
+          {
+            if(err){console.log(err)}
+            else{
+              if(song === null || song === undefined || song.length === 0)
+              {
+                res.send("Not Found")
+              }
+              else
+              {
+                const userarr = user[0].liked_songs
+                const currsong = song[0].SpotifyURI;
+                const inLikedSongs = (song) => song === currsong  
+                var ind = userarr.findIndex(inLikedSongs);
+                if(ind === -1){res.send("Not Found")}
+                else{res.send("Found")}
+              }
+            }
+          })
+      }
     }
-    )
+  )
+});
+
+app.post("/api/user/addlikedsong", (req, res) => 
+{
+  let owner_id = req.body.accountID;
+  let songname = req.body.song_name;
+  let artistname = req.body.artist_name;
+  let uri = req.body.uri;
+  let id = new mongoose.Types.ObjectId();
+
+  userModel.findOneAndUpdate(
+    {_id: owner_id},
+    { $push : {liked_songs: uri}},
+    {new: true},
+    function(err,user)
+    {
+      if(err){console.log(err)}
+      
+      songModel.findOne({SpotifyURI : uri}, function (err, song) {
+        if(err){console.log(err)}
+        else if (song === null) {
+          songModel.create({
+            _id: id,
+            song_name: songname,
+            artist_name: artistname,
+            SpotifyURI : uri
+          })
+          res.send("Success")
+        }
+        else
+        {res.send("Success");}
+      })
+  })
+})
+app.post("/api/user/removelikedsong", (req,res) =>
+{
+  userModel.findOneAndUpdate(
+    {_id: req.body.accountID},
+    {$pull : {liked_songs: req.body.uri}},
+    function(err, user)
+    {
+      if(err){console.log(err)}
+      res.send("Success");
+    }
+  )
 })
 
 //POST for creating new playlist

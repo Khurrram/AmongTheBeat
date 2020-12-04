@@ -24,6 +24,14 @@ function SearchSong(props)
         setResults(await searchTracks(search, accessToken ));
     }, [search])
 
+    useEffect(() =>
+    {
+        return(() =>
+        {
+            setResults(null);
+        })
+    },[])
+
     function artistamt( arr )
     {
         if(arr.length === 1){return arr[0].name;}
