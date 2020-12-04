@@ -27,7 +27,7 @@ function Home() {
   const [settings, setSettings] = useState(false);
   const [reload, setReload] = useState(false);
   const [playingCurrentSong, setPlayingCurrentSong] = useState("");
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
   let { path, url } = useRouteMatch();
   const session = getSessionCookie();
   let {
@@ -43,8 +43,8 @@ function Home() {
   } = usePlaylists(session.id);
 
   const songContextValue = {
-    songState: { playingCurrentSong },
-    songActions: { setPlayingCurrentSong },
+    songState: { playingCurrentSong, playing },
+    songActions: { setPlayingCurrentSong, setPlaying },
   };
 
   const contextValue = {
