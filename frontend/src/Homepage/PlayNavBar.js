@@ -28,7 +28,7 @@ function PlayNavBar(props) {
   return (
     <NavBarInfo>
       <Avatar variant="rounded">D</Avatar>
-      <span>{song}</span>
+      <span>{song.name}</span>
       {songState.playing ? (
         <span>
           <PauseIcon

@@ -13,9 +13,7 @@ var previousSong = "";
 var repeat = false;
 var finished = true;
 var setPlayNav;
-// export const setDeviceID = (deviceID) => {
-//     setSessionCookie({ id: session.id, username: session.username, accessToken: session.accessToken, deviceID: deviceID});
-// }
+
 
 window.onSpotifyWebPlaybackSDKReady = () => {
   console.log("SDK Callback");
@@ -62,7 +60,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     }
 
     if (state) {
-      setSong(state.track_window.current_track.name);
+      setSong(state.track_window.current_track);
     }
 
     if (
@@ -168,7 +166,7 @@ export const resumeSong = async () => {
 
 export const buttonClicked = (playlist, uri) => {
   console.log("button clicked :" + playlist);
-  if (uri != currentSong) {
+  if (uri != currentSong || playlist !== undefined) {
     currentPos = 0;
     }
   if (playlist === undefined) {
@@ -255,8 +253,8 @@ export const queueSong = (uri) => {
   console.log("queued next song");
 };
 
-export const setSong = (song) => {
-  setPlayNav(song);
+export const setSong = (track) => {
+  setPlayNav(track);
 };
 
 export const setSongFunction = (func) => {
