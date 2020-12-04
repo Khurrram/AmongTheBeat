@@ -134,6 +134,13 @@ export const resumeSong = async () => { //resumes song
 }
 
 export const buttonClicked = (playlist,uri) => {
+    console.log("button clicked :" + uri);
+
+    if (playlist === undefined) {
+        playSong(uri);
+        return;
+    }
+
     if (currentPos === 0) {
         loadPlaylist(playlist,uri);
     } else {
@@ -150,7 +157,7 @@ export const pauseSong = async () => {
      'Content-Type': 'application/json',
      'Authorization': `Bearer ${session.accessToken}`
     }}).then((ev) => {
-        console.log("pause song: " + ev.body);
+        console.log("pause song: " + ev);
     }).catch((error) => {
         console.log(error);
         // ...
@@ -202,10 +209,6 @@ export const queueSong = (uri) => { //add songs to the SongQueue
     songQueue.enqueue(uri);
     console.log("queued next song");
 };
-
-// export const getSong = () => {
-//     return playnowSong;
-// }
 
 export const setSong = (song) => {
     setPlayNav(song);
