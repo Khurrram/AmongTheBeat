@@ -24,6 +24,7 @@ export const HomeContext = React.createContext();
 
 function Home() {
   const [settings, setSettings] = useState(false);
+  const [reload, setReload] = useState(false);
   let { path, url } = useRouteMatch();
   const session = getSessionCookie();
   let {

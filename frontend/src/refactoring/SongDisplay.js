@@ -7,6 +7,7 @@ import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
+import PlayForWorkIcon from '@material-ui/icons/PlayForWork';
 import AddIcon from "@material-ui/icons/Add";
 import { Button } from "react-materialize";
 import Modal from "react-modal";
@@ -14,7 +15,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
-import { playSong, pauseSong } from "../DataManipulation/PlayerREST"
+import { loadPlaylist, pauseSong, queueSong, resumeSong } from "../DataManipulation/PlayerREST"
 import { HomeContext } from "./Home";
 import {addSongToPlaylist} from  "../DataManipulation/PlaylistREST"
 import {findLikedSong, addLikedSong, removeLikedSong} from "../DataManipulation/AccountREST";
@@ -159,8 +160,9 @@ function SongDisplay(props) {
       </Menu>
 
       <SongInfo>
-        <PlayCircleFilledIcon onClick={() => playSong(uri)} />
+        <PlayCircleFilledIcon onClick={() => loadPlaylist(playlist,uri)} />
         <PauseCircleFilledIcon onClick={() => pauseSong()} />
+        <PlayForWorkIcon onClick={() => resumeSong()} />
         <SongName>{name}</SongName>
         <SongArtist>{artist}</SongArtist>
         <SongTime>{time}</SongTime>
@@ -168,7 +170,7 @@ function SongDisplay(props) {
 
       <SongAction>
         {liked? <LikedHeart onClick = {() => unlikeSong()}/> : <UnlikedHeart onClick = {() => likeSong()}/>}
-        <StyledQueue />
+        <StyledQueue onClick={() => queueSong(uri)} />
         {props.Browse ? (
           <StyledPlaylistAdd onClick={() => toggleModal()} />
         ) : (
