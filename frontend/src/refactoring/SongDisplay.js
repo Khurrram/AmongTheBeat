@@ -166,16 +166,28 @@ function SongDisplay(props) {
 
       <SongInfo>
         {songState.playingCurrentSong === uri ? (
-          <PauseCircleFilledIcon
-            onClick={() => {
-              songActions.setPlayingCurrentSong("");
-              pauseSong();
-            }}
-          />
+          songState.playing ? (
+            <PauseCircleFilledIcon
+              onClick={() => {
+                songActions.setPlayingCurrentSong("");
+                songActions.setPlaying(true);
+                pauseSong();
+              }}
+            />
+          ) : (
+            <PlayCircleFilledIcon
+              onClick={() => {
+                songActions.setPlayingCurrentSong(uri);
+                songActions.setPlaying(false);
+                loadPlaylist(playlist, uri);
+              }}
+            />
+          )
         ) : (
           <PlayCircleFilledIcon
             onClick={() => {
               songActions.setPlayingCurrentSong(uri);
+              songActions.setPlaying(true);
               loadPlaylist(playlist, uri);
             }}
           />
