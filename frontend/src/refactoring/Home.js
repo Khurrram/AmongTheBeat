@@ -15,7 +15,7 @@ import LikePage from "./LikedSongs";
 import { getSessionCookie } from "../CookieHandler";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
-import SpotifyPlayerContainer from './SpotifyPlayerContainer'
+import SpotifyPlayerContainer from "./SpotifyPlayerContainer";
 import { PlaylistAdd } from "@material-ui/icons";
 import SettingsView from "../Homepage/SettingView";
 import Axios from "axios";
