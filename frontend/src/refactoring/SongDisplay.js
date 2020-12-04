@@ -17,7 +17,7 @@ import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
 import { SongContext } from "./Home";
 import {
-  loadPlaylist,
+  buttonClicked,
   pauseSong,
   queueSong,
   resumeSong,
@@ -176,7 +176,7 @@ function SongDisplay(props) {
           <PlayCircleFilledIcon
             onClick={() => {
               songActions.setPlayingCurrentSong(uri);
-              loadPlaylist(playlist, uri);
+              buttonClicked(playlist, uri);
             }}
           />
         )}
