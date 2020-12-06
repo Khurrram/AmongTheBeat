@@ -285,6 +285,13 @@ const StyledTrashCan = styled(TrashIcon)`
 
 const StyledQueue = styled(QueueMusicIcon)`
   margin-right: 1rem;
+
+  color: ${"white"};
+
+  &:hover {
+    color: ${"blue"};
+  }
+}
 `;
 
 const SongArtist = styled.span`

@@ -40,6 +40,7 @@ function Home() {
     removeSongFromPlaylistID,
     addSongToPlaylistID,
     getValidPlaylists,
+    rerender
   } = usePlaylists(session.id);
 
   const songContextValue = {
@@ -57,6 +58,7 @@ function Home() {
       removeSongFromPlaylistID,
       addSongToPlaylistID,
       getValidPlaylists,
+      rerender
     },
   };
   return (

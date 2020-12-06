@@ -256,7 +256,12 @@ const CustomP = styled.p`
 
 const StyledTrash = styled(TrashIcon)`
   margin-left: 1rem;
-  color: white;
+  color: ${"white"}; 
+
+  &:hover {
+    color: ${"blue"};
+  }
+}
 `;
 
 const StyledButton = styled(Button)`

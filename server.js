@@ -294,6 +294,30 @@ app.post("/api/playlist/createPlaylist", (req, res) => {
   res.send(playlist_id);
 });
 
+app.post("/api/playlist/forkplaylist", (req,res) =>
+{
+  let owner_id = req.body.id;
+  let playlist = req.body.playlist;
+  let playlist_id = new mongoose.Types.ObjectId();
+
+  playlistModel.create({
+    _id: playlist_id,
+    playlist_name: playlist.playlist_name,
+    owner_id: owner_id,
+    private: playlist.private, 
+    songs_ids: playlist.songs_ids
+  });
+  userModel.findOneAndUpdate(
+    {_id: owner_id},
+    {$push: {playlists: playlist_id}},
+    function(err,user)
+    {
+      if(err){console.log(err)}
+      else{res.send("Success");}
+    }
+  );
+})
+
 //POST for editing playlist name
 app.post("/api/playlist/editname", (req, res) => {
   let id = req.body.id;

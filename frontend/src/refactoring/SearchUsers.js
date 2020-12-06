@@ -77,7 +77,7 @@ function SearchUsers(props)
                     userplaylists.map( (playlist) =>
                     {
                         return(
-                            <Container onClick = {() => setUsersPage(playlist)}>
+                            <Container onClick = {() => setUsersPage(playlist)} key = {playlist._id}>
                                 <StyledAvatar variant="rounded">{playlist.playlist_name.charAt(0)}</StyledAvatar>
                                 <SongInfo>
                                     <SongName>{playlist.playlist_name}</SongName>

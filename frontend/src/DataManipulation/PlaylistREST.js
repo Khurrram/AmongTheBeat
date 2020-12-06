@@ -136,3 +136,18 @@ export const updatePlaylist = async(playlistID, song_ids) =>
     })
     .catch((err) => {console.log("updatePlaylist Error")});
 }
+
+export const forkPlaylist = async(ownerID, playlist) =>
+{
+  return instance
+    .post("/api/playlist/forkplaylist",
+    {
+      id: ownerID,
+      playlist: playlist
+    })
+    .then((res) =>
+    {
+      return res.data
+    })
+    .catch((err) => {console.log("forkPlaylist ERR")})
+}
