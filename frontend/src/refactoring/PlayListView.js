@@ -248,7 +248,7 @@ const Title = styled.h6`
   grid-row-end: 1;
 `;
 
-const CustomP = styled.p`
+const CustomP = styled.div`
   margin-block-start: 0em;
   margin-block-end: 0em;
   margin-bottom: 0rem;
