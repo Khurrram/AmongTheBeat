@@ -271,6 +271,42 @@ app.post("/api/user/removelikedsong", (req,res) =>
   )
 })
 
+app.post("/api/user/gethistory", (req,res) =>
+{
+  userModel.find(
+    {_id: req.body.accountID},
+    function(err,user)
+    {
+      if(err){console.log(err)}
+      else
+      {
+        let arr = user[0].history //send history of user
+        songModel.find(
+          {SpotifyURI: {$in:arr}},
+          function(err, song)
+          {
+            if(err){console.log(err)}
+            else{res.send(song)}
+          }
+        )
+      }
+    }
+    )
+})
+
+app.post("/api/user/audiofeatures", (req,res) =>
+{
+  spotifyApi.setAccessToken(req.body.accessToken);
+  spotifyApi.getAudioFeaturesForTracks(req.body.tracks)
+    .then(function(data)
+    {
+      res.send(data.body)
+    },function(err)
+    {
+      console.log(err);
+    });
+})
+
 //POST for creating new playlist
 app.post("/api/playlist/createPlaylist", (req, res) => {
   let owner_id = req.body.id;

@@ -78,7 +78,7 @@ function Home() {
               {settings && <SettingsView></SettingsView>}
               <Switch>
                 <Route exact path={`${path}`}>
-                  <HomeDashView></HomeDashView>
+                  <HomeDashView />
                 </Route>
                 <Route exact path={`${path}/browse`}>
                   <BrowseView></BrowseView>
@@ -108,6 +108,7 @@ function Home() {
                 <Route exact path={`${path}/searchuser/:ownerID`}>
                   <SearchUsersPage />
                 </Route>
+
               </Switch>
             </ContentWindow>
             <Footer>

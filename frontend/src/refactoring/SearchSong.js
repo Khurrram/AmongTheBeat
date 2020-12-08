@@ -76,6 +76,7 @@ function SearchSong(props)
                         uri = {track.uri}
                         id = {track.id}
                         Browse = {true}
+                        key = {track.id}
                     />
                 );
             })

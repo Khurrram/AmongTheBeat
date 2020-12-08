@@ -99,6 +99,7 @@ function AlbumPage(props)
                           uri = {song.track.uri}
                           id = {song.track.id}
                           Browse = {true}
+                          key = {song.track.id}
                       />
                   );
                 })

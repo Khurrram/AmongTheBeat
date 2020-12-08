@@ -147,3 +147,27 @@ export const openAlbum = async(playlistID, accessToken) =>
       }).catch((err) => console.log("openAlbum ERR"));
 }
 
+export const getHistory = async(accountID) =>
+{
+  return instance
+    .post("/api/user/gethistory",
+    {accountID: accountID
+    }).then((res) =>
+    {
+      return res.data
+    }).catch((err) => console.log("getHistory ERR"));
+}
+
+export const getAudioFeatures = async(accessToken, tracks) =>
+{
+  return instance
+    .post("/api/user/audiofeatures",
+    {
+      accessToken: accessToken,
+      tracks: tracks
+    }).then((res) =>
+    {
+      return res.data
+    }).catch((err) => console.log("getAudioFeatures ERR"));
+}
+ 
