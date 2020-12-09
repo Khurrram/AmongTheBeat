@@ -163,6 +163,9 @@ function HomeDashView(props) {
           {quote}
         </div>
         
+        //Might also go here if there is nothing in the history array; maybe add like a screen thats says "You currently have no played songs"
+        //"Listen to  some songs to see some data!"
+        //or something like that
         : <p>Loading...</p> }
       </SongDiv>
     </StyledDiv>

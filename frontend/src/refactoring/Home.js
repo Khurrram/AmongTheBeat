@@ -97,7 +97,7 @@ function Home() {
                   path={`${path}/playlist/:playlistID`}
                   component={PlayListView}
                 />
-                <Route exact path={`${path}/user/:userID`}>
+                <Route exact path={`${path}/share/:playlistID`}>
                   <UserPlaylistView></UserPlaylistView>
                 </Route>
 

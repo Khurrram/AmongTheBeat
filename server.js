@@ -446,6 +446,30 @@ app.post("/api/playlist/getowner", (req, res) =>
     );
 })
 
+app.post("/api/playlist/getplaylistowner", (req,res) =>
+{
+  playlistModel.find(
+    {_id: req.body.id},
+    function(err,playlist)
+    {
+      if(err){console.log(err)}
+      else{
+        userModel.find(
+          {_id: playlist[0].owner_id},
+          function(err,user)
+          {
+            if(err){console.log(err)}
+            else{
+              res.send([user[0].username, playlist[0]])
+            }
+          }
+        )
+      }
+    }
+  )
+
+})
+
 //POST for getting playlists of a specific user
 app.post("/api/playlist/getplaylists", (req, res) => {
     let owner_id = req.body.id;
