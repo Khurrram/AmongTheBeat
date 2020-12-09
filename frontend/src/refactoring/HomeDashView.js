@@ -1,10 +1,5 @@
-import React, { useState, useEffect, Suspense, useContext } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import styled from "styled-components";
-import SettingIcon from "@material-ui/icons/Settings";
-import SearchBar from "material-ui-search-bar";
-import { Search } from "@material-ui/icons";
-import testplay from "../data/testsongs.json";
-import axios from "axios";
 import {SessionContext} from "../App"
 import {getHistory, getAudioFeatures} from "../DataManipulation/AccountREST"
 import moodboard from "../data/MoodBoard.json"
@@ -16,6 +11,10 @@ function HomeDashView(props) {
   const session = useContext(SessionContext)
   const [songs, setSongs] = useState();
   const [mood, setMood] = useState();
+  const [quote, setQuote] = useState("");
+
+  const moodRef = useRef(mood);
+  const quoteRef = useRef(quote);
   
   //func that takes only the ID part of the URI
   const getSongIDS = (arr) =>
@@ -32,7 +31,7 @@ function HomeDashView(props) {
   const tallyMood = (arr) =>
   {
     let moodstally = [0,0,0,0,0,0] //an element for each moood (6 total moods)
-    
+
     for(var i = 0; i < arr.length; i++)
     {
       let mood = arr[i]
@@ -57,10 +56,10 @@ function HomeDashView(props) {
           moodstally[5] += 1
           break;
       }
-
-      let maxTally = moodstally.indexOf(Math.max(...moodstally)); //get the index of the mood with the most tallies
-      return maxTally
     }
+
+    let maxTally = moodstally.indexOf(Math.max(...moodstally)); //get the index of the mood with the most tallies
+    return maxTally
 
 
   }
@@ -85,29 +84,30 @@ function HomeDashView(props) {
     for (var j = 0; j < moodarr.length; j++)
     {
       let song = moodarr[j]
-      if(song[0] < mindance[0]) //if the songs danceability is less than the current minimum danceability
+      if(song[0] <= mindance[0]) //if the songs danceability is less than the current minimum danceability
       {
         mindance[0] = song[0] //change the current minimum danceability to the one of song
         mindance[1] = moodboard.moods[j].type //set which mood this danceability came from
       }
-      if(song[1] < minspeech[0]) //for speechiness
+      if(song[1] <= minspeech[0]) //for speechiness
       {
         minspeech[0] = song[1]
         minspeech[1] = moodboard.moods[j].type
       }
-      if(song[2] < minact[0]) //for acousticness
+      if(song[2] <= minact[0]) //for acousticness
       {
         minact[0] = song[2]
         minact[1] = moodboard.moods[j].type
       } 
-      if(song[3] < minlive[0]) //for liveness
+      if(song[3] <= minlive[0]) //for liveness
       {
         minlive[0] = song[3]
         minlive[1] = moodboard.moods[j].type
       }
     }
 
-    let tallyindex = tallyMood([mindance[1], minspeech[1], minact[1], minlive[1]]) //tallyMood takes in the mood 
+    let tallyindex = tallyMood([mindance[1], minspeech[1], minact[1], minlive[1]]) //tallyMood takes in the mood
+
     return moodboard.moods[tallyindex].type
   }
 
@@ -121,6 +121,9 @@ function HomeDashView(props) {
     }
 
     let finalmoodindex = tallyMood(mood)
+
+    quoteRef.current = moodboard.moods[finalmoodindex].quotes[Math.floor(Math.random() * 10)];
+    setQuote(quoteRef.current) //select a random quote from that specific mood
     return moodboard.moods[finalmoodindex].type;
   }
 
@@ -140,8 +143,9 @@ function HomeDashView(props) {
         getAudioFeatures(session.accessToken, songIDS).then((res) =>
         {
           //res contains audio features
-          setMood(getMood(res))
-          console.log(mood)
+          moodRef.current = getMood(res)
+          setMood(moodRef.current)
+          
         })
       }
       
@@ -149,10 +153,18 @@ function HomeDashView(props) {
 
   },[])
 
-
+//mood and quote loaded for you here already
   return (
     <StyledDiv>
-      <h1>DASHBOARD</h1>
+      <SongDiv>
+        {mood && quote? 
+        <div>
+          {mood}
+          {quote}
+        </div>
+        
+        : <p>Loading...</p> }
+      </SongDiv>
     </StyledDiv>
   );
 }

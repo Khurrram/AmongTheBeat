@@ -1,13 +1,107 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./Admin.css";
 import SearchBar from "material-ui-search-bar";
-import userdata from "../data/admintest.json";
-import axios from "axios";
+import {ban,unban,remove, usersList, checkAdmin} from "../DataManipulation/AccountREST"
+import {SessionContext} from "../App"
+import {useHistory } from "react-router-dom";
 
 import styled from "styled-components";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-pro-sidebar/dist/css/styles.css";
-import { get } from "mongoose";
+
+
+
+function Admin() {
+  const [currF, setcurrF] = useState("");
+  const [users, setUsers] = useState([]);
+  const [currS, setcurrS] = useState("");
+  const session = useContext(SessionContext);
+  let history = useHistory();
+
+  useEffect(() =>
+  {
+    checkAdmin(session.id).then((res) =>
+    {
+      if(res === "Not Admin")
+      {
+        history.push("/home")
+      }
+    })
+
+  },[])
+
+  function getData(command) {
+    setcurrF(command);
+    let accountType = 0;
+    if (command == "Unban") {
+      accountType = -1;
+    } else if (command == "Remove") {
+      accountType = 2;
+    }
+    usersList(accountType).then((res) =>
+    {
+      setUsers(res);
+    })
+  }
+
+  function UI_Handler(command, id) {
+    //id used to find the user
+    if (command === "Ban") {
+      ban(id).then((res) =>
+      {
+        alert(res.username + " has been banned.");
+        getData("Ban");
+      })
+    } else if (command === "Unban") {
+      unban(id).then((res) =>
+      {
+        alert(res.username + " has been unbanned.");
+        getData("Unban");
+      })
+    } else {
+      remove(id).then((res) =>
+      {
+        alert(res.username + " has been removed.");
+        getData("Remove");
+      })
+    }
+  }
+
+  return (
+    <CenterDiv className="fullscreen-container">
+      <div id="atxt">Admin</div>
+
+      <div>
+        <Button onClick={(e) => getData("Ban")}>Ban User</Button>
+        <Button onClick={(e) => getData("Unban")}>Unban User</Button>
+        <Button onClick={(e) => getData("Remove")}>Remove User</Button>
+
+        <CenterPanel>
+          <StyledSearch onChange={(val) => setcurrS(val)} />
+          <ResultsPanel>
+            {
+              //go through database and print out people (excluding admin)
+              users.map((user) => {
+                if (user.username.includes(currS)) {
+                  return (
+                    <div key = {user._id}>
+                      {user.username}
+                      <CButton onClick={() => UI_Handler(currF, user._id)}>
+                        {currF}
+                      </CButton>
+                    </div>
+                  );
+                } else {
+                  return null;
+                }
+              })
+            }
+          </ResultsPanel>
+        </CenterPanel>
+      </div>
+    </CenterDiv>
+  );
+}
 
 const Button = styled.button`
   padding: 0.5em;
@@ -60,97 +154,5 @@ const StyledSearch = styled(SearchBar)`
   margin-left: 1em;
   margin-right: 1em;
 `;
-function Admin() {
-  const [currF, setcurrF] = useState("");
-  const [users, setUsers] = useState([]);
-  const [currS, setcurrS] = useState("");
-
-  function getData(command) {
-    setcurrF(command);
-    console.log("getData is called");
-    let accountType = 0;
-    if (command == "Unban") {
-      accountType = -1;
-    } else if (command == "Remove") {
-      accountType = 2;
-    }
-    let data = { accountType };
-    axios
-      .post("http://localhost:5000/api/usersList", data)
-      .then(function (res) {
-        setUsers(res.data);
-      })
-      .catch((err) => console.log(err.data));
-  }
-
-  function UI_Handler(command, id) {
-    //id used to find the user
-    let data = { id: id };
-    if (command === "Ban") {
-      console.log("ban is called");
-      axios
-        .post("http://localhost:5000/api/user/ban", data)
-        .then(function (res) {
-          console.log(res.data);
-          alert(res.data.username + " has been banned.");
-          getData("Ban");
-        })
-        .catch((err) => console.log(err.data));
-    } else if (command === "Unban") {
-      console.log("unban is called");
-      axios
-        .post("http://localhost:5000/api/user/unban", data)
-        .then(function (res) {
-          alert(res.data.username + " has been unbanned.");
-          getData("Unban");
-        })
-        .catch((err) => console.log(err.data));
-    } else {
-      console.log("remove is called");
-      axios
-        .post("http://localhost:5000/api/user/remove", data)
-        .then(function (res) {
-          alert(res.data.username + " has been removed.");
-          getData("Remove");
-        })
-        .catch((err) => console.log(err.data));
-    }
-  }
-
-  return (
-    <CenterDiv className="fullscreen-container">
-      <div id="atxt">Admin</div>
-
-      <div>
-        <Button onClick={(e) => getData("Ban")}>Ban User</Button>
-        <Button onClick={(e) => getData("Unban")}>Unban User</Button>
-        <Button onClick={(e) => getData("Remove")}>Remove User</Button>
-
-        <CenterPanel>
-          <StyledSearch onChange={(val) => setcurrS(val)} />
-          <ResultsPanel>
-            {
-              //go through database and print out people (excluding admin)
-              users.map((user) => {
-                if (user.username.includes(currS)) {
-                  return (
-                    <div>
-                      {user.username}
-                      <CButton onClick={() => UI_Handler(currF, user._id)}>
-                        {currF}
-                      </CButton>
-                    </div>
-                  );
-                } else {
-                  return null;
-                }
-              })
-            }
-          </ResultsPanel>
-        </CenterPanel>
-      </div>
-    </CenterDiv>
-  );
-}
 
 export default Admin;

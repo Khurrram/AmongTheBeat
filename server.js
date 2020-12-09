@@ -99,6 +99,23 @@ app.post("/api/login", (req, res) => {
   );
 });
 
+app.post("/api/checkAdmin", (req,res) =>
+{
+  userModel.find(
+    {_id: req.body.id},
+    function(err,user)
+    {
+      if(err){console.log(err)}
+      else
+      {
+        if(user[0].accountType === 420)
+          {res.send("Admin")}
+        else
+          {res.send("Not Admin")}
+      }
+    }
+  )
+})
 
 app.post("/api/usersList", (req, res) => {
   if (req.body.accountType == 2) {
