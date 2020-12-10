@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import HomePage from "./Homepage/HomePage";
-import MoodPage from "./MoodPage/MoodPage";
 import LandingPage from "./LandingPage/LandingPage";
 import SettingsPage from "./components/Settings";
 import AdminPage from "./components/Admin";
@@ -50,18 +49,7 @@ function App() {
               )
             }
           />
-          <Route path="/landing" exact={true} component={LandingPage} />
-          <Route
-            path="/mood"
-            exact={true}
-            render={() =>
-              !session.username === undefined ? (
-                <Redirect to="/" />
-              ) : (
-                <MoodPage />
-              )
-            }
-          />
+
           <Route
             path="/settings"
             exact={true}

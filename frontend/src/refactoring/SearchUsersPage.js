@@ -2,12 +2,18 @@ import React, {useState, useEffect, useContext, useRef} from 'react'
 import styled from "styled-components";
 import axios from "axios";
 import SongDisplay from "./SongDisplay";
-import {getPlaylists, getPlaylistSongs} from "../DataManipulation/PlaylistREST";
+import {getPlaylists, getPlaylistSongs, forkPlaylist} from "../DataManipulation/PlaylistREST";
 import { Link, useHistory, useLocation, useRouteMatch } from "react-router-dom";
+import MergeTypeIcon from '@material-ui/icons/MergeType';
+import {SessionContext} from "../App"
+import { HomeContext } from "./Home";
 
 function SearchUsersPage(props)
 {
+    const session = useContext(SessionContext);
+    const {state,actions} = useContext(HomeContext);
     const [songs, setSongs] = useState();
+    const [isOwner, setIsOwner] = useState(false)
     const songsRef = useRef(songs);
 
     const location = useLocation();
@@ -22,11 +28,28 @@ function SearchUsersPage(props)
             setSongs(songsRef.current)
         };
         getSongs();
+
     },[])
+
+    useEffect(() =>
+    {
+      if(session.id === playlist.owner_id) //check if playlist can be forked
+        setIsOwner(true);
+    },[])
+
+    const addPlaylist = () =>
+    {
+      forkPlaylist(session.id, playlist).then((res) =>
+      {
+        actions.rerender();
+      })
+    }
+
     return(
         <StyledDiv>
             <span>
                 <h1>{playlist.playlist_name}</h1>
+                {isOwner? <StyledBookmarkDisabled/> : <StyledBookmark onClick = {() => addPlaylist()}/>}
             </span>
 
             <StyledSpan>
@@ -50,6 +73,7 @@ function SearchUsersPage(props)
                             uri = {song.SpotifyURI}
                             id = {song._id}
                             Browse = {true}
+                            key = {song._id}
                         />
                     );
                 })
@@ -120,5 +144,26 @@ const Title = styled.h6`
   grid-column-start: 1;
   grid-row-end: 1;
 `;
+
+const StyledBookmark = styled(MergeTypeIcon)`
+  margin-left: 2rem;
+  transform: scale(2);
+  color: ${"white"}; 
+
+  &:hover {
+    color: ${"blue"};
+  }
+}
+`
+
+const StyledBookmarkDisabled = styled(MergeTypeIcon)`
+  margin-left: 2rem;
+  transform: scale(2);
+  color: ${"grey"}; 
+
+}
+`
+
+
 
 export default SearchUsersPage

@@ -1,0 +1,111 @@
+{
+    "moods":
+    [
+        {
+            "type": "jolly",
+            "danceability": 0.653874,
+            "speechiness": 0.193879,
+            "acousticness": 0.145240,
+            "liveness": 0.464081,
+            "quotes": ["'Thousands of candles can be lighted from a single candle, and the life of the candle will not be shortened. Happiness never decreases by being shared.' – Buddha",
+            "'There is only one way to happiness and that is to cease worrying about things which are beyond the power of our will.' – Epictetus",
+            "'For every minute you are angry you lose sixty seconds of happiness.' – Ralph Waldo Emerson",
+            "'Happiness is when what you think, what you say, and what you do are in harmony.' – Mahatma Gandhi",
+            "'Happiness is not something readymade. It comes from your own actions.' – 14th Dalai Lama",
+            "'We all live with the objective of being happy; our lives are all different and yet the same.' – Anne Frank",
+            "'No one is in control of your happiness but you; therefore, you have the power to change anything about yourself or your life that you want to change.' – Barbara DeAngelis",
+            "'By being yourself you put something wonderful in the world that was not there before.' – Edwin Elliott",
+            "'Be positive. Stay happy and don’t let the negativity of the world get you down.' ― Germany Kent",
+            "'The talent for being happy is appreciating and liking what you have, instead of what you don’t have.' – Woody Allen"]
+        },
+        {
+            "type": "melancholy",
+            "danceability": 0.311,
+            "speechiness": 0.037,
+            "acousticness": 0.731,
+            "liveness": 0.156,
+            "quotes":["'Sadness is but a wall between two gardens.' – Kahlil Gibran",
+            "'Our sweetest songs are those that tell of saddest thought.' – Percy Bysshe Shelley",
+            "'We must understand that sadness is an ocean, and sometimes we drown, while other days we are forced to swim.'– R.M. Drake",
+            "'There are moments when I wish I could roll back the clock and take all the sadness away, but I have the feeling that if I did, the joy would be gone as well.'– Nicholas Sparks",
+            "'Experiencing sadness and anger can make you feel more creative, and by being creative you can get beyond your pain or negativity.'– Yoko Ono",
+            "'Some days are just bad days, that’s all. You have to experience sadness to know happiness, and I remind myself that not every day is going to be a good day, that’s just the way it is!.'– Dita Von Teese",
+            "'There is no greater sorrow than to recall in misery the time when we were happy.'– Dante Alighieri",
+            "'Every man has his secret sorrows which the world knows not; and often times we call a man cold when he is only sad.'– Henry Wadsworth Longfellow",
+            "'Sometimes we get sad about things and we don’t like to tell other people that we are sad about them. We like to keep it a secret. Or sometimes, we are sad but we really don’t know why we are sad, so we say we aren’t sad but we really are.'– Mark Haddon",
+            "'There is some kind of a sweet innocence in being human- in not having to be just happy or just sad- in the nature of being able to be both broken and whole, at the same time.'– C. Joybell"]
+        },
+        {
+            "type": "inspired",
+            "danceability": 0.268,
+            "speechiness": 0.0346,
+            "acousticness": 0.378,
+            "liveness": 0.119,
+            "quotes":["'The Best Way To Get Started Is To Quit Talking And Begin Doing.' – Walt Disney",
+            "'The Pessimist Sees Difficulty In Every Opportunity. The Optimist Sees Opportunity In Every Difficulty.' – Winston Churchill",
+            "'Don’t Let Yesterday Take Up Too Much Of Today.' – Will Rogers",
+            "'You Learn More From Failure Than From Success. Don’t Let It Stop You. Failure Builds Character.' – Unknown",
+            "'It’s Not Whether You Get Knocked Down, It’s Whether You Get Up.' - Vince Lombardi",
+            "'If You Are Working On Something That You Really Care About, You Don’t Have To Be Pushed. The Vision Pulls You.' – Steve Jobs",
+            "'People Who Are Crazy Enough To Think They Can Change The World, Are The Ones Who Do.' – Rob Siltanen",
+            "'Failure Will Never Overtake Me If My Determination To Succeed Is Strong Enough.' – Og Mandino",
+            "'Entrepreneurs Are Great At Dealing With Uncertainty And Also Very Good At Minimizing Risk. That’s The Classic Entrepreneur.' – Mohnish Pabrai",
+            "'We May Encounter Many Defeats But We Must Not Be Defeated.' – Maya Angelou"]
+
+        },
+        {
+            "type": "energized",
+            "danceability": 0.735998,
+            "speechiness": 0.145243,
+            "acousticness": 0.106128,
+            "liveness": 0.135005,
+            "quotes":["'Passion is energy. Feel the power that comes from focusing on what excites you.' - Oprah Winfrey",
+            "'Genuine beginnings begin within us, even when they are brought to our attention by external opportunities.' - William Throsby Bridges",
+            "'The power of imagination makes us infinite.' – John Muir",
+            "'Find out who you are and do it on purpose.' - Dolly Parton",
+            "'The scariest moment is always just before you start.' - Stephen King",
+            "'Write it. Shoot it. Publish it. Crochet it, sauté it, whatever. MAKE.' - Joss Whedon",
+            "'In the end, we are our choices. Build yourself a great story.' - Jeff Bezos",
+            "'My mission in life is not merely to survive, but to thrive; and to do so with some passion, some compassion, some humor, and some style.' - Maya Angelou",
+            "'Don't let the fear of losing be greater than the excitement of winning.' - Robert Kiyosaki",
+            "'How wonderful it is that nobody need wait a single moment before starting to improve the world.' - Anne Frank"]
+
+        },
+        {
+            "type": "relaxed",
+            "danceability": 0.555815,
+            "speechiness": 0.109517,
+            "acousticness": 0.822704,
+            "liveness": 0.182991,
+            "quotes":["'Difficult roads often lead to beautiful destinations. The best is yet to come.' - Zig Ziglar",
+            "'Trust yourself. You've survived a lot, and you'll survive whatever is coming.' - Robert Tew",
+            "'Act the way that you want to feel.' - Gretchen Rubin",
+            "'I promise you nothing is as chaotic as it seems. Nothing is worth diminishing your health. Nothing is worth poisoning yourself into stress, anxiety, and fear.' ― Steve Maraboli",
+            "'There is more to life than increasing its speed.' - Mahatma Gandhi",
+            "'Your mind will answer most questions if you learn to relax and wait for the answer.' - William Burroughs",
+            "'Tension is who you think you should be. Relaxation is who you are.' - Chinese Proverb",
+            "'Keep walking through the storm. Your rainbow is waiting on the other side.' - Heather Stillufsen",
+            "'Our anxiety does not come from thinking about the future, but from wanting to control it.' - Kahlil Gibran",
+            "'Almost everything will work again if you unplug it for a few minutes...Including you.' - Anne Lamott"]
+        },
+        {
+            "type": "flirty",
+            "danceability": 0.740957,
+            "speechiness": 0.174659,
+            "acousticness": 0.441355,
+            "liveness": 0.144303,
+            "quotes":["'I think of you only twice a day ― when I am alone and when I am with someone else.' – Amit Kalantri",
+            "'A day without sunshine is a day without you.' – Kenna",
+            "'I loved you for a thousand years and missed you in all of them.' – Christina Strigas",
+            "'Clever as the Devil and twice as pretty.' – Holly Black",
+            "'For the two of us, home isn’t a place. It is a person. And we are finally home.' – Stephanie Perkins",
+            "'I’m a fish swimming by … catch me if you want me.' – Janet Fitch",
+            "'Forget everything that surrounds you. Think that there’s just you and me in this wide world.' – Olga Goa",
+            "Beauty is power; a smile is its sword. - Charles Reade",
+            "Flirting is a woman's trade, one must keep in practice. - Charlotte Bronte",
+            "I always have many roads to travel, but I take the one which leads to you. - Amit Kalantri"]
+        }
+
+
+    ]
+}

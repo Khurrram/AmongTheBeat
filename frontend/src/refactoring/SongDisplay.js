@@ -23,7 +23,7 @@ import {
   resumeSong,
 } from "../DataManipulation/PlayerREST";
 import { HomeContext } from "./Home";
-import { addSongToPlaylist } from "../DataManipulation/PlaylistREST";
+import { addSongToPlaylist, getValidSongPlaylists } from "../DataManipulation/PlaylistREST";
 import {
   findLikedSong,
   addLikedSong,
@@ -58,20 +58,12 @@ function SongDisplay(props) {
   function toggleModal() {
     setModalIsOpen(!modalIsOpen);
     if (!modalIsOpen) {
-      let data = {
-        id: session.id,
-        song_name: name,
-        artist_name: artist,
-        uri: uri,
-      };
-
-      axios
-        .post("http://localhost:5000/api/song/getplaylists", data)
-        .then(function (res) {
-          setPlaylists(res.data.playlists);
-          setCurrSong(res.data.song);
-        })
-        .catch((err) => console.log(err));
+      getValidSongPlaylists(session.id, name, artist, uri)
+      .then((res) =>
+      {
+        setPlaylists(res.data.playlists);
+        setCurrSong(res.data.song);
+      })
     }
   }
 
@@ -144,7 +136,7 @@ function SongDisplay(props) {
         {/*  JUST SAMPLE FOR TESTING, THIS IS WHERE DATABASE IMPLEMENTATION NEEDS TO BE ADDED */}
         {playlists.map((playlist) => {
           return (
-            <ModalContent onClick={(e) => addtoPlaylist(e, playlist._id, uri)}>
+            <ModalContent onClick={(e) => addtoPlaylist(e, playlist._id, uri)} key = {playlist._id}>
               {playlist.playlist_name}
             </ModalContent>
           );
@@ -285,6 +277,13 @@ const StyledTrashCan = styled(TrashIcon)`
 
 const StyledQueue = styled(QueueMusicIcon)`
   margin-right: 1rem;
+
+  color: ${"white"};
+
+  &:hover {
+    color: ${"blue"};
+  }
+}
 `;
 
 const SongArtist = styled.span`

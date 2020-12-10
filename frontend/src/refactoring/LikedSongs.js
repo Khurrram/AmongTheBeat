@@ -59,6 +59,7 @@ function LikedSongs()
                           Browse = {true}
                           rerender = {rerender}
                           setrerender = {setRerender}
+                          key = {song._id}
                       />
                   );
               })

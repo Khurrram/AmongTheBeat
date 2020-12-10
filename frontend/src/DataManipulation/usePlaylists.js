@@ -78,6 +78,11 @@ const usePlaylists = (userID) => {
     // console.log(currentPlaylist);
   };
 
+  const rerender = () =>
+  {
+    setActionCounter(actionCounter+1);
+  }
+
   useEffect(() => {
     const fetchPlaylists = async () => {
       const response = await getPlaylists(id);
@@ -86,7 +91,7 @@ const usePlaylists = (userID) => {
     fetchPlaylists();
     // console.log("useplaylists");
     // console.log(playlists);
-  }, []);
+  }, [actionCounter]);
 
   return {
     playlists,
@@ -97,7 +102,8 @@ const usePlaylists = (userID) => {
     changeCurrentPlaylistView,
     removeSongFromPlaylistID,
     addSongToPlaylistID,
-    getValidPlaylists
+    getValidPlaylists,
+    rerender
   };
 };
 

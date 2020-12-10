@@ -11,7 +11,7 @@ import Button from "@material-ui/core/Button";
 import axios from "axios";
 import { TextField } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
-import { Link, useHistory, useLocation, useParams } from "react-router-dom";
+import { Link, useHistory, useRouteMatch, useParams } from "react-router-dom";
 import { HomeContext } from "./Home";
 import {
   getPlaylistSongs,
@@ -19,11 +19,19 @@ import {
 } from "../DataManipulation/PlaylistREST";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import SongDisplay from "./SongDisplay";
+import Modal from "react-modal";
+import MergeTypeIcon from '@material-ui/icons/MergeType';
+
+Modal.setAppElement("#root");
 
 function PlayListView(props) {
   const { state, actions } = useContext(HomeContext);
   const { playlistID } = useParams();
   const history = useHistory();
+  let {url} = useRouteMatch();
+  let sharepath = "http://localhost:3000/home/share/" + url.substr(15);
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const [disableTitle, setdisableTitle] = useState(false);
   const [playlistName, setPlaylistName] = useState("");
@@ -53,6 +61,11 @@ function PlayListView(props) {
     };
     fetchSongs();
   }, [state.playlists]);
+
+  function toggleModal() {
+    setModalIsOpen(!modalIsOpen);
+  }
+
 
   const dClick = () => {
     setdisableTitle(false);
@@ -117,7 +130,20 @@ function PlayListView(props) {
           )}
         </div>
 
-        <StyledButton variant="contained" disableElevation onClick={dClick}>
+        <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={toggleModal}
+        contentLabel="Test"
+        style={customStyles}
+      >
+        <ModalHeader>Copy This Link To Share!</ModalHeader>
+            <ModalContent>
+              {sharepath}
+            </ModalContent>
+        </Modal>
+
+
+        <StyledButton variant="contained" disableElevation onClick={() => toggleModal()}>
           Share
         </StyledButton>
         <StyledTrash
@@ -248,7 +274,7 @@ const Title = styled.h6`
   grid-row-end: 1;
 `;
 
-const CustomP = styled.p`
+const CustomP = styled.div`
   margin-block-start: 0em;
   margin-block-end: 0em;
   margin-bottom: 0rem;
@@ -256,7 +282,12 @@ const CustomP = styled.p`
 
 const StyledTrash = styled(TrashIcon)`
   margin-left: 1rem;
-  color: white;
+  color: ${"white"}; 
+
+  &:hover {
+    color: ${"blue"};
+  }
+}
 `;
 
 const StyledButton = styled(Button)`
@@ -282,6 +313,43 @@ const PlayListTitle = styled.input`
   // &:focus {
   //   opacity: 0.8;
   // }
+`;
+
+const customStyles = {
+  overlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
+  },
+  content: {
+    top: "35%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    width: "60%",
+    transform: "translate(-40%, -10%)",
+    background:
+      "linear-gradient(160deg, rgba(49,22,101,1) 59%, rgba(127,60,142,1) 100%)",
+    color: "white",
+  },
+};
+
+const ModalHeader = styled.div`
+  font-size: 24px;
+  padding-bottom: 2em;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+`;
+
+const ModalContent = styled.div`
+  font-size: 15px;
+  padding-bottom: 1em;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  &:hover {
+    background-color: #686868;
+  }
 `;
 
 export default PlayListView;

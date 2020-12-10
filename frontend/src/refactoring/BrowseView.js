@@ -87,7 +87,7 @@ function BrowseView(props) {
       {currPlay && search === false ? 
         currPlay.playlists.items.map((album)=>{
           return (
-            <Album name = {album.name} playlistid = {album.id} images = {album.images[0].url} description = {album.description}/>
+            <Album name = {album.name} playlistid = {album.id} images = {album.images[0].url} description = {album.description} key = {album.id}/>
           );
         })
         :

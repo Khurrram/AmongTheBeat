@@ -40,6 +40,7 @@ function Home() {
     removeSongFromPlaylistID,
     addSongToPlaylistID,
     getValidPlaylists,
+    rerender
   } = usePlaylists(session.id);
 
   const songContextValue = {
@@ -57,6 +58,7 @@ function Home() {
       removeSongFromPlaylistID,
       addSongToPlaylistID,
       getValidPlaylists,
+      rerender
     },
   };
   return (
@@ -76,7 +78,7 @@ function Home() {
               {settings && <SettingsView></SettingsView>}
               <Switch>
                 <Route exact path={`${path}`}>
-                  <HomeDashView></HomeDashView>
+                  <HomeDashView />
                 </Route>
                 <Route exact path={`${path}/browse`}>
                   <BrowseView></BrowseView>
@@ -95,7 +97,7 @@ function Home() {
                   path={`${path}/playlist/:playlistID`}
                   component={PlayListView}
                 />
-                <Route exact path={`${path}/user/:userID`}>
+                <Route exact path={`${path}/share/:playlistID`}>
                   <UserPlaylistView></UserPlaylistView>
                 </Route>
 
@@ -106,6 +108,7 @@ function Home() {
                 <Route exact path={`${path}/searchuser/:ownerID`}>
                   <SearchUsersPage />
                 </Route>
+
               </Switch>
             </ContentWindow>
             <Footer>

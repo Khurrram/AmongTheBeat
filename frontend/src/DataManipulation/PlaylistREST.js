@@ -21,6 +21,18 @@ export const getOwner = async (username) =>
     .catch((err) => {console.log("getOwner Error")})
 }
 
+export const getPlaylistOwner = async(playlistID) =>
+{
+  return instance
+    .post("/api/playlist/getplaylistowner",
+    {
+      id: playlistID
+    }).then((res) =>
+    {
+      return res.data
+    }).catch((err) => console.log("getPlaylistOwner ERR"));
+}
+
 export const createPlaylist = async (accountID) => {
   return instance
     .post("/api/playlist/createPlaylist", { id: accountID })
@@ -135,4 +147,19 @@ export const updatePlaylist = async(playlistID, song_ids) =>
       return res.data;
     })
     .catch((err) => {console.log("updatePlaylist Error")});
+}
+
+export const forkPlaylist = async(ownerID, playlist) =>
+{
+  return instance
+    .post("/api/playlist/forkplaylist",
+    {
+      id: ownerID,
+      playlist: playlist
+    })
+    .then((res) =>
+    {
+      return res.data
+    })
+    .catch((err) => {console.log("forkPlaylist ERR")})
 }

@@ -99,6 +99,7 @@ function AlbumPage(props)
                           uri = {song.track.uri}
                           id = {song.track.id}
                           Browse = {true}
+                          key = {song.track.id}
                       />
                   );
                 })
@@ -149,7 +150,9 @@ const StyledSpan = styled.span`
 const StylAvatar = styled(Avatar)`
   margin-left: 0.5em;
   margin-right: 1em;
-  variant: 'square'
+  margin-bottom: -1em;
+  variant: 'square';
+  transform: scale(1);
 `;
 
 const SongDiv = styled.div`

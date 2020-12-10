@@ -147,3 +147,88 @@ export const openAlbum = async(playlistID, accessToken) =>
       }).catch((err) => console.log("openAlbum ERR"));
 }
 
+export const getHistory = async(accountID) =>
+{
+  return instance
+    .post("/api/user/gethistory",
+    {accountID: accountID
+    }).then((res) =>
+    {
+      return res.data
+    }).catch((err) => console.log("getHistory ERR"));
+}
+
+export const getAudioFeatures = async(accessToken, tracks) =>
+{
+  return instance
+    .post("/api/user/audiofeatures",
+    {
+      accessToken: accessToken,
+      tracks: tracks
+    }).then((res) =>
+    {
+      return res.data
+    }).catch((err) => console.log("getAudioFeatures ERR"));
+}
+
+export const ban = async(ID) =>
+{
+  return instance
+    .post("/api/user/ban", 
+    {
+      id: ID
+    }).then((res) =>
+    {
+      return res.data
+    }).catch((err) => console.log("Ban ERR"));
+    
+}
+export const unban = async(ID) =>
+{
+  return instance
+    .post("/api/user/unban", 
+    {
+      id: ID
+    }).then((res) =>
+    {
+      return res.data
+    }).catch((err) => console.log("Unban ERR"));
+    
+}
+export const remove = async(ID) =>
+{
+  return instance
+    .post("/api/user/remove", 
+    {
+      id: ID
+    }).then((res) =>
+    {
+      return res.data
+    }).catch((err) => console.log("Remove ERR"));
+    
+}
+
+export const usersList = async(accountType) =>
+{
+  return instance
+    .post("/api/usersList",
+    {
+      accountType: accountType
+    }).then((res) =>
+    {
+      return res.data
+    }).catch((err) => console.log("usersList ERR"));
+}
+
+export const checkAdmin = async(id) =>
+{
+  return instance
+    .post("/api/checkAdmin",
+    {
+      id:id
+    }).then((res) =>
+    {
+      return res.data
+    }).catch((err) => console.log("checkAdmin ERR"))
+}
+ 

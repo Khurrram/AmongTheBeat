@@ -99,6 +99,23 @@ app.post("/api/login", (req, res) => {
   );
 });
 
+app.post("/api/checkAdmin", (req,res) =>
+{
+  userModel.find(
+    {_id: req.body.id},
+    function(err,user)
+    {
+      if(err){console.log(err)}
+      else
+      {
+        if(user[0].accountType === 420)
+          {res.send("Admin")}
+        else
+          {res.send("Not Admin")}
+      }
+    }
+  )
+})
 
 app.post("/api/usersList", (req, res) => {
   if (req.body.accountType == 2) {
@@ -271,6 +288,42 @@ app.post("/api/user/removelikedsong", (req,res) =>
   )
 })
 
+app.post("/api/user/gethistory", (req,res) =>
+{
+  userModel.find(
+    {_id: req.body.accountID},
+    function(err,user)
+    {
+      if(err){console.log(err)}
+      else
+      {
+        let arr = user[0].history //send history of user
+        songModel.find(
+          {SpotifyURI: {$in:arr}},
+          function(err, song)
+          {
+            if(err){console.log(err)}
+            else{res.send(song)}
+          }
+        )
+      }
+    }
+    )
+})
+
+app.post("/api/user/audiofeatures", (req,res) =>
+{
+  spotifyApi.setAccessToken(req.body.accessToken);
+  spotifyApi.getAudioFeaturesForTracks(req.body.tracks)
+    .then(function(data)
+    {
+      res.send(data.body)
+    },function(err)
+    {
+      console.log(err);
+    });
+})
+
 //POST for creating new playlist
 app.post("/api/playlist/createPlaylist", (req, res) => {
   let owner_id = req.body.id;
@@ -293,6 +346,30 @@ app.post("/api/playlist/createPlaylist", (req, res) => {
   );
   res.send(playlist_id);
 });
+
+app.post("/api/playlist/forkplaylist", (req,res) =>
+{
+  let owner_id = req.body.id;
+  let playlist = req.body.playlist;
+  let playlist_id = new mongoose.Types.ObjectId();
+
+  playlistModel.create({
+    _id: playlist_id,
+    playlist_name: playlist.playlist_name,
+    owner_id: owner_id,
+    private: playlist.private, 
+    songs_ids: playlist.songs_ids
+  });
+  userModel.findOneAndUpdate(
+    {_id: owner_id},
+    {$push: {playlists: playlist_id}},
+    function(err,user)
+    {
+      if(err){console.log(err)}
+      else{res.send("Success");}
+    }
+  );
+})
 
 //POST for editing playlist name
 app.post("/api/playlist/editname", (req, res) => {
@@ -367,6 +444,30 @@ app.post("/api/playlist/getowner", (req, res) =>
         }
       }
     );
+})
+
+app.post("/api/playlist/getplaylistowner", (req,res) =>
+{
+  playlistModel.find(
+    {_id: req.body.id},
+    function(err,playlist)
+    {
+      if(err){console.log(err)}
+      else{
+        userModel.find(
+          {_id: playlist[0].owner_id},
+          function(err,user)
+          {
+            if(err){console.log(err)}
+            else{
+              res.send([user[0].username, playlist[0]])
+            }
+          }
+        )
+      }
+    }
+  )
+
 })
 
 //POST for getting playlists of a specific user
