@@ -121,7 +121,7 @@ function Home() {
 function SpotifyProfile(props) {
   const [url, setUrl] = useState("");
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     console.log(props);
     Axios.get("https://api.spotify.com/v1/me", {
       headers: {
