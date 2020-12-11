@@ -80,7 +80,7 @@ function PlayNavBar(props) {
 
       {shuffle ? (
         <span>
-          <ShuffleIcon
+          <DisableShuffleIcon
             onClick={() => {
               setShuffle(false);
               noShuffleSong();
@@ -89,7 +89,7 @@ function PlayNavBar(props) {
         </span>
       ) : (
         <span>
-          <ShuffleIcon
+          <EnableShuffleIcon
             onClick={() => {
               setShuffle(true);
               shuffleSong();
@@ -99,10 +99,10 @@ function PlayNavBar(props) {
       )}
 
       <span>
-        <SkipPreviousIcon onClick={() => playPrevSong()} />
+        <StyledPrevious onClick={() => playPrevSong()} />
       </span>
       <span>
-        <SkipNextIcon onClick={() => playNextSong()} />
+        <StyledNext onClick={() => playNextSong()} />
       </span>
 
     </NavBarInfo>
@@ -113,5 +113,45 @@ const NavBarInfo = styled.div`
   display: flex;
   align-items: center;
 `;
+
+const EnableShuffleIcon = styled(ShuffleIcon)`
+
+  color: ${"white"}; 
+
+  &:hover {
+    color: ${"green"};
+  }
+  }
+`
+
+const DisableShuffleIcon = styled(ShuffleIcon)`
+
+  color: ${"green"}; 
+
+  &:hover {
+    color: ${"white"};
+  }
+  }
+`
+
+const StyledPrevious = styled(SkipPreviousIcon)`
+
+  color: ${"white"}; 
+
+  &:hover {
+    color: ${"blue"};
+  }
+  }
+`
+
+const StyledNext = styled(SkipNextIcon)`
+
+  color: ${"white"}; 
+
+  &:hover {
+    color: ${"blue"};
+  }
+  }
+`
 
 export default PlayNavBar;
