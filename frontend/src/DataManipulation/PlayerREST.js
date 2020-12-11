@@ -6,7 +6,6 @@ import { useState } from "react";
 
 const session = getSessionCookie();
 var deviceID = "";
-const playlistQueue = new Queue();
 const songQueue = new Queue();
 var currentSong = "";
 var currentIndex = -1;
@@ -229,7 +228,7 @@ export const playNextSong = () => {
         }
       }
     } else {
-      playSong(songQueue.dequeue());
+      playSong(songQueue.dequeue().uri);
       console.log("Playing next song in Song Queue");
     }
   }
@@ -262,9 +261,9 @@ export const noRepeatSong = () => {
   repeat = false;
 };
 
-export const queueSong = (uri) => {
+export const queueSong = (track) => {
   //add songs to the SongQueue
-  songQueue.enqueue(uri);
+  songQueue.enqueue(track);
   queuedSongs = true;
   console.log("queued next song");
 };
@@ -296,4 +295,15 @@ const addHistory_wrapper = () => {
   let artistname = currentPlaylist[currentIndex].artist_name;
   let uri = currentSong;
   addHistory(accountID,songname,artistname,uri);
+}
+
+export const getQueue = () => {
+  let queue = [];
+  for (let i = 0; i < songQueue.size(); i++) {
+    let temp = songQueue.dequeue();
+    console.log (" song queue : " + temp.song_name)
+    queue.push(temp);
+    songQueue.enqueue(temp);
+  }
+  return queue;
 }
