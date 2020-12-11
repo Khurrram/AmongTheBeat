@@ -89,19 +89,22 @@ function AlbumPage(props)
               playlists? 
                 playlists.map((song) => 
                 {
-                  let artists = artistamt(song.track.artists);
+                  if(song.track !== null)
+                  {
+                    let artists = artistamt(song.track.artists);
                   
-                  return(
-                      <SongDisplay
-                          name = {song.track.name}
-                          artist = {artists}
-                          time = {msToTime(song.track.duration_ms)}
-                          uri = {song.track.uri}
-                          id = {song.track.id}
-                          Browse = {true}
-                          key = {song.track.id}
-                      />
-                  );
+                    return(
+                        <SongDisplay
+                            name = {song.track.name}
+                            artist = {artists}
+                            time = {msToTime(song.track.duration_ms)}
+                            uri = {song.track.uri}
+                            id = {song.track.id}
+                            Browse = {true}
+                            key = {song.track.id}
+                        />
+                    );
+                    }
                 })
                 :<p>Loading...</p>
             }
