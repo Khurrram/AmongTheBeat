@@ -480,27 +480,27 @@ function LoginBox(props) {
 
 function SpotifyBox(props) {
   const auth = "https://accounts.spotify.com/authorize?";
-  const client_id ="6e6168bb4f424095b42f948f1e303b69";
-  const response_type ="code";
+  const client_id = "6e6168bb4f424095b42f948f1e303b69";
+  const response_type = "code";
   const redirect_uri = "http://localhost:3000/redirect";
   const scope = [
-    'user-read-recently-played',
-    'user-top-read',
-    'user-read-playback-position',
-    'user-read-playback-state',
-    'user-modify-playback-state',
-    'user-read-currently-playing',
-    'streaming',
-    'playlist-modify-public',
-    'playlist-modify-private',
-    'playlist-read-private',
-    'playlist-read-collaborative',
-    'user-follow-modify',
-    'user-follow-read',
-    'user-library-modify',
-    'user-library-read',
-    'user-read-email',
-    'user-read-private'
+    "user-read-recently-played",
+    "user-top-read",
+    "user-read-playback-position",
+    "user-read-playback-state",
+    "user-modify-playback-state",
+    "user-read-currently-playing",
+    "streaming",
+    "playlist-modify-public",
+    "playlist-modify-private",
+    "playlist-read-private",
+    "playlist-read-collaborative",
+    "user-follow-modify",
+    "user-follow-read",
+    "user-library-modify",
+    "user-library-read",
+    "user-read-email",
+    "user-read-private",
   ];
   return (
     <CardPanel className="box-dim hoverable">
@@ -513,7 +513,16 @@ function SpotifyBox(props) {
             <Button
               variant="contained"
               className="btn-color"
-              href={auth+"client_id="+client_id+"&redirect_uri="+redirect_uri+"&scope="+scope.join("%20")+"&response_type=token&show_dialog=true"}
+              href={
+                auth +
+                "client_id=" +
+                client_id +
+                "&redirect_uri=" +
+                redirect_uri +
+                "&scope=" +
+                scope.join("%20") +
+                "&response_type=token&show_dialog=true"
+              }
             >
               {" "}
               Log In Through Spotify{" "}
@@ -524,7 +533,6 @@ function SpotifyBox(props) {
     </CardPanel>
   );
 }
-
 
 function LoginButton(props) {
   return (
