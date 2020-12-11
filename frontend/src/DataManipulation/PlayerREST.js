@@ -8,10 +8,12 @@ var deviceID = "";
 const playlistQueue = new Queue();
 const songQueue = new Queue();
 var currentSong = "";
+var currentIndex = -1;
+var currentPlaylist = [];
 var currentPos = 0;
-var previousSong = "";
 var repeat = false;
 var finished = true;
+var queuedSongs = false;
 var setPlayNav;
 
 
@@ -100,6 +102,9 @@ export const finishedSong = () => {
 const playSong = async (uri) => {
   //should set previous song
   currentSong = uri;
+  if (!queuedSongs) {
+    get_currentSong(uri);
+  }
   currentPos = 0;
   console.log("currentsong uri :" + uri);
   fetch(
@@ -122,24 +127,27 @@ const playSong = async (uri) => {
     });
 };
 
-export const loadPlaylist = (playlist, uri) => {
-  // loads playlist to playlistQueue
-  console.log("loadPlaylist: " + playlist[0].SpotifyURI);
-  console.log("currentSong: " + uri);
+const get_currentSong = (uri) => {
   let index = -1;
-  for (let i = 0; i < playlist.length; i++) {
-    if (playlist[i].SpotifyURI == uri) {
+  for (let i = 0; i < currentPlaylist.length; i++) {
+    if (currentPlaylist[i].SpotifyURI == uri) {
       index = i;
       break;
     }
   }
-  playlistQueue.clear();
-  if (index != -1) {
-    for (let i = index; i < playlist.length; i++) {
-      playlistQueue.enqueue(playlist[i].SpotifyURI);
-    }
-    playSong(playlistQueue.dequeue());
+  if (index == -1 ){
+    console.log("Song not found in get_currentSong ERROR!")
+  } else {
+    currentIndex = index;
   }
+}
+
+export const loadPlaylist = (playlist, uri) => {
+  // loads playlist to playlistQueue
+  console.log("loadPlaylist: " + playlist[0]);
+  console.log("currentSong: " + uri);
+  currentPlaylist = playlist;
+  playSong(uri);
 };
 
 export const resumeSong = async () => {
@@ -166,19 +174,17 @@ export const resumeSong = async () => {
 
 export const buttonClicked = (playlist, uri) => {
   console.log("button clicked :" + playlist);
-  if (uri != currentSong || playlist !== undefined) {
-    currentPos = 0;
-  }
-  if (playlist === undefined) {
     playSong(uri);
     console.log("playlist undefined");
-  } else {
-    if (currentPos === 0) {
+    if (currentPlaylist != playlist) { // check if in the same playlist, if it is don't load playlist; if not, load in new playlist
       loadPlaylist(playlist, uri);
     } else {
-      resumeSong();
+      if (currentSong != uri) { // check if a new song is being played in the current playlist
+        playSong(uri);
+      } else {
+        resumeSong(); //if not new song, resume at currentPos
+      }
     }
-  }
   return "song_played";
 };
 
@@ -209,15 +215,14 @@ export const playNextSong = () => {
     playSong(currentSong);
   } else {
     if (songQueue.isEmpty()) {
-      if (playlistQueue.isEmpty()) {
-        console.log("Nothing to play");
+        queuedSongs = false;
+      if (currentIndex == currentPlaylist.length - 1) {
+        console.log("Nothing left to play in playlist");
       } else {
-        previousSong = currentSong;
-        playSong(playlistQueue.dequeue());
+        playSong(currentPlaylist[currentIndex+1].SpotifyURI);
         console.log("Playing next song in playlistQueue");
       }
     } else {
-      previousSong = currentSong;
       playSong(songQueue.dequeue());
       console.log("Playing next song in Song Queue");
     }
@@ -228,10 +233,10 @@ export const playPrevSong = () => {
   if (repeat) {
     playSong(currentSong);
   } else {
-    if (previousSong == "") {
+    if (currentIndex == 0) {
       console.log("No Previous Song");
     } else {
-      playSong(previousSong);
+      playSong(currentPlaylist[currentIndex-1].SpotifyURI);
       console.log("Now playing previous song");
     }
   }
@@ -250,6 +255,7 @@ export const noRepeatSong = () => {
 export const queueSong = (uri) => {
   //add songs to the SongQueue
   songQueue.enqueue(uri);
+  queuedSongs = true;
   console.log("queued next song");
 };
 
@@ -260,3 +266,12 @@ export const setSong = (track) => {
 export const setSongFunction = (func) => {
   setPlayNav = func;
 };
+
+// const addtoFront = (queue, song) => {
+//   temp = queue;
+//   queue.clear();
+//   queue.enqueue(song);
+//   while(!temp.isEmpty()){
+//     queue.enqueue(temp.dequeue());
+//   }
+// }

@@ -57,6 +57,16 @@ function AlbumPage(props)
         }
     }
 
+    function getPlaylist( arr ) {
+      let uris = [];
+      for (let i = 0; i < arr.length; i++) {
+        let data = {name: arr[i].name, SpotifyURI: arr[i].track.uri};
+        uris.push(data);
+      }
+
+      return uris;
+    }
+
     function msToTime(duration) {
         var milliseconds = parseInt((duration % 1000) / 100),
           seconds = Math.floor((duration / 1000) % 60),
@@ -90,7 +100,7 @@ function AlbumPage(props)
                 playlists.map((song) => 
                 {
                   let artists = artistamt(song.track.artists);
-                  
+                  let playlist = getPlaylist(playlists);
                   return(
                       <SongDisplay
                           name = {song.track.name}
@@ -100,6 +110,7 @@ function AlbumPage(props)
                           id = {song.track.id}
                           Browse = {true}
                           key = {song.track.id}
+                          playlist = {playlist}
                       />
                   );
                 })
