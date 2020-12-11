@@ -2,7 +2,7 @@
     "moods":
     [
         {
-            "type": "jolly",
+            "type": "Jolly",
             "danceability": 0.653874,
             "speechiness": 0.193879,
             "acousticness": 0.145240,
@@ -19,7 +19,7 @@
             "'The talent for being happy is appreciating and liking what you have, instead of what you don’t have.' – Woody Allen"]
         },
         {
-            "type": "melancholy",
+            "type": "Melancholy",
             "danceability": 0.311,
             "speechiness": 0.037,
             "acousticness": 0.731,
@@ -36,7 +36,7 @@
             "'There is some kind of a sweet innocence in being human- in not having to be just happy or just sad- in the nature of being able to be both broken and whole, at the same time.'– C. Joybell"]
         },
         {
-            "type": "inspired",
+            "type": "Inspired",
             "danceability": 0.268,
             "speechiness": 0.0346,
             "acousticness": 0.378,
@@ -54,7 +54,7 @@
 
         },
         {
-            "type": "energized",
+            "type": "Energized",
             "danceability": 0.735998,
             "speechiness": 0.145243,
             "acousticness": 0.106128,
@@ -72,7 +72,7 @@
 
         },
         {
-            "type": "relaxed",
+            "type": "Relaxed",
             "danceability": 0.555815,
             "speechiness": 0.109517,
             "acousticness": 0.822704,
@@ -89,7 +89,7 @@
             "'Almost everything will work again if you unplug it for a few minutes...Including you.' - Anne Lamott"]
         },
         {
-            "type": "flirty",
+            "type": "Flirty",
             "danceability": 0.740957,
             "speechiness": 0.174659,
             "acousticness": 0.441355,

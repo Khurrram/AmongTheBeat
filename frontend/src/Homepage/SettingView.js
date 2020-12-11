@@ -46,9 +46,9 @@ function SettingView(props) {
     <SidebarDiv>
       <StyledBackIcon
         fontSize="large"
-        // onClick={() => {
-        //   actions.setSettings(false);
-        // }}
+        onClick={() => {
+          props.toggleSetting(false);
+        }}
       />
       <SettingDiv>
         <AccountDiv>

@@ -18,6 +18,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import SpotifyPlayerContainer from "./SpotifyPlayerContainer";
 import { PlaylistAdd } from "@material-ui/icons";
 import SettingsView from "../Homepage/SettingView";
+import useScript from "../DataManipulation/useScript";
 import Axios from "axios";
 
 export const HomeContext = React.createContext();
@@ -30,6 +31,9 @@ function Home() {
   const [playing, setPlaying] = useState(false);
   let { path, url } = useRouteMatch();
   const session = getSessionCookie();
+
+  useScript("https://sdk.scdn.co/spotify-player.js");
+
   let {
     playlists,
     currentPlaylist,
@@ -40,7 +44,7 @@ function Home() {
     removeSongFromPlaylistID,
     addSongToPlaylistID,
     getValidPlaylists,
-    rerender
+    rerender,
   } = usePlaylists(session.id);
 
   const songContextValue = {
@@ -58,7 +62,7 @@ function Home() {
       removeSongFromPlaylistID,
       addSongToPlaylistID,
       getValidPlaylists,
-      rerender
+      rerender,
     },
   };
   return (
@@ -67,7 +71,7 @@ function Home() {
         <HomeContainer>
           <SideBar playlists={playlists} />
           <ContentWindow>
-            <SpotifyPlayerContainer />
+            {/* <SpotifyPlayerContainer /> */}
             <Navbar>
               <StyledAvatar>
                 <SpotifyProfile accessToken={session.accessToken} />
@@ -75,7 +79,9 @@ function Home() {
               <StyledSettingIcon onClick={() => setSettings(true)} />
             </Navbar>
             <ContentWindow>
-              {settings && <SettingsView></SettingsView>}
+              {settings && (
+                <SettingsView toggleSetting={setSettings}></SettingsView>
+              )}
               <Switch>
                 <Route exact path={`${path}`}>
                   <HomeDashView />
@@ -108,7 +114,6 @@ function Home() {
                 <Route exact path={`${path}/searchuser/:ownerID`}>
                   <SearchUsersPage />
                 </Route>
-
               </Switch>
             </ContentWindow>
             <Footer>
