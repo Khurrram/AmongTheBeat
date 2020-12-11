@@ -57,6 +57,19 @@ function AlbumPage(props)
         }
     }
 
+    function getPlaylist( arr, artists ) {
+      let uris = [];
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].track !== null) {
+
+          let data = {song_name: arr[i].track.name, artist_name: artistamt(arr[i].track.artists), SpotifyURI: arr[i].track.uri};
+          uris.push(data);
+        }
+      }
+
+      return uris;
+    }
+
     function msToTime(duration) {
         var milliseconds = parseInt((duration % 1000) / 100),
           seconds = Math.floor((duration / 1000) % 60),
@@ -89,19 +102,23 @@ function AlbumPage(props)
               playlists? 
                 playlists.map((song) => 
                 {
-                  let artists = artistamt(song.track.artists);
-                  
-                  return(
-                      <SongDisplay
-                          name = {song.track.name}
-                          artist = {artists}
-                          time = {msToTime(song.track.duration_ms)}
-                          uri = {song.track.uri}
-                          id = {song.track.id}
-                          Browse = {true}
-                          key = {song.track.id}
-                      />
-                  );
+                  if(song.track !== null)
+                  {
+                    let artists = artistamt(song.track.artists);
+                    let playlist = getPlaylist(playlists, artists);
+                    return(
+                        <SongDisplay
+                            name = {song.track.name}
+                            artist = {artists}
+                            time = {msToTime(song.track.duration_ms)}
+                            uri = {song.track.uri}
+                            id = {song.track.id}
+                            Browse = {true}
+                            key = {song.track.id}
+                            playlist = {playlist}
+                        />
+                    );
+                    }
                 })
                 :<p>Loading...</p>
             }

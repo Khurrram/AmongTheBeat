@@ -74,6 +74,7 @@ function SearchUsersPage(props)
                             id = {song._id}
                             Browse = {true}
                             key = {song._id}
+                            playlist = {songs}
                         />
                     );
                 })

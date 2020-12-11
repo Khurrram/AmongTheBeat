@@ -18,6 +18,7 @@ function LikedSongs()
       getLikedSongs(session.id).then((res) =>
       {
         setSongs(res);
+        console.log("Favorited Songs: " + res)
       })
       
     },[rerender])
@@ -60,6 +61,7 @@ function LikedSongs()
                           rerender = {rerender}
                           setrerender = {setRerender}
                           key = {song._id}
+                          playlist = {songs}
                       />
                   );
               })
