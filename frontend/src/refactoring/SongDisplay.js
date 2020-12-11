@@ -155,7 +155,13 @@ function SongDisplay(props) {
         </MenuItem>
         <MenuItem onClick={() => handleClose()}>Cancel</MenuItem>
       </Menu>
-
+      {props.Queue? (
+        <SongInfo>
+            <SongName>{name}</SongName>
+            {/* <SongArtist>{artist}</SongArtist> */}
+        </SongInfo>
+        
+        ) : (
       <SongInfo>
         {songState.playingCurrentSong === uri ? (
           songState.playing ? (
@@ -189,6 +195,8 @@ function SongDisplay(props) {
         <SongArtist>{artist}</SongArtist>
         <SongTime>{time}</SongTime>
       </SongInfo>
+      )}
+
 
       <SongAction>
         {liked ? (
@@ -196,8 +204,8 @@ function SongDisplay(props) {
         ) : (
           <UnlikedHeart onClick={() => likeSong()} />
         )}
-        <StyledQueue onClick={() => queueSong(uri)} />
-        {props.Browse ? (
+        {props.Queue ? (null) : (<StyledQueue onClick={() => queueSong({uri: uri, song_name: name, artist_name:artist})} />)}
+        {props.Browse || props.Queue ? (
           <StyledPlaylistAdd onClick={() => toggleModal()} />
         ) : (
           <StyledTrashCan
@@ -340,5 +348,6 @@ const ModalContent = styled.div`
     background-color: #686868;
   }
 `;
+
 
 export default SongDisplay;

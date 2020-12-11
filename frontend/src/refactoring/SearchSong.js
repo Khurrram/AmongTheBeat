@@ -49,6 +49,19 @@ function SearchSong(props)
         }
     }
 
+    function getPlaylist( arr ) {
+        let uris = [];
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].track !== null) {
+  
+            let data = {song_name: arr[i].name, artist_name: artistamt(arr[i].artists), SpotifyURI: arr[i].uri};
+            uris.push(data);
+          }
+        }
+  
+        return uris;
+      }
+
     function msToTime(duration) {
         var milliseconds = parseInt((duration % 1000) / 100),
           seconds = Math.floor((duration / 1000) % 60),
@@ -68,6 +81,7 @@ function SearchSong(props)
             results.tracks.items.map( (track) =>
             {
                 let artists = artistamt(track.artists);
+                let playlist = getPlaylist(results.tracks.items);
                 return(
                     <SongDisplay
                         name = {track.name}
@@ -77,6 +91,7 @@ function SearchSong(props)
                         id = {track.id}
                         Browse = {true}
                         key = {track.id}
+                        playlist = {playlist}
                     />
                 );
             })
