@@ -57,11 +57,14 @@ function AlbumPage(props)
         }
     }
 
-    function getPlaylist( arr ) {
+    function getPlaylist( arr, artists ) {
       let uris = [];
       for (let i = 0; i < arr.length; i++) {
-        let data = {name: arr[i].name, SpotifyURI: arr[i].track.uri};
-        uris.push(data);
+        if (arr[i].track !== null) {
+
+          let data = {song_name: arr[i].track.name, artist_name: artistamt(arr[i].track.artists), SpotifyURI: arr[i].track.uri};
+          uris.push(data);
+        }
       }
 
       return uris;
@@ -102,7 +105,7 @@ function AlbumPage(props)
                   if(song.track !== null)
                   {
                     let artists = artistamt(song.track.artists);
-                    let playlist = getPlaylist(playlists);
+                    let playlist = getPlaylist(playlists, artists);
                     return(
                         <SongDisplay
                             name = {song.track.name}

@@ -275,6 +275,7 @@ app.post("/api/user/addlikedsong", (req, res) =>
       })
   })
 })
+
 app.post("/api/user/removelikedsong", (req,res) =>
 {
   userModel.findOneAndUpdate(
@@ -675,4 +676,49 @@ app.post("/api/song/removefromplaylist", (req, res) => {
         console.log(err);
     } 
   });
+});
+
+app.post("/api/user/addHistory", (req, res) => 
+{
+  let owner_id = req.body.accountID;
+  let songname = req.body.song_name;
+  let artistname = req.body.artist_name;
+  let uri = req.body.uri;
+  let id = new mongoose.Types.ObjectId();
+
+  userModel.findOneAndUpdate(
+    {_id: owner_id},
+    { $push : {history: uri}},
+    {new: true},
+    function(err,user)
+    {
+      if(err){console.log(err)}
+
+      if (user.history.length > 25) {
+        userModel.findOneAndUpdate(
+          {_id: owner_id},
+          { $pop: {history: -1}},
+          {new: true},
+          function(err,user)
+          {
+            if(err){console.log(err)}
+        })
+      }
+      
+      songModel.findOne({SpotifyURI : uri}, function (err, song) {
+        if(err){console.log(err)}
+        else if (song === null) {
+          songModel.create({
+            _id: id,
+            song_name: songname,
+            artist_name: artistname,
+            SpotifyURI : uri
+          })
+          res.send("Success")
+        }
+        else
+        {res.send("Success");}
+      })
+  })
+
 });

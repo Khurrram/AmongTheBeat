@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getSessionCookie, setSessionCookie } from "../CookieHandler";
+import {addHistory} from "./AccountREST";
 import Queue from "queue-fifo";
 import { useState } from "react";
 
@@ -14,6 +15,7 @@ var currentPos = 0;
 var repeat = false;
 var finished = true;
 var queuedSongs = false;
+var shuffle = false;
 var setPlayNav;
 
 
@@ -107,6 +109,7 @@ const playSong = async (uri) => {
   }
   currentPos = 0;
   console.log("currentsong uri :" + uri);
+  addHistory_wrapper();
   fetch(
     "https://api.spotify.com/v1/me/player/play?" + "device_id=" + deviceID,
     {
@@ -174,7 +177,6 @@ export const resumeSong = async () => {
 
 export const buttonClicked = (playlist, uri) => {
   console.log("button clicked :" + playlist);
-    playSong(uri);
     console.log("playlist undefined");
     if (currentPlaylist != playlist) { // check if in the same playlist, if it is don't load playlist; if not, load in new playlist
       loadPlaylist(playlist, uri);
@@ -216,11 +218,15 @@ export const playNextSong = () => {
   } else {
     if (songQueue.isEmpty()) {
         queuedSongs = false;
-      if (currentIndex == currentPlaylist.length - 1) {
-        console.log("Nothing left to play in playlist");
+      if (shuffle) { //shuffle is toggled, play any song from the playlist
+        playSong(currentPlaylist[getRndInteger(0, currentPlaylist.length)].SpotifyURI);
       } else {
-        playSong(currentPlaylist[currentIndex+1].SpotifyURI);
-        console.log("Playing next song in playlistQueue");
+        if (currentIndex == currentPlaylist.length - 1) {
+          console.log("Nothing left to play in playlist");
+        } else {
+          playSong(currentPlaylist[currentIndex+1].SpotifyURI);
+          console.log("Playing next song in playlistQueue");
+        }
       }
     } else {
       playSong(songQueue.dequeue());
@@ -233,11 +239,15 @@ export const playPrevSong = () => {
   if (repeat) {
     playSong(currentSong);
   } else {
-    if (currentIndex == 0) {
-      console.log("No Previous Song");
+    if (shuffle) {
+      playSong(currentPlaylist[getRndInteger(0, currentPlaylist.length)].SpotifyURI);
     } else {
-      playSong(currentPlaylist[currentIndex-1].SpotifyURI);
-      console.log("Now playing previous song");
+      if (currentIndex == 0) {
+        console.log("No Previous Song");
+      } else {
+        playSong(currentPlaylist[currentIndex-1].SpotifyURI);
+        console.log("Now playing previous song");
+      }
     }
   }
 };
@@ -267,11 +277,23 @@ export const setSongFunction = (func) => {
   setPlayNav = func;
 };
 
-// const addtoFront = (queue, song) => {
-//   temp = queue;
-//   queue.clear();
-//   queue.enqueue(song);
-//   while(!temp.isEmpty()){
-//     queue.enqueue(temp.dequeue());
-//   }
-// }
+export const shuffleSong = () => {
+  shuffle = true;
+}
+
+export const noShuffleSong = () => {
+  shuffle = false;
+}
+
+const getRndInteger = (min, max) => {
+  return Math.floor(Math.random() * (max - min) ) + min;
+}
+
+const addHistory_wrapper = () => {
+  let accountID = session.id;
+  console.log("currentTrack :" + currentPlaylist[currentIndex]);
+  let songname = currentPlaylist[currentIndex].song_name;
+  let artistname = currentPlaylist[currentIndex].artist_name;
+  let uri = currentSong;
+  addHistory(accountID,songname,artistname,uri);
+}

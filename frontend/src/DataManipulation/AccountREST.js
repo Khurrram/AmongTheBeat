@@ -232,3 +232,18 @@ export const checkAdmin = async(id) =>
     }).catch((err) => console.log("checkAdmin ERR"))
 }
  
+export const addHistory = (accountID, song_name, artist_name, uri) => {
+  console.log("song name: " + song_name);
+  console.log("artist name: " + artist_name);
+  return instance
+    .post("/api/user/addHistory",
+    {
+      accountID: accountID,
+      song_name: song_name,
+      artist_name: artist_name,
+      uri: uri
+    }).then((res) =>
+    {
+      return res.data;
+    }).catch((err) => console.log("addHistory error"));
+}
