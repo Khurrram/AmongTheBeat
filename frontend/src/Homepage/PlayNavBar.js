@@ -149,7 +149,7 @@ function PlayNavBar(props) {
       </span>
 
         <span>
-          <QueueIcon
+          <StyledQueue
             onClick={() => {
               setQueue(getQueue());
               toggleModal();
@@ -198,6 +198,16 @@ const StyledPrevious = styled(SkipPreviousIcon)`
 `
 
 const StyledNext = styled(SkipNextIcon)`
+
+  color: ${"white"}; 
+
+  &:hover {
+    color: ${"blue"};
+  }
+  }
+`
+
+const StyledQueue = styled(QueueIcon)`
 
   color: ${"white"}; 
 
