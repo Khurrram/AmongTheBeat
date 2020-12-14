@@ -59,7 +59,6 @@ app.post("/api/searchTracks",  (req,res) =>
 
 })
 
-
 app.post("/api/register", (req, res) => {
   userModel.findOne(
     { $or: [{ username: req.body.username }, { email: req.body.email }] },
