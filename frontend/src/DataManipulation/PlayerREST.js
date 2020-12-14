@@ -235,6 +235,31 @@ export const changeVolume = async(volume) =>
     })
 }
 
+export const playbackInfo = async() =>
+{
+  axios.get(
+    "https://api.spotify.com/v1/me/player/currently-playing",
+    {
+      method: "GET",
+      headers:
+      {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.accessToken}`
+      }
+    }
+    )
+    .then((res) =>
+    {
+      console.log(res);
+      return res
+    }).catch((err) =>
+    {
+      console.log("changeVolume ERR");
+    })
+
+
+}
+
 export const playNextSong = () => {
   //play next song, dequeue either playlistqueue or songqueue before calling playSong
   if (repeat) {
