@@ -67,6 +67,7 @@ function PlayNavBar(props) {
                             name = {song.song_name}
                             artist = {song.artist_name}
                             uri = {song.uri}
+                            time = {song.time}
                             Queue = {true}
                             playlist = {queue}
                         />

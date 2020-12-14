@@ -106,7 +106,7 @@ export const findLikedSong = async(accountID, uri) =>
     }).catch((err) => console.log("findLikedSongs ERR"));
 }
 
-export const addLikedSong = async(accountID, name, artist, uri) =>
+export const addLikedSong = async(accountID, name, artist, uri, time) =>
 {
   return instance
     .post("/api/user/addlikedsong",
@@ -114,7 +114,8 @@ export const addLikedSong = async(accountID, name, artist, uri) =>
       accountID: accountID,
       song_name: name,
       artist_name: artist,
-      uri: uri
+      uri: uri,
+      time: time
     }).then((res) =>
     {
       return res.data;
@@ -232,7 +233,7 @@ export const checkAdmin = async(id) =>
     }).catch((err) => console.log("checkAdmin ERR"))
 }
  
-export const addHistory = (accountID, song_name, artist_name, uri) => {
+export const addHistory = (accountID, song_name, artist_name, uri, time) => {
   console.log("song name: " + song_name);
   console.log("artist name: " + artist_name);
   return instance
@@ -241,7 +242,8 @@ export const addHistory = (accountID, song_name, artist_name, uri) => {
       accountID: accountID,
       song_name: song_name,
       artist_name: artist_name,
-      uri: uri
+      uri: uri,
+      time:time
     }).then((res) =>
     {
       return res.data;

@@ -138,7 +138,6 @@ function HomeDashView(props) {
     getHistory(session.id).then((res) => {
       //takes history of songs and returns songs
       //if there is no songs in history it returns an empty array
-      console.log(res);
       if (res.length !== 0) {
         //res contains songs from songModel
         setSongs(res);
@@ -149,7 +148,6 @@ function HomeDashView(props) {
           //res contains audio features
           moodRef.current = getMood(res);
           setAudioFeature(res.audio_features);
-          console.log(res.audio_features);
           setMood(moodRef.current);
         });
       }

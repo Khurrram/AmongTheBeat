@@ -16,6 +16,8 @@ function SearchUsersPage(props)
     const [isOwner, setIsOwner] = useState(false)
     const songsRef = useRef(songs);
 
+    const [totalLength, setTotalLength] = useState("0")
+
     const location = useLocation();
     let playlist = location.state.playlist;
 
@@ -25,6 +27,7 @@ function SearchUsersPage(props)
         {
             let result = await getPlaylistSongs(playlist._id)
             songsRef.current = result.data
+            setTotalLength(getTrackLength(songsRef.current));
             setSongs(songsRef.current)
         };
         getSongs();
@@ -45,12 +48,43 @@ function SearchUsersPage(props)
       })
     }
 
+    const getTrackLength = (arr) =>
+    {
+      let totalsecs = 0
+      for(var i = 0; i < arr.length; i++)
+      {
+        let x = arr[i]
+        let y = x.time.split(":")
+        let secs = (+y[0]) * 60 + (+y[1]);
+        totalsecs += secs;
+      }
+      totalsecs *= 1000
+
+      var seconds = Math.floor((totalsecs / 1000) % 60),
+        minutes = Math.floor((totalsecs / (1000 * 60)) % 60),
+        hours = Math.floor((totalsecs / (1000 * 60 * 60)) % 24);
+    
+      hours = (hours < 10) ? "0" + hours : hours;
+      minutes = (minutes < 10) ? "0" + minutes : minutes;
+      seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+      return hours + ":"  + minutes + ":" + seconds;
+    }
+
     return(
         <StyledDiv>
             <span>
                 <h1>{playlist.playlist_name}</h1>
                 {isOwner? <StyledBookmarkDisabled/> : <StyledBookmark onClick = {() => addPlaylist()}/>}
+
+                <h6 id="timestamp">{totalLength}</h6>
+                <h6>
+                  {playlist.songs_ids.length + " "}
+                  {playlist.songs_ids.length === 1? "Song" : "Songs"}
+                </h6>
+
             </span>
+
 
             <StyledSpan>
                 <Title>Title</Title>
@@ -72,6 +106,7 @@ function SearchUsersPage(props)
                             artist = {song.artist_name}
                             uri = {song.SpotifyURI}
                             id = {song._id}
+                            time = {song.time}
                             Browse = {true}
                             key = {song._id}
                             playlist = {songs}

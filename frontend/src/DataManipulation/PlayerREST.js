@@ -290,11 +290,11 @@ const getRndInteger = (min, max) => {
 
 const addHistory_wrapper = () => {
   let accountID = session.id;
-  console.log("currentTrack :" + currentPlaylist[currentIndex]);
   let songname = currentPlaylist[currentIndex].song_name;
   let artistname = currentPlaylist[currentIndex].artist_name;
   let uri = currentSong;
-  addHistory(accountID,songname,artistname,uri);
+  let time = currentPlaylist[currentIndex].time
+  addHistory(accountID,songname,artistname,uri, time);
 }
 
 export const getQueue = () => {
