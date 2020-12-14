@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useLayoutEffect } from "react";
 import Sketch from "react-p5";
 import randomColor from "randomcolor";
+import { AccessAlarm } from "@material-ui/icons";
 
 const musicHues = [
   "monochrome",
@@ -224,7 +225,7 @@ function rain(p5, num) {
   }
 }
 
-function birds(p5, mode) {
+function birds(p5, mode, acousticness) {
   p5.noStroke();
   // p5.colorMode(p5.HSL, 360, 255, 255, 1);
   if (mode === 0) {
@@ -247,7 +248,7 @@ function birds(p5, mode) {
 
       let yy = p5.height / 8 + y - n * (p5.height / 3) * (1 - ny);
 
-      if (p5.random() > 0.997) {
+      if (p5.random() > 0.99 + Math.abs(acousticness - 1) / 100) {
         // if (true) {
         p5.stroke(0, 0, 0, 1);
         p5.strokeWeight(0.5);
@@ -388,24 +389,37 @@ function MoodSketch(props) {
       stars(p5);
     }
     sun(p5);
-    if (p5.random() < 0.33) {
-      let amt = p5.random([100, 250, 500]);
-      rain(p5, amt);
-    }
-
-    if (p5.random() < 0.5) {
+    // if (p5.random() < 0.33) {
+    //   let amt = p5.random([100, 250, 500]);
+    //   rain(p5, amt);
+    // }
+    if (valence < 0.33) {
+      rain(p5, 500);
       fade(p5, cloudColor2);
-    }
-    if (p5.random() < 0.5) {
+      clouds(p5, cloudColor1);
+    } else if (valence < 0.45) {
+      rain(p5, 250);
+      fade(p5, cloudColor2);
+    } else if (valence < 0.66) {
+      rain(p5, 100);
       clouds(p5, cloudColor1);
     }
+
+    // if (p5.random() < 0.5) {
+    //   fade(p5, cloudColor2);
+    // }
+    // if (p5.random() < 0.5) {
+    //   clouds(p5, cloudColor1);
+    // }
     // if (p5.random() < 0.5) clouds(p5, cloudColor2);
-    if (landN === 2) makeLand(p5, (4 * p5.height) / 6, landColors[2], energy);
+    if (danceability >= 0.5)
+      makeLand(p5, (4 * p5.height) / 6, landColors[3], energy);
     makeLand(p5, p5.height / 2, landColors[0], energy);
-    if (landN >= 1)
+    if (danceability >= 0.3)
       makeLand(p5, (p5.random(1, 2) * p5.height) / 6, landColors[1], energy);
-    if (p5.random() < 0.33) {
-      birds(p5, mode);
+
+    if (acousticness > 0.2) {
+      birds(p5, mode, acousticness);
     }
   }
 
