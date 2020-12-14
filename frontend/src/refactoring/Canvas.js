@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import Sketch from "react-p5";
 import randomColor from "randomcolor";
+import { AccessAlarm } from "@material-ui/icons";
 
 const musicHues = [
   "monochrome",
@@ -60,12 +61,19 @@ let sunSize;
 let sunRange;
 let sunPos;
 
+let landN;
+
 var i, j;
 
 let landColors;
 
 let backgroundColor1;
 let backgroundColor2;
+
+let cloudColor1;
+let cloudColor2;
+
+let rainColor;
 
 const X_AXIS = 2;
 const Y_AXIS = 1;
@@ -89,7 +97,6 @@ function stars(p5) {
 }
 
 function makeLand(p5, level, landColor, energy) {
-  // mountains based on this openprocessing sketch: https://www.openprocessing.org/sketch/179401
   p5.noStroke();
   p5.fill(landColor);
   p5.stroke(landColor);
@@ -155,17 +162,18 @@ function setGradient(p5, x, y, w, h, c1, c2, axis) {
   }
 }
 
-function fade(p5) {
+function fade(p5, color) {
   for (let i = 0; i < p5.height / 3; i++) {
     let alfa = p5.map(i, 0, p5.height / 3, 360, 0);
 
     p5.strokeWeight(1);
-    p5.stroke(200, alfa);
+    p5.stroke([color[0], color[1], color[2], alfa]);
     p5.line(0, i, p5.width, i);
   }
 }
 
-function clouds(p5) {
+function clouds(p5, color) {
+  console.log(color);
   let begin = p5.random(50); //changes the begin of noise each time
 
   let i = 0;
@@ -179,7 +187,7 @@ function clouds(p5) {
       alfa = p5.map(alfa, 0.4, 1, 0, alfaMax);
 
       p5.noStroke();
-      p5.fill(222, alfa);
+      p5.fill([color[0], color[1], color[2], alfa]);
       p5.ellipse(x, y, 2, 2);
 
       j += 0.06; //increase j faster than i so the clouds look horizontal
@@ -206,22 +214,77 @@ function frequent(arr1) {
   return item;
 }
 
+function rain(p5, num) {
+  for (let i = 0; i < num; i++) {
+    let x = p5.random(p5.width);
+    let y = p5.random(p5.height / 1.6);
+
+    p5.noStroke();
+    p5.fill(cloudColor2);
+    p5.rect(x, y, p5.random(0.3, 1.2), p5.random(2, 6) * 3);
+  }
+}
+
+function birds(p5, mode, acousticness) {
+  p5.noStroke();
+  // p5.colorMode(p5.HSL, 360, 255, 255, 1);
+  if (mode === 0) {
+    p5.colorMode(p5.HSL, 255, 0, 100);
+  } else {
+    p5.colorMode(p5.HSL, 360, 255, 255, 1);
+  }
+  for (let y = 0; y < p5.height / 3; y += 16) {
+    let ny = y / p5.height;
+    for (let x = 0; x < p5.width; x += 3) {
+      let nx = x / p5.width;
+      let nox = p5.noise(nx * 2, ny * 8);
+      let nox2 = p5.noise(nx, ny);
+      let nox3 = p5.noise(nx / 8, ny / 8);
+      let n =
+        ((p5.sin(nx * p5.PI * 4 + ny * p5.PI * 6 + nox * p5.PI * 0.15) +
+          p5.cos(ny * p5.PI * 10 * nox3 + nx * p5.PI * 2)) /
+          2) *
+        nox2;
+
+      let yy = p5.height / 8 + y - n * (p5.height / 3) * (1 - ny);
+
+      if (p5.random() > 0.99 + Math.abs(acousticness - 1) / 100) {
+        // if (true) {
+        p5.stroke(0, 0, 0, 1);
+        p5.strokeWeight(0.5);
+        let tx = x + p5.random(1, 6);
+        let ty = yy + p5.random(1, 6);
+        p5.line(x, yy, tx, ty);
+        p5.line(
+          tx,
+          ty,
+          tx + p5.random(1, 6) * (1 - ny),
+          ty - p5.random(1, 4) * (1 - ny)
+        );
+      }
+    }
+  }
+}
+
 function MoodSketch(props) {
-  const [danceability, setDanceability] = useState(0);
+  const [danceability, setDanceability] = useState(0.0);
   const [key, setKey] = useState([]);
-  const [loudness, setLoudness] = useState(0);
-  const [valence, setValence] = useState(0);
-  const [tempo, setTempo] = useState(0);
-  const [mode, setMode] = useState(0);
-  const [energy, setEnergy] = useState(0);
-  const [speechiness, setSpeechiness] = useState(0);
-  const [acousticness, setAcousticness] = useState(0);
-  const [instrumentalness, setInstrumentalness] = useState(0);
-  const [liveness, setLiveness] = useState(0);
+  const [loudness, setLoudness] = useState(0.0);
+  const [valence, setValence] = useState(0.0);
+  const [tempo, setTempo] = useState(0.0);
+  const [mode, setMode] = useState(0.0);
+  const [energy, setEnergy] = useState(0.0);
+  const [speechiness, setSpeechiness] = useState(0.0);
+  const [acousticness, setAcousticness] = useState(0.0);
+  const [instrumentalness, setInstrumentalness] = useState(0.0);
+  const [liveness, setLiveness] = useState(0.0);
   const [loading, setLoading] = useState(false);
 
   function setup(p5, canvasParentRef) {
+    p5.smooth();
     let valenceColor = musicHues[Math.round(p5.map(valence, 0.0, 1.0, 0, 7))];
+
+    landN = p5.random([0, 1, 2]);
 
     if (mode == 1) {
       // Major mode --- DAY
@@ -236,6 +299,25 @@ function MoodSketch(props) {
           luminosity: "light",
         })
       );
+
+      cloudColor1 = randomColor({
+        luminosity: "light",
+        hue: valenceColor,
+        format: "rgbArray",
+      });
+
+      cloudColor2 = randomColor({
+        luminosity: "light",
+        format: "rgbArray",
+      });
+
+      rainColor = p5.color(
+        randomColor({
+          luminosity: "light",
+          hue: valenceColor,
+        })
+      );
+
       // Large yellow sun
       sunColors = randomColor({
         hue: "yellow",
@@ -256,6 +338,23 @@ function MoodSketch(props) {
       backgroundColor2 = p5.color(
         randomColor({
           luminosity: "dark",
+        })
+      );
+
+      cloudColor1 = randomColor({
+        luminosity: "light",
+        hue: valenceColor,
+        format: "rgbArray",
+      });
+      cloudColor2 = randomColor({
+        luminosity: "light",
+        format: "rgbArray",
+      });
+
+      rainColor = p5.color(
+        randomColor({
+          luminosity: "dark",
+          hue: valenceColor,
         })
       );
       // Small monochrome moon
@@ -282,63 +381,49 @@ function MoodSketch(props) {
     });
 
     p5.createCanvas(900, 500).parent(canvasParentRef);
-    sunColors = randomColor({
-      hue: "yellow",
-      count: 2,
-    });
-    sunSize = p5.random(200, 300);
-    sunRange = p5.random(20, 50);
-    p5.noLoop();
-    // p5.frameRate(30);
     setGradient(p5, 0, 0, 900, 500, backgroundColor1, backgroundColor2, Y_AXIS);
   }
 
   function draw(p5) {
-    if (mode === 0) stars(p5);
-    console.log(mode);
+    if (mode === 0) {
+      stars(p5);
+    }
     sun(p5);
-    fade(p5);
-    clouds(p5);
-    makeLand(p5, p5.height / 2, landColors[0], energy);
-    // p5.fill(255);
-    // p5.stroke(1);
-    // // //We are going to draw a polygon out of the wave points
-    // p5.beginShape();
-
-    // let xoff = 0; // Option #1: 2D Noise
-    // // let xoff = yoff; // Option #2: 1D Noise
-    // for (let j = 0; j < 3; j++) {
-    //   let offsety = j * 85;
-    //   // Iterate over horizontal pixels
-    //   for (let x = 0; x <= p5.width; x += 10) {
-    //     // Calculate a y value according to noise, map to
-
-    //     // Option #1: 2D Noise
-    //     let y = p5.map(
-    //       p5.noise(xoff, yoff),
-    //       0,
-    //       1,
-    //       200 + offsety,
-    //       300 + offsety
-    //     );
-
-    //     // Option #2: 1D Noise
-    //     // let y = map(noise(xoff), 0, 1, 200,300);
-
-    //     // Set the vertex
-    //     p5.vertex(x, y + 50);
-    //     // Increment x dimension for noise
-    //     xoff += 0.1;
-    //   }
-    //   // increment y dimension for noise
-    //   yoff += 0.01;
-    //   p5.vertex(p5.width, p5.height);
-    //   p5.vertex(0, p5.height);
-    //   p5.endShape();
+    // if (p5.random() < 0.33) {
+    //   let amt = p5.random([100, 250, 500]);
+    //   rain(p5, amt);
     // }
+    if (valence < 0.33) {
+      rain(p5, 500);
+      fade(p5, cloudColor2);
+      clouds(p5, cloudColor1);
+    } else if (valence < 0.45) {
+      rain(p5, 250);
+      fade(p5, cloudColor2);
+    } else if (valence < 0.66) {
+      rain(p5, 100);
+      clouds(p5, cloudColor1);
+    }
+
+    // if (p5.random() < 0.5) {
+    //   fade(p5, cloudColor2);
+    // }
+    // if (p5.random() < 0.5) {
+    //   clouds(p5, cloudColor1);
+    // }
+    // if (p5.random() < 0.5) clouds(p5, cloudColor2);
+    if (danceability >= 0.5)
+      makeLand(p5, (4 * p5.height) / 6, landColors[3], energy);
+    makeLand(p5, p5.height / 2, landColors[0], energy);
+    if (danceability >= 0.3)
+      makeLand(p5, (p5.random(1, 2) * p5.height) / 6, landColors[1], energy);
+
+    if (acousticness > 0.2) {
+      birds(p5, mode, acousticness);
+    }
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setLoading(false);
     props.trackFeatures.forEach(function (p1, p2, p3) {
       setDanceability((prev) => prev + p1.danceability);
@@ -353,6 +438,7 @@ function MoodSketch(props) {
       setInstrumentalness((prev) => prev + p1.instrumentalness);
       setLiveness((prev) => prev + p1.liveness);
     });
+
     setDanceability((prev) => prev / props.trackFeatures.length);
     setKey((prev) => frequent(prev));
     setLoudness((prev) => prev / props.trackFeatures.length);
