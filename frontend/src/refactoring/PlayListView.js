@@ -37,9 +37,12 @@ function PlayListView(props) {
   const [playlistName, setPlaylistName] = useState("");
 
   const playlistTitle = useRef(null);
+  
+  const [totalLength, setTotalLength] = useState("0")
 
   const [currSongs, setCurrSongs] = useState();
   const [currSongIDS, setCurrSongIDS] = useState(
+
     state.currentPlaylist.songs_ids
   );
 
@@ -57,6 +60,7 @@ function PlayListView(props) {
   useEffect(() => {
     const fetchSongs = async () => {
       const response = await getPlaylistSongs(playlistID);
+      setTotalLength(getTrackLength(response.data));
       setCurrSongs(response.data);
     };
     fetchSongs();
@@ -66,6 +70,28 @@ function PlayListView(props) {
     setModalIsOpen(!modalIsOpen);
   }
 
+  const getTrackLength = (arr) =>
+  {
+    let totalsecs = 0
+    for(var i = 0; i < arr.length; i++)
+    {
+      let x = arr[i]
+      let y = x.time.split(":")
+      let secs = (+y[0]) * 60 + (+y[1]);
+      totalsecs += secs;
+    }
+    totalsecs *= 1000
+
+    var seconds = Math.floor((totalsecs / 1000) % 60),
+      minutes = Math.floor((totalsecs / (1000 * 60)) % 60),
+      hours = Math.floor((totalsecs / (1000 * 60 * 60)) % 24);
+  
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    return hours + ":"  + minutes + ":" + seconds;
+  }
 
   const dClick = () => {
     setdisableTitle(false);
@@ -152,11 +178,11 @@ function PlayListView(props) {
             history.push("/home");
           }}
         />
-        <h6 id="timestamp">{DEFAULT_VALUE}</h6>
+        <h6 id="timestamp">{totalLength}</h6>
         <h6>
           {state.currentPlaylist.songs_ids &&
             state.currentPlaylist.songs_ids.length + " "}
-          Songs
+          {state.currentPlaylist.songs_ids.length === 1? "Song" : "Songs"}
         </h6>
       </span>
       <StyledSpan>
@@ -177,7 +203,8 @@ function PlayListView(props) {
                   ref={provided.innerRef}
                 >
                   {currSongs.map(
-                    ({ song_name, artist_name, _id, SpotifyURI }, index) => {
+                    ({ song_name, artist_name, _id, SpotifyURI, time }, index) => {
+
                       return (
                         <Draggable key={_id} draggableId={_id} index={index}>
                           {(provided) => (
@@ -192,6 +219,7 @@ function PlayListView(props) {
                                 id={_id}
                                 playlist_id={playlistID}
                                 uri={SpotifyURI}
+                                time = {time}
                                 playlist={currSongs}
                                 type="Playlists"
                               />

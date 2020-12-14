@@ -14,6 +14,7 @@ function UserPlaylistView(props) {
   const [playlist, setPlaylist] = useState();
   const [playlistName, setPlaylistName] = useState()
   const [isOwner, setIsOwner] = useState(false)
+  const [totalLength, setTotalLength] = useState("0")
 
   let {url} = useRouteMatch();
   let playlistID = url.substr(12); 
@@ -26,12 +27,14 @@ function UserPlaylistView(props) {
       console.log(res)
       setUsername(res[0])
       setPlaylistName(res[1].playlist_name)
+     
       setPlaylist(res[1])
       if(res[1].owner_id === session.id)
       {setIsOwner(true)}
 
       getPlaylistSongs(playlistID).then((res2) =>
       {
+        setTotalLength(getTrackLength(res2.data));
         setcurrPlay(res2.data)
       })
     })
@@ -45,11 +48,40 @@ function UserPlaylistView(props) {
     })
   }
 
+  const getTrackLength = (arr) =>
+    {
+      let totalsecs = 0
+      for(var i = 0; i < arr.length; i++)
+      {
+        let x = arr[i]
+        let y = x.time.split(":")
+        let secs = (+y[0]) * 60 + (+y[1]);
+        totalsecs += secs;
+      }
+      totalsecs *= 1000
+
+      var seconds = Math.floor((totalsecs / 1000) % 60),
+        minutes = Math.floor((totalsecs / (1000 * 60)) % 60),
+        hours = Math.floor((totalsecs / (1000 * 60 * 60)) % 24);
+    
+      hours = (hours < 10) ? "0" + hours : hours;
+      minutes = (minutes < 10) ? "0" + minutes : minutes;
+      seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+      return hours + ":"  + minutes + ":" + seconds;
+    }
+
   return (
     <StyledDiv>
       <span>
         <h1>{username && playlistName? playlistName + " by " + username : "" }</h1>
         {isOwner? <StyledBookmarkDisabled/> : <StyledBookmark onClick = {() => addPlaylist()}/>}
+
+        <StyledH id="timestamp">{totalLength}</StyledH>
+        <h6>
+          {playlist ? playlist.songs_ids.length + " ": ""}
+          {playlist ? playlist.songs_ids.length === 1? "Song" : "Songs" : ""}
+        </h6>
       </span>
       <StyledSpan>
         <Title>Title</Title>
@@ -68,6 +100,7 @@ function UserPlaylistView(props) {
                 id={song._id}
                 playlist_id={playlistID}
                 uri={song.SpotifyURI}
+                time = {song.time}
                 playlist={currPlay}
                 Browse = {true}
                 key = {song._id}
@@ -138,6 +171,7 @@ const SongDiv = styled.div`
 
 const StyledBookmark = styled(MergeTypeIcon)`
   margin-left: 2rem;
+  margin-right: 2rem;
   transform: scale(2);
   color: ${"white"}; 
 
@@ -149,10 +183,14 @@ const StyledBookmark = styled(MergeTypeIcon)`
 
 const StyledBookmarkDisabled = styled(MergeTypeIcon)`
   margin-left: 2rem;
+  margin-right: 2rem;
   transform: scale(2);
   color: ${"grey"}; 
 
 }
+`
+const StyledH = styled.h6`
+  margin-right: 2rem;
 `
 
 export default UserPlaylistView;

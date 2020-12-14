@@ -12,6 +12,11 @@ import ShuffleIcon from '@material-ui/icons/Shuffle';
 import SongDisplay from "../refactoring/SongDisplay";
 import Modal from "react-modal";
 import QueueIcon from '@material-ui/icons/Queue';
+import Slider from '@material-ui/core/Slider';
+import VolumeUp from '@material-ui/icons/VolumeUp';
+import VolumeDownIcon from '@material-ui/icons/VolumeDown';
+import VolumeOffIcon from '@material-ui/icons/VolumeOff';
+import Grid from '@material-ui/core/Grid';
 
 import {
   setSongFunction,
@@ -23,19 +28,27 @@ import {
   pauseSong,
   shuffleSong,
   noShuffleSong,
-  getQueue
+  getQueue,
+  changeVolume,
+  playbackInfo
 } from "../DataManipulation/PlayerREST";
 import { SongContext } from "../refactoring/Home";
+import { makeStyles } from "@material-ui/core";
 
 Modal.setAppElement("#root");
 
 function PlayNavBar(props) {
+  const classes = useStyles()
   const [song, setSong] = useState("");
   const { songState, songActions } = useContext(SongContext);
   const [repeat, setRepeat] = useState(false);
   const [shuffle, setShuffle] = useState(false);
   const [modal, setModal] = useState(false);
   const [queue, setQueue] = useState([]);
+  const [volume, setVolume] = useState(50);
+  const [previousVolume, setPreviousVolume] = useState(volume);
+  const [currentTime, setCurrentTime] = useState(0);
+
   setSongFunction(setSong);
 
   function toggleModal() {
@@ -45,6 +58,52 @@ function PlayNavBar(props) {
   useEffect(() => {
     songActions.setPlayingCurrentSong(song.uri);
   }, [song]);
+
+  // const changeTime = async() =>
+  // {
+  //   // playbackInfo().then((res) =>
+  //   // {
+  //   //   console.log(res);
+  //   //   setCurrentTime(currentTime+1);
+  //   // })
+
+  //   let x = await playbackInfo();
+  //   console.log(x);
+  //   setCurrentTime(currentTime+1);
+  // }
+
+  // useEffect(() =>
+  // {
+  //   setTimeout(() => changeTime(), 10000)
+
+  // }, [currentTime])
+
+  // useEffect(() =>
+  // {
+  //   return(() =>
+  //   {
+  //     changeTime(0);
+  //   })
+  // },[])
+
+  const handleVolumeChange = (event, newvolume) =>
+  {
+    setVolume(newvolume);
+    changeVolume(newvolume);
+  }
+
+  const muteVolume = () =>
+  {
+    setVolume(0);
+    setPreviousVolume(volume);
+    changeVolume(0)
+  }
+
+  const unmuteVolume = () =>
+  {
+    setVolume(previousVolume);
+    changeVolume(previousVolume);
+  }
 
   return (
     <NavBarInfo>
@@ -67,6 +126,7 @@ function PlayNavBar(props) {
                             name = {song.song_name}
                             artist = {song.artist_name}
                             uri = {song.uri}
+                            time = {song.time}
                             Queue = {true}
                             playlist = {queue}
                         />
@@ -158,6 +218,28 @@ function PlayNavBar(props) {
           />
         </span>
 
+        <span>
+          <Slider 
+            className = {classes.root2}
+          
+          
+          />
+        </span>
+
+        <div>
+          {volume === 0 ? <StyledVolumeMute onClick = {() => unmuteVolume()}/> : volume >= 50 ? <StyledVolumeUp onClick = {() => muteVolume()}/> : <StyledVolumeDown onClick = {() => muteVolume()}/>}
+
+          <StyledSlider
+            className = {classes.root}
+            value = {volume}
+            onChange = {(e,vol) => setVolume(vol)}
+            aria-labelledby="continuous-slider"
+            onChangeCommitted = {handleVolumeChange}
+          />
+        </div>
+
+        
+
     </NavBarInfo>
   );
 }
@@ -216,6 +298,50 @@ const StyledQueue = styled(QueueIcon)`
   }
   }
 `
+const StyledSlider = styled(Slider)`
+  
+  display: inline-block;
+  float:left;
+`
+const StyledVolumeUp = styled(VolumeUp)`
+  
+  
+  display: inline-block;
+  float:left;
+  margin-left: 4em;
+  color: ${"white"}; 
+
+  &:hover {
+    color: ${"blue"};
+  }
+  }
+  
+`
+const StyledVolumeDown = styled(VolumeDownIcon)`
+  display: inline-block;
+  float:left;
+  margin-left: 4em;
+  color: ${"white"}; 
+
+  &:hover {
+    color: ${"blue"};
+  }
+  }
+  
+`
+const StyledVolumeMute = styled(VolumeOffIcon)`
+  display: inline-block;
+  float:left;
+  margin-left: 4em;
+  color: ${"white"}; 
+
+  &:hover {
+    color: ${"blue"};
+  }
+  }
+  
+`
+
 const customStyles = {
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.75)",
@@ -233,6 +359,16 @@ const customStyles = {
     color: "white",
   },
 };
+
+const useStyles = makeStyles({
+  root : {
+    width: 200
+  },
+  root2: {
+    width: 400
+  }
+
+})
 
 const ModalHeader = styled.div`
   font-size: 24px;

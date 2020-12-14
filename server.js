@@ -59,7 +59,6 @@ app.post("/api/searchTracks",  (req,res) =>
 
 })
 
-
 app.post("/api/register", (req, res) => {
   userModel.findOne(
     { $or: [{ username: req.body.username }, { email: req.body.email }] },
@@ -249,6 +248,7 @@ app.post("/api/user/addlikedsong", (req, res) =>
   let songname = req.body.song_name;
   let artistname = req.body.artist_name;
   let uri = req.body.uri;
+  let time = req.body.time
   let id = new mongoose.Types.ObjectId();
 
   userModel.findOneAndUpdate(
@@ -266,7 +266,8 @@ app.post("/api/user/addlikedsong", (req, res) =>
             _id: id,
             song_name: songname,
             artist_name: artistname,
-            SpotifyURI : uri
+            SpotifyURI : uri,
+            time: time
           })
           res.send("Success")
         }
@@ -493,6 +494,8 @@ app.post("/api/song/getplaylists", (req, res) => {
   let song_name = req.body.song_name;
   let artist_name = req.body.artist_name;
   let uri = req.body.uri;
+  let time = req.body.time
+
   let id = new mongoose.Types.ObjectId();
   let songHold;
 
@@ -510,7 +513,8 @@ app.post("/api/song/getplaylists", (req, res) => {
               _id: id,
               song_name: song_name,
               artist_name: artist_name,
-              SpotifyURI : uri
+              SpotifyURI : uri,
+              time: time
             });
             let data = {playlists : playlists, song: id};
             res.send(data);
@@ -684,6 +688,7 @@ app.post("/api/user/addHistory", (req, res) =>
   let songname = req.body.song_name;
   let artistname = req.body.artist_name;
   let uri = req.body.uri;
+  let time = req.body.time
   let id = new mongoose.Types.ObjectId();
 
   userModel.findOneAndUpdate(
@@ -712,7 +717,8 @@ app.post("/api/user/addHistory", (req, res) =>
             _id: id,
             song_name: songname,
             artist_name: artistname,
-            SpotifyURI : uri
+            SpotifyURI : uri,
+            time: time
           })
           res.send("Success")
         }

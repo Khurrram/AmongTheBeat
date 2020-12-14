@@ -14,6 +14,10 @@ const songSchema = new Schema({
     SpotifyURI: {
         type: String,
         required: [true, "Enter SpotifyURI"]
+    },
+    time: {
+        type: String,
+        required: [true, "Enter time"]
     }
 });
 

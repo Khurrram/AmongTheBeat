@@ -58,7 +58,7 @@ function SongDisplay(props) {
   function toggleModal() {
     setModalIsOpen(!modalIsOpen);
     if (!modalIsOpen) {
-      getValidSongPlaylists(session.id, name, artist, uri)
+      getValidSongPlaylists(session.id, name, artist, uri, time)
       .then((res) =>
       {
         setPlaylists(res.data.playlists);
@@ -105,7 +105,7 @@ function SongDisplay(props) {
   }, []);
 
   const likeSong = () => {
-    addLikedSong(session.id, name, artist, uri).then((res) => {
+    addLikedSong(session.id, name, artist, uri, time).then((res) => {
       console.log("Success");
       setLiked(true);
     });
@@ -204,7 +204,7 @@ function SongDisplay(props) {
         ) : (
           <UnlikedHeart onClick={() => likeSong()} />
         )}
-        {props.Queue ? (null) : (<StyledQueue onClick={() => queueSong({uri: uri, song_name: name, artist_name:artist})} />)}
+        {props.Queue ? (null) : (<StyledQueue onClick={() => queueSong({uri: uri, song_name: name, artist_name:artist, time: time})} />)}
         {props.Browse || props.Queue ? (
           <StyledPlaylistAdd onClick={() => toggleModal()} />
         ) : (

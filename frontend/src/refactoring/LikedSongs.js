@@ -57,6 +57,7 @@ function LikedSongs()
                           artist = {song.artist_name}
                           uri = {song.SpotifyURI}
                           id = {song._id}
+                          time = {song.time}
                           Browse = {true}
                           rerender = {rerender}
                           setrerender = {setRerender}
