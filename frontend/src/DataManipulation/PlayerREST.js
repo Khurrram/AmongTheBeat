@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getSessionCookie, setSessionCookie } from "../CookieHandler";
-import {addHistory} from "./AccountREST";
-import querystring from 'querystring';
+import { addHistory } from "./AccountREST";
+import querystring from "querystring";
 import Queue from "queue-fifo";
 import { useState } from "react";
 import { instance } from "./AccountREST";
@@ -20,7 +20,6 @@ var finished = true;
 var queuedSongs = false;
 var shuffle = false;
 var setPlayNav;
-
 
 window.onSpotifyWebPlaybackSDKReady = () => {
   console.log("SDK Callback");
@@ -103,13 +102,34 @@ export const finishedSong = () => {
   }
 };
 
-setInterval(function(){
-  axios.post('https://accounts.spotify.com/api/token',querystring.stringify({ grant_type: 'refresh_token', refresh_token: session.refresh_token }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Basic ' + (new Buffer("6e6168bb4f424095b42f948f1e303b69" + ':' + "d0083b4ff5b743f5888468fe02c2ba9c").toString('base64')) }, })
-  .then(res => { 
+setInterval(function () {
+  axios
+    .post(
+      "https://accounts.spotify.com/api/token",
+      querystring.stringify({
+        grant_type: "refresh_token",
+        refresh_token: session.refresh_token,
+      }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization:
+            "Basic " +
+            new Buffer(
+              "6e6168bb4f424095b42f948f1e303b69" +
+                ":" +
+                "d0083b4ff5b743f5888468fe02c2ba9c"
+            ).toString("base64"),
+        },
+      }
+    )
+    .then((res) => {
       console.log(res);
-  })
-  .catch(error => { console.log(error) });
-}, session.expires_in * 1000);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}, 3600 * 1000);
 
 const playSong = async (uri) => {
   //should set previous song
@@ -131,7 +151,7 @@ const playSong = async (uri) => {
     }
   )
     .then((ev) => {
-      changeVolume(currentVolume)
+      changeVolume(currentVolume);
     })
     .catch((error) => {
       console.log(error);
@@ -147,12 +167,12 @@ const get_currentSong = (uri) => {
       break;
     }
   }
-  if (index == -1 ){
-    console.log("Song not found in get_currentSong ERROR!")
+  if (index == -1) {
+    console.log("Song not found in get_currentSong ERROR!");
   } else {
     currentIndex = index;
   }
-}
+};
 
 export const loadPlaylist = (playlist, uri) => {
   // loads playlist to playlistQueue
@@ -183,15 +203,17 @@ export const resumeSong = async () => {
 };
 
 export const buttonClicked = (playlist, uri) => {
-    if (currentPlaylist != playlist) { // check if in the same playlist, if it is don't load playlist; if not, load in new playlist
-      loadPlaylist(playlist, uri);
+  if (currentPlaylist != playlist) {
+    // check if in the same playlist, if it is don't load playlist; if not, load in new playlist
+    loadPlaylist(playlist, uri);
+  } else {
+    if (currentSong != uri) {
+      // check if a new song is being played in the current playlist
+      playSong(uri);
     } else {
-      if (currentSong != uri) { // check if a new song is being played in the current playlist
-        playSong(uri);
-      } else {
-        resumeSong(); //if not new song, resume at currentPos
-      }
+      resumeSong(); //if not new song, resume at currentPos
     }
+  }
   return "song_played";
 };
 
@@ -216,72 +238,68 @@ export const pauseSong = async () => {
   return "song_paused";
 };
 
-export const changeVolume = async(volume) =>
-{
+export const changeVolume = async (volume) => {
   fetch(
-    "https://api.spotify.com/v1/me/player/volume?" + "volume_percent=" + volume.toString()  + "&device_id=" + deviceID,
+    "https://api.spotify.com/v1/me/player/volume?" +
+      "volume_percent=" +
+      volume.toString() +
+      "&device_id=" +
+      deviceID,
     {
       method: "PUT",
-      headers:
-      {
+      headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session.accessToken}`
-      }
+        Authorization: `Bearer ${session.accessToken}`,
+      },
     }
   )
-    .then((ev) =>
-    {
-      currentVolume = volume
-    }).catch((err) =>
-    {
-      console.log("changeVolume ERR");
+    .then((ev) => {
+      currentVolume = volume;
     })
-}
+    .catch((err) => {
+      console.log("changeVolume ERR");
+    });
+};
 
-export const playbackInfo = async() =>
-{
-
-  return axios.get(
-    "https://api.spotify.com/v1/me/player/currently-playing",
-    {
+export const playbackInfo = async () => {
+  return axios
+    .get("https://api.spotify.com/v1/me/player/currently-playing", {
       method: "GET",
-      headers:
-      {
+      headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session.accessToken}`
-      }
-    }
-    )
-    .then((res) =>
-    {
-      return res.data
-    }).catch((err) =>
-    {
-      console.log("changeVolume ERR");
+        Authorization: `Bearer ${session.accessToken}`,
+      },
     })
-}
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log("changeVolume ERR");
+    });
+};
 
-export const setTime = async(time) =>
-{
+export const setTime = async (time) => {
   fetch(
-    "https://api.spotify.com/v1/me/player/seek?" + "position_ms=" + time.toString()  + "&device_id=" + deviceID,
+    "https://api.spotify.com/v1/me/player/seek?" +
+      "position_ms=" +
+      time.toString() +
+      "&device_id=" +
+      deviceID,
     {
       method: "PUT",
-      headers:
-      {
+      headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session.accessToken}`
-      }
+        Authorization: `Bearer ${session.accessToken}`,
+      },
     }
   )
-    .then((ev) =>
-    {
+    .then((ev) => {
       console.log("set time to ", time, " ms");
-    }).catch((err) =>
-    {
-      console.log("changeVolume ERR");
     })
-}
+    .catch((err) => {
+      console.log("changeVolume ERR");
+    });
+};
 
 export const playNextSong = () => {
   //play next song, dequeue either playlistqueue or songqueue before calling playSong
@@ -290,16 +308,18 @@ export const playNextSong = () => {
     return currentSong;
   } else {
     if (songQueue.isEmpty()) {
-        queuedSongs = false;
-      if (shuffle) { //shuffle is toggled, play any song from the playlist
-        let nextSong = currentPlaylist[getRndInteger(0, currentPlaylist.length)].SpotifyURI;
+      queuedSongs = false;
+      if (shuffle) {
+        //shuffle is toggled, play any song from the playlist
+        let nextSong =
+          currentPlaylist[getRndInteger(0, currentPlaylist.length)].SpotifyURI;
         playSong(nextSong);
         return nextSong;
       } else {
         if (currentIndex == currentPlaylist.length - 1) {
           console.log("Nothing left to play in playlist");
         } else {
-          let nextSong = currentPlaylist[currentIndex+1].SpotifyURI;
+          let nextSong = currentPlaylist[currentIndex + 1].SpotifyURI;
           playSong(nextSong);
           return nextSong;
           console.log("Playing next song in playlistQueue");
@@ -320,13 +340,14 @@ export const playPrevSong = () => {
     return currentSong;
   } else {
     if (shuffle) {
-      let prevSong = currentPlaylist[getRndInteger(0, currentPlaylist.length)].SpotifyURI;
+      let prevSong =
+        currentPlaylist[getRndInteger(0, currentPlaylist.length)].SpotifyURI;
       playSong(prevSong);
     } else {
       if (currentIndex == 0) {
         console.log("No Previous Song");
       } else {
-        let prevSong = currentPlaylist[currentIndex-1].SpotifyURI;
+        let prevSong = currentPlaylist[currentIndex - 1].SpotifyURI;
         playSong(prevSong);
         return prevSong;
         console.log("Now playing previous song");
@@ -372,32 +393,32 @@ export const setSongFunction = (func) => {
 
 export const shuffleSong = () => {
   shuffle = true;
-}
+};
 
 export const noShuffleSong = () => {
   shuffle = false;
-}
+};
 
 const getRndInteger = (min, max) => {
-  return Math.floor(Math.random() * (max - min) ) + min;
-}
+  return Math.floor(Math.random() * (max - min)) + min;
+};
 
 const addHistory_wrapper = () => {
   let accountID = session.id;
   let songname = currentPlaylist[currentIndex].song_name;
   let artistname = currentPlaylist[currentIndex].artist_name;
   let uri = currentSong;
-  let time = currentPlaylist[currentIndex].time
-  addHistory(accountID,songname,artistname,uri, time);
-}
+  let time = currentPlaylist[currentIndex].time;
+  addHistory(accountID, songname, artistname, uri, time);
+};
 
 export const getQueue = () => {
   let queue = [];
   for (let i = 0; i < songQueue.size(); i++) {
     let temp = songQueue.dequeue();
-    console.log (" song queue : " + temp.song_name)
+    console.log(" song queue : " + temp.song_name);
     queue.push(temp);
     songQueue.enqueue(temp);
   }
   return queue;
-}
+};

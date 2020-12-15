@@ -194,10 +194,6 @@ function PlayListView(props) {
             (state.currentPlaylist.songs_ids.length === 1 ? "Song" : "Songs")}
         </h6>
       </span>
-      <StyledSpan>
-        <Title>Title</Title>
-        <Artist>Artist</Artist>
-      </StyledSpan>
       <span>
         <hr />
       </span>

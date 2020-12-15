@@ -175,12 +175,15 @@ const AccountButtonDiv = styled(AccountDiv)`
 `;
 
 const SidebarDiv = styled.div`
-  position: absolute;
-  right: 0px;
-  margin: auto;
-  background-color: rgb(0, 0, 0, 0.7);
-  border-radius: 15px 0px 0px 15px;
-  backdrop-filter: blur(10px);
+  &&&& {
+    position: absolute;
+    right: 0px;
+    margin: auto;
+    z-index: 1000000;
+    background-color: rgb(0, 0, 0, 0.7);
+    border-radius: 15px 0px 0px 15px;
+    backdrop-filter: blur(10px);
+  }
 `;
 
 const StyledBackIcon = styled(ArrowForwardIcon)`
