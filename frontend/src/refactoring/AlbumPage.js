@@ -62,7 +62,7 @@ function AlbumPage(props)
       for (let i = 0; i < arr.length; i++) {
         if (arr[i].track !== null) {
 
-          let data = {song_name: arr[i].track.name, artist_name: artistamt(arr[i].track.artists), SpotifyURI: arr[i].track.uri};
+          let data = {song_name: arr[i].track.name, artist_name: artistamt(arr[i].track.artists), SpotifyURI: arr[i].track.uri, time: msToTime(arr[i].track.duration_ms)};
           uris.push(data);
         }
       }

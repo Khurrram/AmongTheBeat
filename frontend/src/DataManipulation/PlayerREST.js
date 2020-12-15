@@ -10,7 +10,7 @@ import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from "constants";
 const session = getSessionCookie();
 var deviceID = "";
 const songQueue = new Queue();
-var currentSong = "";
+var currentSong = {};
 var currentIndex = -1;
 var currentPlaylist = [];
 var currentPos = 0;
@@ -20,7 +20,8 @@ var finished = true;
 var queuedSongs = false;
 var shuffle = false;
 var setPlayNav;
-
+var queueRerenderFunc;
+var queueRerenderVal;
 
 window.onSpotifyWebPlaybackSDKReady = () => {
   console.log("SDK Callback");
@@ -111,19 +112,22 @@ setInterval(function(){
   .catch(error => { console.log(error) });
 }, session.expires_in * 1000);
 
-const playSong = async (uri) => {
+const playSong = async (track) => {
   //should set previous song
-  currentSong = uri;
+  currentSong = track;
   if (!queuedSongs) {
-    get_currentSong(uri);
+    get_currentSong(track.SpotifyURI);
   }
+
   currentPos = 0;
+
   addHistory_wrapper();
+
   fetch(
     "https://api.spotify.com/v1/me/player/play?" + "device_id=" + deviceID,
     {
       method: "PUT",
-      body: JSON.stringify({ uris: [uri] }),
+      body: JSON.stringify({ uris: [track.SpotifyURI] }),
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session.accessToken}`,
@@ -154,10 +158,10 @@ const get_currentSong = (uri) => {
   }
 }
 
-export const loadPlaylist = (playlist, uri) => {
+export const loadPlaylist = (playlist, track) => {
   // loads playlist to playlistQueue
   currentPlaylist = playlist;
-  playSong(uri);
+  playSong(track);
 };
 
 export const resumeSong = async () => {
@@ -166,7 +170,7 @@ export const resumeSong = async () => {
     "https://api.spotify.com/v1/me/player/play?" + "device_id=" + deviceID,
     {
       method: "PUT",
-      body: JSON.stringify({ uris: [currentSong], position_ms: currentPos }),
+      body: JSON.stringify({ uris: [currentSong.SpotifyURI], position_ms: currentPos }),
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session.accessToken}`,
@@ -182,12 +186,12 @@ export const resumeSong = async () => {
     });
 };
 
-export const buttonClicked = (playlist, uri) => {
+export const buttonClicked = (playlist, track) => {
     if (currentPlaylist != playlist) { // check if in the same playlist, if it is don't load playlist; if not, load in new playlist
-      loadPlaylist(playlist, uri);
+      loadPlaylist(playlist, track);
     } else {
-      if (currentSong != uri) { // check if a new song is being played in the current playlist
-        playSong(uri);
+      if (currentSong.SpotifyURI != track.SpotifyURI) { // check if a new song is being played in the current playlist
+        playSong(track);
       } else {
         resumeSong(); //if not new song, resume at currentPos
       }
@@ -287,48 +291,53 @@ export const playNextSong = () => {
   //play next song, dequeue either playlistqueue or songqueue before calling playSong
   if (repeat) {
     playSong(currentSong);
-    return currentSong;
+    return currentSong.SpotifyURI;
   } else {
     if (songQueue.isEmpty()) {
         queuedSongs = false;
       if (shuffle) { //shuffle is toggled, play any song from the playlist
-        let nextSong = currentPlaylist[getRndInteger(0, currentPlaylist.length)].SpotifyURI;
+        let nextSong = currentPlaylist[getRndInteger(0, currentPlaylist.length)];
         playSong(nextSong);
-        return nextSong;
+        return nextSong.SpotifyURI;
       } else {
         if (currentIndex == currentPlaylist.length - 1) {
           console.log("Nothing left to play in playlist");
         } else {
-          let nextSong = currentPlaylist[currentIndex+1].SpotifyURI;
+          let nextSong = currentPlaylist[currentIndex+1];
           playSong(nextSong);
-          return nextSong;
+          return nextSong.SpotifyURI;
           console.log("Playing next song in playlistQueue");
         }
       }
     } else {
-      let nextSong = songQueue.dequeue().uri;
+      let nextSong = songQueue.dequeue();
+      if (queueRerenderFunc) {
+      queueRerenderFunc(queueRerenderVal+1);
+      }
       playSong(nextSong);
-      return nextSong;
+      return nextSong.SpotifyURI;
       console.log("Playing next song in Song Queue");
     }
   }
 };
+
 export const playPrevSong = () => {
   //play previous song
   if (repeat) {
-    playSong(currentSong);
-    return currentSong;
+    playSong(currentSong.SpotifyURI);
+    return currentSong.SpotifyURI;
   } else {
     if (shuffle) {
-      let prevSong = currentPlaylist[getRndInteger(0, currentPlaylist.length)].SpotifyURI;
+      let prevSong = currentPlaylist[getRndInteger(0, currentPlaylist.length)];
       playSong(prevSong);
+      return prevSong.SpotifyURI;
     } else {
       if (currentIndex == 0) {
         console.log("No Previous Song");
       } else {
-        let prevSong = currentPlaylist[currentIndex-1].SpotifyURI;
+        let prevSong = currentPlaylist[currentIndex-1];
         playSong(prevSong);
-        return prevSong;
+        return prevSong.SpotifyURI;
         console.log("Now playing previous song");
       }
     }
@@ -354,9 +363,10 @@ export const queueSong = (track) => {
 
 export const dequeueSong = (track) => {
   //removes songs from the SongQueue
+  console.log("dequeueing song: " + track.SpotifyURI);
   for (let i = 0; i < songQueue.size(); i++) {
     let temp = songQueue.dequeue();
-    if (temp.uri != track) {
+    if (temp.SpotifyURI != track.SpotifyURI) {
       songQueue.enqueue(temp);
     }
   }
@@ -368,6 +378,11 @@ export const setSong = (track) => {
 
 export const setSongFunction = (func) => {
   setPlayNav = func;
+};
+
+export const QueueRerender = (func, render) => {
+  queueRerenderFunc = func;
+  queueRerenderVal = render;
 };
 
 export const shuffleSong = () => {
@@ -384,10 +399,11 @@ const getRndInteger = (min, max) => {
 
 const addHistory_wrapper = () => {
   let accountID = session.id;
-  let songname = currentPlaylist[currentIndex].song_name;
-  let artistname = currentPlaylist[currentIndex].artist_name;
-  let uri = currentSong;
-  let time = currentPlaylist[currentIndex].time
+  let songname = currentSong.song_name;
+  let artistname = currentSong.artist_name;
+  let uri = currentSong.SpotifyURI;
+  let time = currentSong.time;
+  console.log("added to history: " + songname + artistname + uri + time);
   addHistory(accountID,songname,artistname,uri, time);
 }
 
@@ -395,9 +411,9 @@ export const getQueue = () => {
   let queue = [];
   for (let i = 0; i < songQueue.size(); i++) {
     let temp = songQueue.dequeue();
-    console.log (" song queue : " + temp.song_name)
     queue.push(temp);
     songQueue.enqueue(temp);
   }
   return queue;
 }
+

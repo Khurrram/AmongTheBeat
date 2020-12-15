@@ -12,6 +12,7 @@ import SearchUsers from "./SearchUsers";
 import SearchUsersPage from "./SearchUsersPage";
 import AlbumPage from "./AlbumPage";
 import LikePage from "./LikedSongs";
+import Queue from "./Queue";
 import { getSessionCookie } from "../CookieHandler";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -120,6 +121,10 @@ function Home() {
 
                 <Route exact path={`${path}/likedsongs`}>
                   <LikePage />
+                </Route>
+
+                <Route exact path={`${path}/queue`}>
+                  <Queue />
                 </Route>
 
                 <Route
