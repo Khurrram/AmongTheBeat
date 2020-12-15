@@ -1,9 +1,10 @@
+import { useState } from "react";
 import axios from "axios";
 import { getSessionCookie, setSessionCookie } from "../CookieHandler";
 import { addHistory } from "./AccountREST";
 import querystring from "querystring";
 import Queue from "queue-fifo";
-import { useState } from "react";
+import { SongContext } from "../refactoring/Home";
 import { instance } from "./AccountREST";
 import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from "constants";
 
@@ -409,6 +410,8 @@ const addHistory_wrapper = () => {
   let artistname = currentPlaylist[currentIndex].artist_name;
   let uri = currentSong;
   let time = currentPlaylist[currentIndex].time;
+
+  console.log(currentPlaylist[currentIndex]);
   addHistory(accountID, songname, artistname, uri, time);
 };
 

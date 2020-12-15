@@ -101,7 +101,7 @@ function Home() {
               {settingTransition.map(
                 ({ item, props }) =>
                   item && (
-                    <animated.div style={props}>
+                    <animated.div style={props} key = {props}>
                       <SettingsView url={url} toggleSetting={setSettings} />
                     </animated.div>
                   )
