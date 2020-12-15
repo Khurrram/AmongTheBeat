@@ -5,7 +5,7 @@ import Avatar from "@material-ui/core/Avatar";
 import { HomeContext } from "./Home";
 import { getSessionCookie } from "../CookieHandler";
 import { Route, useLocation } from "react-router-dom";
-import {openAlbum} from "../DataManipulation/AccountREST"
+import {openAlbum} from "../DataManipulation/BrowseREST"
 
 function AlbumPage(props)
 {

@@ -3,7 +3,7 @@ import axios from "axios";
 import styled from "styled-components";
 import { getSessionCookie } from "../CookieHandler";
 import SongDisplay from "./SongDisplay";
-import {searchTracks} from "../DataManipulation/AccountREST"
+import {searchTracks} from "../DataManipulation/BrowseREST"
 
 const SongDiv = styled.div`
   min-height: 65vh;

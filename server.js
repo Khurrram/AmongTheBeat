@@ -9,8 +9,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const SpotifyWebApi = require('spotify-web-api-node');
-const spotifyApi = new SpotifyWebApi();
 
 const db = require("./config/keys.js").mongoURI;
 
@@ -24,40 +22,6 @@ const port = process.env.PORT || 5000;
 mongoose.set('useFindAndModify', false);
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
-
-
-app.post("/api/browse", (req, res) => {
-
-  spotifyApi.setAccessToken(req.body.curraccessToken)
-  spotifyApi.getFeaturedPlaylists({limit:15})
-    .then(function(data) {
-        res.send(data.body);
-      }, function(err) {
-        console.log("Something went wrong!", err);
-      });
-});
-
-app.post("/api/openalbum", (req, res) =>
-{
-  spotifyApi.setAccessToken(req.body.curraccessToken)
-  spotifyApi.getPlaylist(req.body.id)
-    .then(function(data)
-    {
-      res.send(data.body)
-    }), function(err){console.log("Something went wrong!, ", err)}
-})
-
-app.post("/api/searchTracks",  (req,res) =>
-{
-  spotifyApi.setAccessToken(req.body.curraccessToken)
-  const search = "track:" + req.body.search;
-  spotifyApi.searchTracks(search)
-    .then(function(data)
-    {
-      res.send(data.body)
-    }),function(err){console.log("Something went wrong!, ", err)}
-
-})
 
 app.post("/api/register", (req, res) => {
   userModel.findOne(
@@ -311,19 +275,6 @@ app.post("/api/user/gethistory", (req,res) =>
       }
     }
     )
-})
-
-app.post("/api/user/audiofeatures", (req,res) =>
-{
-  spotifyApi.setAccessToken(req.body.accessToken);
-  spotifyApi.getAudioFeaturesForTracks(req.body.tracks)
-    .then(function(data)
-    {
-      res.send(data.body)
-    },function(err)
-    {
-      console.log(err);
-    });
 })
 
 //POST for creating new playlist

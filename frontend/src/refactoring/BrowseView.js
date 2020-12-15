@@ -8,7 +8,7 @@ import axios from "axios";
 import { getSessionCookie } from "../CookieHandler"
 import Album from "./Album"
 import SearchSong from "./SearchSong"
-import {browse} from "../DataManipulation/AccountREST"
+import {browse} from "../DataManipulation/BrowseREST"
 
 function BrowseView(props) {
   const [currPlay, setcurrPlay] = useState();
@@ -23,7 +23,7 @@ function BrowseView(props) {
       let accessToken = session.accessToken;
 
       setLoad(true);
-      const result = await browse(accessToken);
+      const result = await browse();
       setcurrPlay(result.data);
       setLoad(false);
     }
@@ -40,7 +40,7 @@ function BrowseView(props) {
       let accessToken = session.accessToken;
 
       setLoad(true);
-      const result = await browse(accessToken);
+      const result = await browse();
       setcurrPlay(result.data);
       setLoad(false);
 

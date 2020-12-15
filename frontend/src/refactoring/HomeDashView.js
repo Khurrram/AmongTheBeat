@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import styled from "styled-components";
 import { SessionContext } from "../App";
-import { getHistory, getAudioFeatures } from "../DataManipulation/AccountREST";
+import { getHistory} from "../DataManipulation/AccountREST";
+import {getAudioFeatures} from "../DataManipulation/BrowseREST"
 import moodboard from "../data/MoodBoard.json";
 import Sketch from "react-p5";
 import randomColor from "randomcolor";
@@ -144,7 +145,7 @@ function HomeDashView(props) {
         let songIDS = getSongIDS(res);
 
         //get the audio features of the songs
-        getAudioFeatures(session.accessToken, songIDS).then((res) => {
+        getAudioFeatures(songIDS).then((res) => {
           //res contains audio features
           moodRef.current = getMood(res);
           setAudioFeature(res.audio_features);

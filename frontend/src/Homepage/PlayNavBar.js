@@ -16,6 +16,7 @@ import Slider from '@material-ui/core/Slider';
 import VolumeUp from '@material-ui/icons/VolumeUp';
 import VolumeDownIcon from '@material-ui/icons/VolumeDown';
 import VolumeOffIcon from '@material-ui/icons/VolumeOff';
+import Grid from '@material-ui/core/Grid';
 
 import {
   setSongFunction,
@@ -190,7 +191,7 @@ function PlayNavBar(props) {
       <span>{song.name}</span>
       {songState.playing ? (
         <span>
-          <PauseIcon
+          <StyledPause
             onClick={() => {
               songActions.setPlaying(false);
               pauseSong();
@@ -199,7 +200,7 @@ function PlayNavBar(props) {
         </span>
       ) : (
         <span>
-          <PlayIcon
+          <StyledPlay
             onClick={() => {
               songActions.setPlaying(true);
               resumeSong();
@@ -210,7 +211,7 @@ function PlayNavBar(props) {
 
       {repeat ? (
         <span>
-          <RepeatOneIcon
+          <DisableRepeatIcon
             onClick={() => {
               setRepeat(false);
               noRepeatSong();
@@ -219,7 +220,7 @@ function PlayNavBar(props) {
         </span>
       ) : (
         <span>
-          <RepeatIcon
+          <EnableRepeatIcon
             onClick={() => {
               setRepeat(true);
               repeatSong();
@@ -289,6 +290,38 @@ function PlayNavBar(props) {
           />
         </ParentSpan>
 
+        {/* <Grid container spacing={1}>
+          <Grid item>
+            {currentTimeStart? handleTimeConvert(timeStartRef.current) : "0:00"}
+          </Grid>
+          <Grid item xs>
+            <Slider
+                className = {classes.root2}
+                value = {timeRef.current}
+                onChange = {(e,time) => setCurrentTime(time)}
+                aria-labelledby="continuous-slider"
+                onChangeCommitted = {handleTimeChange}
+              />
+          </Grid>
+          <Grid item>
+            {currentTimeEnd? handleTimeConvert(currentTimeEnd) : "0:00"}
+          </Grid>
+
+          <Grid item>
+            {volume === 0 ? <VolumeOffIcon onClick = {() => unmuteVolume()}/> : volume >= 50 ? <VolumeUp onClick = {() => muteVolume()}/> : <VolumeDownIcon onClick = {() => muteVolume()}/>}
+          </Grid>
+          <Grid item xs>
+            <StyledSlider
+              className = {classes.root}
+              value = {volume}
+              onChange = {(e,vol) => setVolume(vol)}
+              aria-labelledby="continuous-slider"
+              onChangeCommitted = {handleVolumeChange}
+            />
+          </Grid>
+        </Grid> */}
+
+
         
 
     </NavBarInfo>
@@ -316,6 +349,45 @@ const DisableShuffleIcon = styled(ShuffleIcon)`
 
   &:hover {
     color: ${"white"};
+  }
+  }
+`
+const EnableRepeatIcon = styled(RepeatIcon)`
+
+  color: ${"white"}; 
+
+  &:hover {
+    color: ${"green"};
+  }
+  }
+`
+
+const DisableRepeatIcon = styled(RepeatIcon)`
+
+  color: ${"green"}; 
+
+  &:hover {
+    color: ${"white"};
+  }
+  }
+`
+
+const StyledPlay = styled(PlayIcon)`
+
+  color: ${"white"}; 
+
+  &:hover {
+    color: ${"blue"};
+  }
+  }
+`
+
+const StyledPause = styled(PauseIcon)`
+
+  color: ${"white"}; 
+
+  &:hover {
+    color: ${"blue"};
   }
   }
 `
@@ -351,15 +423,15 @@ const StyledQueue = styled(QueueIcon)`
 `
 const StyledSlider = styled(Slider)`
   
-  display: inline-block;
+  display: flex;
   float:left;
   margin-top: 1em;
+  margin-right: 2em;
 
 `
 const StyledVolumeUp = styled(VolumeUp)`
-  
-  
-  display: inline-block;
+
+  display: flex;
   float:left;
   margin-left: 2em;
   color: ${"white"}; 
@@ -371,7 +443,7 @@ const StyledVolumeUp = styled(VolumeUp)`
   
 `
 const StyledVolumeDown = styled(VolumeDownIcon)`
-  display: inline-block;
+  display: flex;
   float:left;
   margin-left: 2em;
   color: ${"white"}; 
@@ -383,7 +455,7 @@ const StyledVolumeDown = styled(VolumeDownIcon)`
   
 `
 const StyledVolumeMute = styled(VolumeOffIcon)`
-  display: inline-block;
+  display: flex;
   float:left;
   margin-left: 2em;
   color: ${"white"}; 
@@ -398,13 +470,14 @@ const StyledVolumeMute = styled(VolumeOffIcon)`
 const StyledP = styled.p`
   color: white;
   margin-top: 1em;
-  display: inline-block;
+  display: flex;
   float:left;
   
 `
 
 const ParentSpan = styled.span`
-  overlow: hidden;
+  display: flex;
+  align-items: flex-start;
   
 `
 
