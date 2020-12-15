@@ -5,9 +5,16 @@ const userModel = require("./models/userModel.js");
 const playlistModel = require("./models/playlistModel.js");
 const songModel = require("./models/songModel.js");
 const app = express();
+const path = require('path')
 
 app.use(express.json());
 app.use(cors());
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, '/frontend/build')))
+// Anything that doesn't match the above, send back index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/frontend/build/index.html'))
+})
 
 const SpotifyWebApi = require('spotify-web-api-node');
 const spotifyApi = new SpotifyWebApi();

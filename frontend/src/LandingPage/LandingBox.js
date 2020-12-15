@@ -482,7 +482,7 @@ function SpotifyBox(props) {
   const auth = "https://accounts.spotify.com/authorize?";
   const client_id = "6e6168bb4f424095b42f948f1e303b69";
   const response_type = "code";
-  const redirect_uri = "http://localhost:3000/redirect";
+  const redirect_uri = "https://among-the-beat-sbu.herokuapp.com/redirect";
   const scope = [
     "user-read-recently-played",
     "user-top-read",
