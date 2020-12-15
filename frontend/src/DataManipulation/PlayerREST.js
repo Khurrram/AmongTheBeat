@@ -109,7 +109,6 @@ const playSong = async (uri) => {
     get_currentSong(uri);
   }
   currentPos = 0;
-  console.log("currentsong uri :" + uri);
   addHistory_wrapper();
   fetch(
     "https://api.spotify.com/v1/me/player/play?" + "device_id=" + deviceID,
@@ -124,7 +123,6 @@ const playSong = async (uri) => {
   )
     .then((ev) => {
       changeVolume(currentVolume)
-      console.log("playing song");
     })
     .catch((error) => {
       console.log(error);
@@ -149,8 +147,6 @@ const get_currentSong = (uri) => {
 
 export const loadPlaylist = (playlist, uri) => {
   // loads playlist to playlistQueue
-  console.log("loadPlaylist: " + playlist[0]);
-  console.log("currentSong: " + uri);
   currentPlaylist = playlist;
   playSong(uri);
 };
@@ -178,8 +174,6 @@ export const resumeSong = async () => {
 };
 
 export const buttonClicked = (playlist, uri) => {
-  console.log("button clicked :" + playlist);
-    console.log("playlist undefined");
     if (currentPlaylist != playlist) { // check if in the same playlist, if it is don't load playlist; if not, load in new playlist
       loadPlaylist(playlist, uri);
     } else {

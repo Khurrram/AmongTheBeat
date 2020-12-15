@@ -51,10 +51,14 @@ function PlayNavBar(props) {
   const [currentTime, setCurrentTime] = useState(0);
   const [currentTimeStart, setCurrentTimeStart] = useState();
   const [currentTimeEnd, setCurrentTimeEnd] = useState();
-  const [flag, setFlag] = useState(true);
+  const [flag, setFlag] = useState(false);
+
+  const [delay, setDelay] = useState(1000);
+  const [isRunning, setIsRunning] = useState(true);
 
   const timeRef = useRef(currentTime);
   const timeStartRef = useRef(currentTimeStart);
+
 
   setSongFunction(setSong);
 
@@ -64,6 +68,11 @@ function PlayNavBar(props) {
 
   useEffect(() => {
     songActions.setPlayingCurrentSong(song.uri);
+
+    if(song !== "")
+    {
+      setFlag(true)
+    }
   }, [song]);
 
   const changeTime = () =>
@@ -99,14 +108,10 @@ function PlayNavBar(props) {
     return minutes + ":" + seconds;
   }
 
-  useEffect(() =>
+  useInterval(() =>
   {
-    const interval = setInterval(() => changeTime(), 1000)
-    return () =>
-    {
-      clearInterval(interval);
-    }
-  }, [song])
+    changeTime();
+  }, isRunning ? delay : null)
 
   useEffect(() =>
   {
@@ -140,6 +145,7 @@ function PlayNavBar(props) {
   const handleTimeChange = (event, newtime) =>
   {
     event.preventDefault();
+    setIsRunning(false);
 
     let bartime = (newtime * (currentTimeEnd))/ 100
 
@@ -150,6 +156,8 @@ function PlayNavBar(props) {
     {
       setCurrentTime(timeRef.current)
       setCurrentTimeStart(timeStartRef.current)
+
+      setIsRunning(true);
     })
   }
 
@@ -186,8 +194,9 @@ function PlayNavBar(props) {
             </ModalContent>
         </Modal>
 
-
-      <Avatar variant="rounded">D</Avatar>
+      {flag? 
+        <EmptyDiv>
+          <Avatar variant="rounded">D</Avatar>
       <span>{song.name}</span>
       {songState.playing ? (
         <span>
@@ -323,9 +332,37 @@ function PlayNavBar(props) {
 
 
         
+        </EmptyDiv>
+      
+      :""}
+    
 
     </NavBarInfo>
   );
+}
+
+function useInterval(callback, delay)
+{
+  const savedCallback = useRef();
+
+  useEffect(() =>
+  {
+    savedCallback.current = callback
+  }, [callback]);
+
+
+  useEffect(() =>
+  {
+    function tick() {
+      savedCallback.current();
+    }
+
+    if(delay !== null) 
+    {
+      let id = setInterval(tick,delay);
+      return () => clearInterval(id)
+    }
+  }, [delay])
 }
 
 const NavBarInfo = styled.div`
@@ -479,6 +516,13 @@ const ParentSpan = styled.span`
   display: flex;
   align-items: flex-start;
   
+`
+const EmptyDiv = styled.div`
+  margin-block-start: 0em;
+  margin-block-end: 0em;
+  margin-bottom: 0rem;
+  display: flex;
+  align-items: center;
 `
 
 const customStyles = {
