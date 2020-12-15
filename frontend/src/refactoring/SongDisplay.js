@@ -223,7 +223,7 @@ function SongDisplay(props) {
           aria-haspopup="true"
           onClick={(e) => dequeueSong(uri)}
           />
-        ) : (null)};
+        ) : (null)}
       </SongAction>
     </Container>
   );
