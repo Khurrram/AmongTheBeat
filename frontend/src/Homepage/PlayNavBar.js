@@ -68,7 +68,6 @@ function PlayNavBar(props) {
 
   useEffect(() => {
     songActions.setPlayingCurrentSong(song.uri);
-
     if(song !== "")
     {
       setFlag(true)
@@ -77,7 +76,6 @@ function PlayNavBar(props) {
 
   const changeTime = () =>
   {
-    // console.log(song);
     if(song !== "")
     {
       playbackInfo().then((res) =>
@@ -196,7 +194,7 @@ function PlayNavBar(props) {
 
       {flag? 
         <EmptyDiv>
-          <Avatar variant="rounded">D</Avatar>
+          <Avatar variant="rounded"  src = {song.album.images[0].url}/>
       <span>{song.name}</span>
       {songState.playing ? (
         <span>

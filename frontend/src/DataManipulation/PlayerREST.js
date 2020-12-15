@@ -48,7 +48,6 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
   // Playback status updates
   player.addListener("player_state_changed", (state) => {
-    console.log(state);
     if (
       state.paused &&
       state.position === 0 &&
