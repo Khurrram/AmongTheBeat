@@ -1,7 +1,7 @@
 import axios from "axios";
 // const userModel = require("../../../models/userModel.js");
 
-export const instance = axios.create({ baseURL: "http://localhost:5000" });
+export const instance = axios.create({ baseURL: "https://among-the-beat-sbu.herokuapp.com" });
 
 export const getToken = async (accountID) => {
   return instance
