@@ -521,7 +521,7 @@ function SpotifyBox(props) {
                 redirect_uri +
                 "&scope=" +
                 scope.join("%20") +
-                "&response_type=token&show_dialog=true"
+                "&response_type=code&show_dialog=true"
               }
             >
               {" "}
