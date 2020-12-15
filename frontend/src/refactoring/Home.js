@@ -20,19 +20,37 @@ import { PlaylistAdd } from "@material-ui/icons";
 import SettingsView from "../Homepage/SettingView";
 import useScript from "../DataManipulation/useScript";
 import Axios from "axios";
+import { useTransition, animated } from "react-spring";
 
 export const HomeContext = React.createContext();
 export const SongContext = React.createContext();
 
 function Home() {
+  useScript("https://sdk.scdn.co/spotify-player.js");
   const [settings, setSettings] = useState(false);
-  const [reload, setReload] = useState(false);
   const [playingCurrentSong, setPlayingCurrentSong] = useState("");
   const [playing, setPlaying] = useState(false);
-  let { path, url } = useRouteMatch();
+  let { path } = useRouteMatch();
   const session = getSessionCookie();
+  const [url, setUrl] = useState("");
+  const settingTransition = useTransition(settings, null, {
+    from: { transform: "translate3d(60%,-40px,0)" },
+    enter: { transform: "translate3d(0,-40px,0)" },
+    leave: { transform: "translate3d(60%,-40px,0)" },
+  });
 
-  useScript("https://sdk.scdn.co/spotify-player.js");
+  useLayoutEffect(() => {
+    Axios.get("https://api.spotify.com/v1/me", {
+      headers: {
+        Authorization: "Bearer " + session.accessToken,
+      },
+    })
+      .then((response) => {
+        setUrl(response.data.images[0].url);
+        // console.log(response.data.images[0].url);
+      })
+      .catch((err) => console.log(err));
+  }, [session.accessToken]);
 
   let {
     playlists,
@@ -74,13 +92,19 @@ function Home() {
             {/* <SpotifyPlayerContainer /> */}
             <Navbar>
               <StyledAvatar>
-                <SpotifyProfile accessToken={session.accessToken} />
+                <StyledImg src={url} />
               </StyledAvatar>
+
               <StyledSettingIcon onClick={() => setSettings(true)} />
             </Navbar>
             <ContentWindow>
-              {settings && (
-                <SettingsView toggleSetting={setSettings}></SettingsView>
+              {settingTransition.map(
+                ({ item, key, props }) =>
+                  item && (
+                    <animated.div style={props}>
+                      <SettingsView url={url} toggleSetting={setSettings} />
+                    </animated.div>
+                  )
               )}
               <Switch>
                 <Route exact path={`${path}`}>
@@ -126,28 +150,9 @@ function Home() {
   );
 }
 
-function SpotifyProfile(props) {
-  const [url, setUrl] = useState("");
-
-  useEffect(() => {
-    console.log(props);
-    Axios.get("https://api.spotify.com/v1/me", {
-      headers: {
-        Authorization: "Bearer " + props.accessToken,
-      },
-    })
-      .then((response) => {
-        setUrl(response.data.images[0].url);
-        console.log(response.data.images[0].url);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  return <StyledImg src={url} />;
-}
-
 const StyledImg = styled.img`
   width: 48px;
+  max-width: 48px;
 `;
 
 const HomeContainer = styled.div`

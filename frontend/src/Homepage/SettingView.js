@@ -4,6 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import { Link, Redirect, useHistory } from "react-router-dom";
+import Avatar from "@material-ui/core/Avatar";
 
 import { Button } from "react-materialize";
 import { SessionContext } from "../App";
@@ -16,8 +17,6 @@ function SettingView(props) {
   const history = useHistory();
   // const { state, actions } = useContext(ViewPage);
   const session = useContext(SessionContext);
-
-  const [test1, setTest1] = useState(false);
   const classes = useStyles();
   const [currF, setcurrF] = useState({
     oldpass: "",
@@ -52,7 +51,9 @@ function SettingView(props) {
       />
       <SettingDiv>
         <AccountDiv>
-          <h2>{currF.username}</h2>
+          <StyledAvatar>
+            <StyledImg src={props.url} />
+          </StyledAvatar>
         </AccountDiv>
 
         <StyledTextField
@@ -127,6 +128,20 @@ function SettingView(props) {
   );
 }
 
+const StyledImg = styled.img`
+  width: 320px;
+  max-width: 320px;
+`;
+
+const StyledAvatar = styled(Avatar)`
+  &&& {
+    max-height: 320px;
+    max-width: 320px;
+    height: 320px;
+    width: 320px;
+  }
+`;
+
 const SettingDiv = styled.div`
   display: flex;
   height: 83vh;
@@ -141,7 +156,7 @@ const StyledTextField = styled(TextField)`
   &&& {
     margin-top: 1.5rem;
   }
-  width: 450px;
+  width: 75%;
 `;
 
 const AccountDiv = styled.div`
@@ -162,7 +177,7 @@ const AccountButtonDiv = styled(AccountDiv)`
 const SidebarDiv = styled.div`
   position: absolute;
   right: 0px;
-  top: 2rem;
+  margin: auto;
   background-color: rgb(0, 0, 0, 0.7);
   border-radius: 15px 0px 0px 15px;
   backdrop-filter: blur(10px);

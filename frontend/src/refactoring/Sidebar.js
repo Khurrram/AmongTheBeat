@@ -17,7 +17,7 @@ import { Route, useRouteMatch, Link, useHistory } from "react-router-dom";
 import { getSessionCookie } from "../CookieHandler";
 import axios from "axios";
 import { HomeContext } from "./Home";
-import {getPlaylistSongs} from "../DataManipulation/PlaylistREST"
+import { getPlaylistSongs } from "../DataManipulation/PlaylistREST";
 
 import "react-pro-sidebar/dist/css/styles.css";
 
@@ -30,13 +30,12 @@ function Sidebar(props) {
   let data = { id: session.id };
   let [searchresults, setSearchResults] = useState("");
 
-  const handleSearch = () =>
-  {
+  const handleSearch = () => {
     history.push({
-      pathname:`${url}/searchuser`,
-      state: {search: searchresults}
+      pathname: `${url}/searchuser`,
+      state: { search: searchresults },
     });
-  }
+  };
 
   const handlePlaylist = (playlistID) => {
     actions.changeCurrentPlaylistView(playlistID);
@@ -68,19 +67,19 @@ function Sidebar(props) {
             <Link to={`${url}/likedsongs`}></Link>
           </MenuItem>
 
-          <StyledSearh 
-          placeholder="Search User" 
-          value = {searchresults}
-          onChange = {(val) => setSearchResults(val)}
-          onCancelSearch = {() => setSearchResults("")}
-          onRequestSearch = {() => handleSearch()}
+          <StyledSearh
+            placeholder="Search User"
+            value={searchresults}
+            onChange={(val) => setSearchResults(val)}
+            onCancelSearch={() => setSearchResults("")}
+            onRequestSearch={() => handleSearch()}
           />
         </Menu>
         <Separator width="90%" color="white"></Separator>
         <Menu>
           <MenuItem id="fontlarge">
             <FlexDiv onClick={actions.createPlaylists}>
-              New Playlist <Add />
+              New Mixtape <Add />
             </FlexDiv>
           </MenuItem>
           {/* {props.playlists &&

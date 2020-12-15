@@ -3,6 +3,7 @@ import { getSessionCookie, setSessionCookie } from "../CookieHandler";
 import {addHistory} from "./AccountREST";
 import Queue from "queue-fifo";
 import { useState } from "react";
+import { instance } from "./AccountREST";
 
 const session = getSessionCookie();
 var deviceID = "";
@@ -11,6 +12,7 @@ var currentSong = "";
 var currentIndex = -1;
 var currentPlaylist = [];
 var currentPos = 0;
+var currentVolume = 50;
 var repeat = false;
 var finished = true;
 var queuedSongs = false;
@@ -121,6 +123,7 @@ const playSong = async (uri) => {
     }
   )
     .then((ev) => {
+      changeVolume(currentVolume)
       console.log("playing song");
     })
     .catch((error) => {
@@ -210,6 +213,53 @@ export const pauseSong = async () => {
   return "song_paused";
 };
 
+export const changeVolume = async(volume) =>
+{
+  fetch(
+    "https://api.spotify.com/v1/me/player/volume?" + "volume_percent=" + volume.toString()  + "&device_id=" + deviceID,
+    {
+      method: "PUT",
+      headers:
+      {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.accessToken}`
+      }
+    }
+  )
+    .then((ev) =>
+    {
+      currentVolume = volume
+    }).catch((err) =>
+    {
+      console.log("changeVolume ERR");
+    })
+}
+
+export const playbackInfo = async() =>
+{
+  axios.get(
+    "https://api.spotify.com/v1/me/player/currently-playing",
+    {
+      method: "GET",
+      headers:
+      {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.accessToken}`
+      }
+    }
+    )
+    .then((res) =>
+    {
+      console.log(res);
+      return res
+    }).catch((err) =>
+    {
+      console.log("changeVolume ERR");
+    })
+
+
+}
+
 export const playNextSong = () => {
   //play next song, dequeue either playlistqueue or songqueue before calling playSong
   if (repeat) {
@@ -290,11 +340,11 @@ const getRndInteger = (min, max) => {
 
 const addHistory_wrapper = () => {
   let accountID = session.id;
-  console.log("currentTrack :" + currentPlaylist[currentIndex]);
   let songname = currentPlaylist[currentIndex].song_name;
   let artistname = currentPlaylist[currentIndex].artist_name;
   let uri = currentSong;
-  addHistory(accountID,songname,artistname,uri);
+  let time = currentPlaylist[currentIndex].time
+  addHistory(accountID,songname,artistname,uri, time);
 }
 
 export const getQueue = () => {

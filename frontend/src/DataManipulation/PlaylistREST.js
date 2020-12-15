@@ -75,7 +75,8 @@ export const getValidSongPlaylists = async (
   accountID,
   songName,
   artistName,
-  uri
+  uri,
+  time
 ) => {
   return instance
     .post("/api/song/getplaylists", {
@@ -83,6 +84,7 @@ export const getValidSongPlaylists = async (
       song_name: songName,
       artist_name: artistName,
       uri: uri,
+      time: time
     })
     .then((res) => {
       return res;
