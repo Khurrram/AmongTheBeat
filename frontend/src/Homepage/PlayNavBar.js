@@ -17,6 +17,7 @@ import VolumeUp from '@material-ui/icons/VolumeUp';
 import VolumeDownIcon from '@material-ui/icons/VolumeDown';
 import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 import Grid from '@material-ui/core/Grid';
+import {useHistory} from 'react-router-dom';
 
 import {
   setSongFunction,
@@ -39,6 +40,7 @@ import { makeStyles } from "@material-ui/core";
 Modal.setAppElement("#root");
 
 function PlayNavBar(props) {
+  let history = useHistory();
   const classes = useStyles()
   const [song, setSong] = useState("");
   const { songState, songActions } = useContext(SongContext);
@@ -67,9 +69,9 @@ function PlayNavBar(props) {
   }
 
   useEffect(() => {
-    songActions.setPlayingCurrentSong(song.uri);
     if(song !== "")
     {
+      songActions.setPlayingCurrentSong(song.uri);
       setFlag(true)
     }
   }, [song]);
@@ -80,17 +82,20 @@ function PlayNavBar(props) {
     {
       playbackInfo().then((res) =>
       {
-        let progress_s = res.progress_ms / 1000;
-        let duration_s = res.item.duration_ms/ 1000;
+        if(res !== undefined && res !== null && res !== "")
+        {
+          let progress_s = res.progress_ms / 1000;
+          let duration_s = res.item.duration_ms/ 1000;
 
-        let bartime = Math.round((progress_s* 100)/ duration_s)
+          let bartime = Math.round((progress_s* 100)/ duration_s)
 
-        timeRef.current = bartime
-        timeStartRef.current = res.progress_ms
-      
-        setCurrentTime(timeRef.current)
-        setCurrentTimeStart(timeStartRef.current);
-        setCurrentTimeEnd(res.item.duration_ms);
+          timeRef.current = bartime
+          timeStartRef.current = res.progress_ms
+        
+          setCurrentTime(timeRef.current)
+          setCurrentTimeStart(timeStartRef.current);
+          setCurrentTimeEnd(res.item.duration_ms);
+        }
       })
     }
   }
@@ -162,40 +167,17 @@ function PlayNavBar(props) {
   return (
     <NavBarInfo>
 
-      <Modal
-        isOpen={modal}
-        onRequestClose={toggleModal}
-        contentLabel="Test"
-        style={customStyles}
-      >
-        <ModalHeader>Queue View</ModalHeader>
-            <ModalContent>
-            <SongDiv>
-            {
-              queue? 
-                queue.map((song) => 
-                {
-                    return(
-                        <SongDisplay
-                            name = {song.song_name}
-                            artist = {song.artist_name}
-                            uri = {song.uri}
-                            time = {song.time}
-                            Queue = {true}
-                            playlist = {queue}
-                        />
-                    );
-                })
-                :<p>Loading...</p>
-            }
-        </SongDiv>
-            </ModalContent>
-        </Modal>
-
       {flag? 
         <EmptyDiv>
           <Avatar variant="rounded"  src = {song.album.images[0].url}/>
       <span>{song.name}</span>
+
+      <span>
+        <StyledPrevious onClick={() => {
+          songActions.setPlaying(true);
+          playPrevSong()}} />
+      </span>
+
       {songState.playing ? (
         <span>
           <StyledPause
@@ -215,6 +197,24 @@ function PlayNavBar(props) {
           />
         </span>
       )}
+
+      <span>
+        <StyledNext onClick={() => {
+          songActions.setPlaying(true);
+          playNextSong()}} />
+      </span>
+
+      <ParentSpan>
+        <StyledP>{currentTimeStart? handleTimeConvert(timeStartRef.current) : "0:00"}</StyledP>
+        <StyledSlider
+          className = {classes.root2}
+          value = {timeRef.current}
+          onChange = {(e,time) => setCurrentTime(time)}
+          aria-labelledby="continuous-slider"
+          onChangeCommitted = {handleTimeChange}
+        />
+        <StyledP>{currentTimeEnd? handleTimeConvert(currentTimeEnd) : "0:00"}</StyledP>
+      </ParentSpan>
 
       {repeat ? (
         <span>
@@ -256,80 +256,27 @@ function PlayNavBar(props) {
         </span>
       )}
 
-      <span>
-        <StyledPrevious onClick={() => playPrevSong()} />
-      </span>
-      <span>
-        <StyledNext onClick={() => playNextSong()} />
-      </span>
-
         <span>
           <StyledQueue
             onClick={() => {
-              setQueue(getQueue());
+              history.push('/home/queue');
               toggleModal();
-
             }}
           />
         </span>
 
-        <ParentSpan>
-          <StyledP>{currentTimeStart? handleTimeConvert(timeStartRef.current) : "0:00"}</StyledP>
-          <StyledSlider
-            className = {classes.root2}
-            value = {timeRef.current}
-            onChange = {(e,time) => setCurrentTime(time)}
-            aria-labelledby="continuous-slider"
-            onChangeCommitted = {handleTimeChange}
-          />
-          <StyledP>{currentTimeEnd? handleTimeConvert(currentTimeEnd) : "0:00"}</StyledP>
-        </ParentSpan>
-
-        <ParentSpan>
-          <StyledP>{volume === 0 ? <StyledVolumeMute onClick = {() => unmuteVolume()}/> : volume >= 50 ? <StyledVolumeUp onClick = {() => muteVolume()}/> : <StyledVolumeDown onClick = {() => muteVolume()}/>}</StyledP>
-          
-          <StyledSlider
-            className = {classes.root}
-            value = {volume}
-            onChange = {(e,vol) => setVolume(vol)}
-            aria-labelledby="continuous-slider"
-            onChangeCommitted = {handleVolumeChange}
-          />
-        </ParentSpan>
-
-        {/* <Grid container spacing={1}>
-          <Grid item>
-            {currentTimeStart? handleTimeConvert(timeStartRef.current) : "0:00"}
-          </Grid>
-          <Grid item xs>
-            <Slider
-                className = {classes.root2}
-                value = {timeRef.current}
-                onChange = {(e,time) => setCurrentTime(time)}
-                aria-labelledby="continuous-slider"
-                onChangeCommitted = {handleTimeChange}
-              />
-          </Grid>
-          <Grid item>
-            {currentTimeEnd? handleTimeConvert(currentTimeEnd) : "0:00"}
-          </Grid>
-
-          <Grid item>
-            {volume === 0 ? <VolumeOffIcon onClick = {() => unmuteVolume()}/> : volume >= 50 ? <VolumeUp onClick = {() => muteVolume()}/> : <VolumeDownIcon onClick = {() => muteVolume()}/>}
-          </Grid>
-          <Grid item xs>
-            <StyledSlider
-              className = {classes.root}
-              value = {volume}
-              onChange = {(e,vol) => setVolume(vol)}
-              aria-labelledby="continuous-slider"
-              onChangeCommitted = {handleVolumeChange}
-            />
-          </Grid>
-        </Grid> */}
-
-
+      <ParentSpan>
+        <StyledP>{volume === 0 ? <StyledVolumeMute onClick = {() => unmuteVolume()}/> : volume >= 50 ? <StyledVolumeUp onClick = {() => muteVolume()}/> : <StyledVolumeDown onClick = {() => muteVolume()}/>}</StyledP>
         
+        <StyledSlider
+          className = {classes.root}
+          value = {volume}
+          onChange = {(e,vol) => setVolume(vol)}
+          aria-labelledby="continuous-slider"
+          onChangeCommitted = {handleVolumeChange}
+        />
+      </ParentSpan>
+
         </EmptyDiv>
       
       :""}
@@ -506,7 +453,6 @@ const StyledP = styled.p`
   color: white;
   margin-top: 1em;
   display: flex;
-  float:left;
   
 `
 

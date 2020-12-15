@@ -112,7 +112,7 @@ function HomePage() {
       currentalbumsongs,
       rerender,
       userresults,
-      urPlaylists
+      urPlaylists,
     },
     actions: {
       setPage,
@@ -123,7 +123,7 @@ function HomePage() {
       setcurrentalbumSongs,
       setRerender,
       setuserResults,
-      seturPlaylists
+      seturPlaylists,
     },
   };
 
@@ -168,17 +168,11 @@ function HomePage() {
     );
   } else if (page === 2) {
     // viewPage = <AlbumPage />;
-    
-  } 
-  else if (page === 3)
-  {
-    viewPage = <SearchUsers search = {userresults}/>
-  }
-  else if (page === 4)
-  {
-    viewPage = <SearchUsersPage playlist = {urPlaylists}/>
-  }
-  else {
+  } else if (page === 3) {
+    viewPage = <SearchUsers search={userresults} />;
+  } else if (page === 4) {
+    viewPage = <SearchUsersPage playlist={urPlaylists} />;
+  } else {
     setPage(0);
     viewPage = <BrowseView />;
   }
@@ -188,7 +182,7 @@ function HomePage() {
     let data = { id: id, owner: owner };
     axios
       .post("http://localhost:5000/api/playlist/delete", data)
-      .then(function (res) { 
+      .then(function (res) {
         console.log("playlist has been deleted");
         setPlaylist(res.data);
         setRerender(rerender + 1);

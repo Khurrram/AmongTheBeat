@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useLayoutEffect } from "react";
 import styled from "styled-components";
 import Avatar from "@material-ui/core/Avatar";
 import HeartIcon from "@material-ui/icons/Favorite";
@@ -16,6 +16,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import axios from "axios";
 import { getSessionCookie } from "../CookieHandler";
 import { SongContext } from "./Home";
+import Axios from "axios";
 import {
   buttonClicked,
   dequeueSong,
@@ -24,7 +25,10 @@ import {
   resumeSong,
 } from "../DataManipulation/PlayerREST";
 import { HomeContext } from "./Home";
-import { addSongToPlaylist, getValidSongPlaylists } from "../DataManipulation/PlaylistREST";
+import {
+  addSongToPlaylist,
+  getValidSongPlaylists,
+} from "../DataManipulation/PlaylistREST";
 import {
   findLikedSong,
   addLikedSong,
@@ -55,16 +59,15 @@ function SongDisplay(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [liked, setLiked] = useState(false);
   const [playState, setPlayState] = useState(true);
+  const [imgSrc, setImgSrc] = useState("");
 
   function toggleModal() {
     setModalIsOpen(!modalIsOpen);
     if (!modalIsOpen) {
-      getValidSongPlaylists(session.id, name, artist, uri, time)
-      .then((res) =>
-      {
+      getValidSongPlaylists(session.id, name, artist, uri, time).then((res) => {
         setPlaylists(res.data.playlists);
         setCurrSong(res.data.song);
-      })
+      });
     }
   }
 
@@ -88,6 +91,20 @@ function SongDisplay(props) {
     actions.removeSongFromPlaylistID(playlistid, songid);
     handleClose();
   }
+
+  useLayoutEffect(() => {
+    Axios.get("https://api.spotify.com/v1/tracks/" + uri.split(":")[2], {
+      headers: {
+        Authorization: "Bearer " + session.accessToken,
+      },
+    })
+      .then((response) => {
+        // console.log(response);
+        setImgSrc(response.data.album.images[2].url);
+        // console.log(response.data.images[0].url);
+      })
+      .catch((err) => console.log(err));
+  }, [uri]);
 
   useEffect(() => {
     findLikedSong(session.id, uri).then((res) => {
@@ -145,7 +162,10 @@ function SongDisplay(props) {
         {/*  JUST SAMPLE FOR TESTING, THIS IS WHERE DATABASE IMPLEMENTATION NEEDS TO BE ADDED */}
         {playlists.map((playlist) => {
           return (
-            <ModalContent onClick={(e) => addtoPlaylist(e, playlist._id, uri)} key = {playlist._id}>
+            <ModalContent
+              onClick={(e) => addtoPlaylist(e, playlist._id, uri)}
+              key={playlist._id}
+            >
               {playlist.playlist_name}
             </ModalContent>
           );
@@ -164,24 +184,35 @@ function SongDisplay(props) {
         </MenuItem>
         <MenuItem onClick={() => handleClose()}>Cancel</MenuItem>
       </Menu>
-      {props.Queue? (
+      {props.Queue ? (
         <SongInfo>
-            <SongName>{name}</SongName>
-            <SongArtist>{artist}</SongArtist>
-            <SongTime>{time}</SongTime>
+          <StyledAvatar variant="rounded">
+            <TrackImg src={imgSrc} />
+          </StyledAvatar>
+          <SongName>{name}</SongName>
+          <SongArtist>{artist}</SongArtist>
+          <SongTime>{time}</SongTime> 
         </SongInfo>
-        
-        ) : (
-      <SongInfo>
-        {songState.playingCurrentSong === uri ? (
-          songState.playing ? (
-            <PauseCircleFilledIcon
-              onClick={() => {
-                songActions.setPlayingCurrentSong("");
-                songActions.setPlaying(false);
-                pauseSong();
-              }}
-            />
+      ) : (
+        <SongInfo>
+          {songState.playingCurrentSong === uri ? (
+            songState.playing ? (
+              <PauseCircleFilledIcon
+                onClick={() => {
+                  songActions.setPlayingCurrentSong("");
+                  songActions.setPlaying(false);
+                  pauseSong();
+                }}
+              />
+            ) : (
+              <PlayCircleFilledIcon
+                onClick={() => {
+                  songActions.setPlayingCurrentSong(uri);
+                  songActions.setPlaying(true);
+                  buttonClicked(playlist, {SpotifyURI: uri, song_name: name, artist_name:artist, time: time});
+                }}
+              />
+            )
           ) : (
             <PlayCircleFilledIcon
               onClick={() => {
@@ -190,40 +221,43 @@ function SongDisplay(props) {
                 buttonClicked(playlist, {SpotifyURI: uri, song_name: name, artist_name:artist, time: time});
               }}
             />
-          )
-        ) : (
-          <PlayCircleFilledIcon
-            onClick={() => {
-              songActions.setPlayingCurrentSong(uri);
-              songActions.setPlaying(true);
-              buttonClicked(playlist, {SpotifyURI: uri, song_name: name, artist_name:artist, time: time});
-            }}
-          />
-        )}
-
-        <SongName>{name}</SongName>
-        <SongArtist>{artist}</SongArtist>
-        <SongTime>{time}</SongTime>
-      </SongInfo>
+          )}
+          <StyledAvatar variant="rounded">
+            <TrackImg src={imgSrc} />
+          </StyledAvatar>
+          <SongName>{name}</SongName>
+          <SongArtist>{artist}</SongArtist>
+          <SongTime>{time}</SongTime>
+        </SongInfo>
       )}
 
-      {props.Queue ? (
+    {props.Queue ? (
       <SongAction>
-        <StyledTrashCan 
-          aria-label="more"
-          aria-controls="long-menu"
-          aria-haspopup="true"
-          onClick={(e) => dequeue({SpotifyURI: uri, song_name: name, artist_name:artist, time: time})}
-          />
-      </SongAction> ) : (
+                <StyledTrashCan
+                aria-label="more"
+                aria-controls="long-menu"
+                aria-haspopup="true"
+                onClick={(e) => dequeue({SpotifyURI: uri, song_name: name, artist_name:artist, time: time})}
+              />
+      </SongAction>
+    ) : (
       <SongAction>
         {liked ? (
           <LikedHeart onClick={() => unlikeSong()} />
         ) : (
           <UnlikedHeart onClick={() => likeSong()} />
         )}
-        <StyledQueue onClick={() => queueSong({SpotifyURI: uri, song_name: name, artist_name:artist, time: time})} />
-        {props.Browse || props.Queue ? (
+          <StyledQueue
+            onClick={() =>
+              queueSong({
+                SpotifyURI: uri,
+                song_name: name,
+                artist_name: artist,
+                time: time,
+              })
+            }
+          />
+        {props.Browse ? (
           <StyledPlaylistAdd onClick={() => toggleModal()} />
         ) : (
           <StyledTrashCan
@@ -234,10 +268,23 @@ function SongDisplay(props) {
           />
         )}
       </SongAction>
-      )}
+        )}
     </Container>
   );
 }
+
+const StyledAvatar = styled(Avatar)`
+  &&& {
+    max-height: 36px;
+    max-width: 36px;
+    height: 36px;
+    width: 36px;
+  }
+`;
+const TrackImg = styled.img`
+  width: 48px;
+  max-midth: 48px;
+`;
 
 const Container = styled.div`
   display: flex;
@@ -251,10 +298,6 @@ const Container = styled.div`
   &:hover {
     background-color: #686868;
   }
-`;
-
-const StyledAvatar = styled(Avatar)`
-  margin-left: 0.5em;
 `;
 
 const SongInfo = styled.div`
@@ -367,6 +410,5 @@ const ModalContent = styled.div`
     background-color: #686868;
   }
 `;
-
 
 export default SongDisplay;

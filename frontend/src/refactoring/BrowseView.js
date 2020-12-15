@@ -76,10 +76,6 @@ function BrowseView(props) {
           onCancelSearch = {() => searchforSong("")}
         />
       </span>
-      <StyledSpan>
-        <Title onClick={()=>{clicklol()}}>Title</Title>
-        {<Artist>{search? "Artist": "Description"}</Artist>}
-      </StyledSpan>
       <span>
         <hr />
       </span>

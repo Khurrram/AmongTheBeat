@@ -67,11 +67,6 @@ function Sidebar(props) {
             <Link to={`${url}/likedsongs`}></Link>
           </MenuItem>
 
-          <MenuItem id="fontsize">
-            Queue
-            <Link to={`${url}/queue`}></Link>
-          </MenuItem>
-
           <StyledSearh
             placeholder="Search User"
             value={searchresults}

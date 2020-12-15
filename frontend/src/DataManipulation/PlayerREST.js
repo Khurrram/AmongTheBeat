@@ -1,16 +1,17 @@
+import { useState} from "react";
 import axios from "axios";
 import { getSessionCookie, setSessionCookie } from "../CookieHandler";
 import {addHistory} from "./AccountREST";
 import querystring from 'querystring';
 import Queue from "queue-fifo";
-import { useState } from "react";
+import { SongContext } from "../refactoring/Home";
 import { instance } from "./AccountREST";
 import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from "constants";
 
 const session = getSessionCookie();
 var deviceID = "";
 const songQueue = new Queue();
-var currentSong = {};
+var currentSong;
 var currentIndex = -1;
 var currentPlaylist = [];
 var currentPos = 0;
@@ -314,9 +315,9 @@ export const playNextSong = () => {
       if (queueRerenderFunc) {
       queueRerenderFunc(queueRerenderVal+1);
       }
+      console.log("Playing next song in Song Queue");
       playSong(nextSong);
       return nextSong.SpotifyURI;
-      console.log("Playing next song in Song Queue");
     }
   }
 };
@@ -358,6 +359,10 @@ export const queueSong = (track) => {
   //add songs to the SongQueue
   songQueue.enqueue(track);
   queuedSongs = true;
+  if (!currentSong) {
+    console.log("empty currentSong");
+    playNextSong();
+  }
   console.log("queued next song");
 };
 

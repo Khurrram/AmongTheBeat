@@ -85,12 +85,6 @@ function SearchUsersPage(props)
 
             </span>
 
-
-            <StyledSpan>
-                <Title>Title</Title>
-                <Artist>Artist</Artist>
-             </StyledSpan>
-
              <span>
                 <hr />
             </span>

@@ -21,6 +21,7 @@ import { PlaylistAdd } from "@material-ui/icons";
 import SettingsView from "../Homepage/SettingView";
 import useScript from "../DataManipulation/useScript";
 import Axios from "axios";
+
 import { useTransition, animated } from "react-spring";
 
 export const HomeContext = React.createContext();
@@ -90,7 +91,6 @@ function Home() {
         <HomeContainer>
           <SideBar playlists={playlists} />
           <ContentWindow>
-            {/* <SpotifyPlayerContainer /> */}
             <Navbar>
               <StyledAvatar>
                 <StyledImg src={url} />
@@ -98,11 +98,11 @@ function Home() {
 
               <StyledSettingIcon onClick={() => setSettings(true)} />
             </Navbar>
-            <ContentWindow>
+            <MiddleContent>
               {settingTransition.map(
-                ({ item, key, props }) =>
+                ({ item, props }) =>
                   item && (
-                    <animated.div style={props}>
+                    <animated.div style={props} key = {props}>
                       <SettingsView url={url} toggleSetting={setSettings} />
                     </animated.div>
                   )
@@ -144,7 +144,7 @@ function Home() {
                   <SearchUsersPage />
                 </Route>
               </Switch>
-            </ContentWindow>
+            </MiddleContent>
             <Footer>
               <PlayNavBar></PlayNavBar>
             </Footer>
@@ -154,6 +154,10 @@ function Home() {
     </HomeContext.Provider>
   );
 }
+
+const MiddleContent = styled.div`
+  order: 1;
+`;
 
 const StyledImg = styled.img`
   width: 48px;
