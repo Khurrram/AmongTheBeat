@@ -237,7 +237,8 @@ export const changeVolume = async(volume) =>
 
 export const playbackInfo = async() =>
 {
-  axios.get(
+
+  return axios.get(
     "https://api.spotify.com/v1/me/player/currently-playing",
     {
       method: "GET",
@@ -250,14 +251,33 @@ export const playbackInfo = async() =>
     )
     .then((res) =>
     {
-      console.log(res);
-      return res
+      return res.data
     }).catch((err) =>
     {
       console.log("changeVolume ERR");
     })
+}
 
-
+export const setTime = async(time) =>
+{
+  fetch(
+    "https://api.spotify.com/v1/me/player/seek?" + "position_ms=" + time.toString()  + "&device_id=" + deviceID,
+    {
+      method: "PUT",
+      headers:
+      {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.accessToken}`
+      }
+    }
+  )
+    .then((ev) =>
+    {
+      console.log("set time to ", time, " ms");
+    }).catch((err) =>
+    {
+      console.log("changeVolume ERR");
+    })
 }
 
 export const playNextSong = () => {

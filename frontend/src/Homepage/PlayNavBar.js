@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import Avatar from "@material-ui/core/Avatar";
 import PlayIcon from "@material-ui/icons/PlayArrow";
@@ -16,7 +16,6 @@ import Slider from '@material-ui/core/Slider';
 import VolumeUp from '@material-ui/icons/VolumeUp';
 import VolumeDownIcon from '@material-ui/icons/VolumeDown';
 import VolumeOffIcon from '@material-ui/icons/VolumeOff';
-import Grid from '@material-ui/core/Grid';
 
 import {
   setSongFunction,
@@ -30,7 +29,8 @@ import {
   noShuffleSong,
   getQueue,
   changeVolume,
-  playbackInfo
+  playbackInfo,
+  setTime
 } from "../DataManipulation/PlayerREST";
 import { SongContext } from "../refactoring/Home";
 import { makeStyles } from "@material-ui/core";
@@ -48,6 +48,12 @@ function PlayNavBar(props) {
   const [volume, setVolume] = useState(50);
   const [previousVolume, setPreviousVolume] = useState(volume);
   const [currentTime, setCurrentTime] = useState(0);
+  const [currentTimeStart, setCurrentTimeStart] = useState();
+  const [currentTimeEnd, setCurrentTimeEnd] = useState();
+  const [flag, setFlag] = useState(true);
+
+  const timeRef = useRef(currentTime);
+  const timeStartRef = useRef(currentTimeStart);
 
   setSongFunction(setSong);
 
@@ -59,32 +65,57 @@ function PlayNavBar(props) {
     songActions.setPlayingCurrentSong(song.uri);
   }, [song]);
 
-  // const changeTime = async() =>
-  // {
-  //   // playbackInfo().then((res) =>
-  //   // {
-  //   //   console.log(res);
-  //   //   setCurrentTime(currentTime+1);
-  //   // })
+  const changeTime = () =>
+  {
+    // console.log(song);
+    if(song !== "")
+    {
+      playbackInfo().then((res) =>
+      {
+        let progress_s = res.progress_ms / 1000;
+        let duration_s = res.item.duration_ms/ 1000;
 
-  //   let x = await playbackInfo();
-  //   console.log(x);
-  //   setCurrentTime(currentTime+1);
-  // }
+        let bartime = Math.round((progress_s* 100)/ duration_s)
 
-  // useEffect(() =>
-  // {
-  //   setTimeout(() => changeTime(), 10000)
+        timeRef.current = bartime
+        timeStartRef.current = res.progress_ms
+      
+        setCurrentTime(timeRef.current)
+        setCurrentTimeStart(timeStartRef.current);
+        setCurrentTimeEnd(res.item.duration_ms);
+      })
+    }
+  }
 
-  // }, [currentTime])
+  const handleTimeConvert = (ms) =>
+  {
+    var seconds = Math.floor((ms / 1000) % 60),
+    minutes = Math.floor((ms / (1000 * 60)) % 60),
 
-  // useEffect(() =>
-  // {
-  //   return(() =>
-  //   {
-  //     changeTime(0);
-  //   })
-  // },[])
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    return minutes + ":" + seconds;
+  }
+
+  useEffect(() =>
+  {
+    const interval = setInterval(() => changeTime(), 1000)
+    return () =>
+    {
+      clearInterval(interval);
+    }
+  }, [song])
+
+  useEffect(() =>
+  {
+    return(() =>
+    {
+      setCurrentTime(0)
+      setCurrentTimeStart(null);
+      setCurrentTimeEnd(null);
+    })
+  },[])
 
   const handleVolumeChange = (event, newvolume) =>
   {
@@ -103,6 +134,22 @@ function PlayNavBar(props) {
   {
     setVolume(previousVolume);
     changeVolume(previousVolume);
+  }
+
+  const handleTimeChange = (event, newtime) =>
+  {
+    event.preventDefault();
+
+    let bartime = (newtime * (currentTimeEnd))/ 100
+
+    timeRef.current = newtime;
+    timeStartRef.current = bartime
+
+    setTime(Math.round(timeStartRef.current)).then((res) =>
+    {
+      setCurrentTime(timeRef.current)
+      setCurrentTimeStart(timeStartRef.current)
+    })
   }
 
   return (
@@ -218,17 +265,21 @@ function PlayNavBar(props) {
           />
         </span>
 
-        <span>
-          <Slider 
+        <ParentSpan>
+          <StyledP>{currentTimeStart? handleTimeConvert(timeStartRef.current) : "0:00"}</StyledP>
+          <StyledSlider
             className = {classes.root2}
-          
-          
+            value = {timeRef.current}
+            onChange = {(e,time) => setCurrentTime(time)}
+            aria-labelledby="continuous-slider"
+            onChangeCommitted = {handleTimeChange}
           />
-        </span>
+          <StyledP>{currentTimeEnd? handleTimeConvert(currentTimeEnd) : "0:00"}</StyledP>
+        </ParentSpan>
 
-        <div>
-          {volume === 0 ? <StyledVolumeMute onClick = {() => unmuteVolume()}/> : volume >= 50 ? <StyledVolumeUp onClick = {() => muteVolume()}/> : <StyledVolumeDown onClick = {() => muteVolume()}/>}
-
+        <ParentSpan>
+          <StyledP>{volume === 0 ? <StyledVolumeMute onClick = {() => unmuteVolume()}/> : volume >= 50 ? <StyledVolumeUp onClick = {() => muteVolume()}/> : <StyledVolumeDown onClick = {() => muteVolume()}/>}</StyledP>
+          
           <StyledSlider
             className = {classes.root}
             value = {volume}
@@ -236,7 +287,7 @@ function PlayNavBar(props) {
             aria-labelledby="continuous-slider"
             onChangeCommitted = {handleVolumeChange}
           />
-        </div>
+        </ParentSpan>
 
         
 
@@ -302,13 +353,15 @@ const StyledSlider = styled(Slider)`
   
   display: inline-block;
   float:left;
+  margin-top: 1em;
+
 `
 const StyledVolumeUp = styled(VolumeUp)`
   
   
   display: inline-block;
   float:left;
-  margin-left: 4em;
+  margin-left: 2em;
   color: ${"white"}; 
 
   &:hover {
@@ -320,7 +373,7 @@ const StyledVolumeUp = styled(VolumeUp)`
 const StyledVolumeDown = styled(VolumeDownIcon)`
   display: inline-block;
   float:left;
-  margin-left: 4em;
+  margin-left: 2em;
   color: ${"white"}; 
 
   &:hover {
@@ -332,13 +385,26 @@ const StyledVolumeDown = styled(VolumeDownIcon)`
 const StyledVolumeMute = styled(VolumeOffIcon)`
   display: inline-block;
   float:left;
-  margin-left: 4em;
+  margin-left: 2em;
   color: ${"white"}; 
 
   &:hover {
     color: ${"blue"};
   }
   }
+  
+`
+
+const StyledP = styled.p`
+  color: white;
+  margin-top: 1em;
+  display: inline-block;
+  float:left;
+  
+`
+
+const ParentSpan = styled.span`
+  overlow: hidden;
   
 `
 
@@ -365,7 +431,7 @@ const useStyles = makeStyles({
     width: 200
   },
   root2: {
-    width: 400
+    width: 600
   }
 
 })

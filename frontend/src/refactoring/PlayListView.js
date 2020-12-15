@@ -65,6 +65,19 @@ function PlayListView(props) {
     };
     fetchSongs();
   }, [state.playlists]);
+  
+  useEffect(() =>
+  {
+    return(() =>
+    {
+      setModalIsOpen(false);
+      setdisableTitle(false);
+      setTotalLength("0");
+      setCurrSongs(null);
+      setCurrSongIDS(null);
+    })
+
+  },[])
 
   function toggleModal() {
     setModalIsOpen(!modalIsOpen);
@@ -180,9 +193,8 @@ function PlayListView(props) {
         />
         <h6 id="timestamp">{totalLength}</h6>
         <h6>
-          {state.currentPlaylist.songs_ids &&
-            state.currentPlaylist.songs_ids.length + " "}
-          {state.currentPlaylist.songs_ids.length === 1? "Song" : "Songs"}
+          {currSongs  ? currSongs.length + " ": ""}
+          {currSongs  ? (currSongs.length === 1 ? "Song" : "Songs"): ""}
         </h6>
       </span>
       <StyledSpan>
