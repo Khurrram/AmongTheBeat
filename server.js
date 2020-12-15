@@ -212,7 +212,6 @@ app.post("/api/user/addlikedsong", (req, res) =>
   let songname = req.body.song_name;
   let artistname = req.body.artist_name;
   let uri = req.body.uri;
-  let time = req.body.time
   let id = new mongoose.Types.ObjectId();
 
   userModel.findOneAndUpdate(
@@ -230,8 +229,7 @@ app.post("/api/user/addlikedsong", (req, res) =>
             _id: id,
             song_name: songname,
             artist_name: artistname,
-            SpotifyURI : uri,
-            time: time
+            SpotifyURI : uri
           })
           res.send("Success")
         }
@@ -445,8 +443,6 @@ app.post("/api/song/getplaylists", (req, res) => {
   let song_name = req.body.song_name;
   let artist_name = req.body.artist_name;
   let uri = req.body.uri;
-  let time = req.body.time
-
   let id = new mongoose.Types.ObjectId();
   let songHold;
 
@@ -464,8 +460,7 @@ app.post("/api/song/getplaylists", (req, res) => {
               _id: id,
               song_name: song_name,
               artist_name: artist_name,
-              SpotifyURI : uri,
-              time: time
+              SpotifyURI : uri
             });
             let data = {playlists : playlists, song: id};
             res.send(data);
@@ -516,36 +511,6 @@ app.post("/api/song/addtoplaylist", (req, res) => {
   });
 });
 
-//WE ARE NOW USING GET REQUEST PLAYLIST/*
-//POST for adding song to playlist
-// app.post("/api/playlist/getsongs", (req, res) => {
-//   let playlist_id = req.body.id;
-//   let songs = []
-//     playlistModel.findOne({ _id: playlist_id },
-//       function (err, playlist) {
-//         if (err) {
-//           console.log(err);
-//         } 
-//         else{
-//           for (let i = 0; i < playlist.songs_ids.length; i++) {
-      
-//             songModel.find({_id: playlist.songs_ids[i].song_id }, function(err,song){
-//               if (err) {
-//                 console.log(err);
-//               } 
-//                 songs.push(song[0]);
-//                 if(i === playlist.songs_ids.length-1)
-//                 {
-//                   res.send(songs);
-//                 }
-//             });
-
-//           }
-           
-//         }
-//       }
-//     );
-// });
 
 app.post("/api/song/updateplaylist", (req, res) => {
 
@@ -639,7 +604,6 @@ app.post("/api/user/addHistory", (req, res) =>
   let songname = req.body.song_name;
   let artistname = req.body.artist_name;
   let uri = req.body.uri;
-  let time = req.body.time
   let id = new mongoose.Types.ObjectId();
 
   userModel.findOneAndUpdate(
@@ -668,8 +632,7 @@ app.post("/api/user/addHistory", (req, res) =>
             _id: id,
             song_name: songname,
             artist_name: artistname,
-            SpotifyURI : uri,
-            time: time
+            SpotifyURI : uri
           })
           res.send("Success")
         }
