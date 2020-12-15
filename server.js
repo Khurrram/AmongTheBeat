@@ -212,6 +212,7 @@ app.post("/api/user/addlikedsong", (req, res) =>
   let songname = req.body.song_name;
   let artistname = req.body.artist_name;
   let uri = req.body.uri;
+  let time = req.body.time
   let id = new mongoose.Types.ObjectId();
 
   userModel.findOneAndUpdate(
@@ -229,7 +230,8 @@ app.post("/api/user/addlikedsong", (req, res) =>
             _id: id,
             song_name: songname,
             artist_name: artistname,
-            SpotifyURI : uri
+            SpotifyURI : uri,
+            time: time
           })
           res.send("Success")
         }

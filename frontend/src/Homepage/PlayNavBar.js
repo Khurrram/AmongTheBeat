@@ -80,17 +80,20 @@ function PlayNavBar(props) {
     {
       playbackInfo().then((res) =>
       {
-        let progress_s = res.progress_ms / 1000;
-        let duration_s = res.item.duration_ms/ 1000;
+        if(res !== undefined && res !== null && res !== "")
+        {
+          let progress_s = res.progress_ms / 1000;
+          let duration_s = res.item.duration_ms/ 1000;
 
-        let bartime = Math.round((progress_s* 100)/ duration_s)
+          let bartime = Math.round((progress_s* 100)/ duration_s)
 
-        timeRef.current = bartime
-        timeStartRef.current = res.progress_ms
-      
-        setCurrentTime(timeRef.current)
-        setCurrentTimeStart(timeStartRef.current);
-        setCurrentTimeEnd(res.item.duration_ms);
+          timeRef.current = bartime
+          timeStartRef.current = res.progress_ms
+        
+          setCurrentTime(timeRef.current)
+          setCurrentTimeStart(timeStartRef.current);
+          setCurrentTimeEnd(res.item.duration_ms);
+        }
       })
     }
   }
@@ -298,7 +301,7 @@ function PlayNavBar(props) {
           onChangeCommitted = {handleVolumeChange}
         />
       </ParentSpan>
-      
+
         </EmptyDiv>
       
       :""}

@@ -18,7 +18,6 @@ function LikedSongs()
       getLikedSongs(session.id).then((res) =>
       {
         setSongs(res);
-        console.log("Favorited Songs: " + res)
       })
       
     },[rerender])
@@ -36,11 +35,6 @@ function LikedSongs()
             <span>
                 <h1>Favorite Songs</h1>
             </span>
-
-            <StyledSpan>
-                <Title>Title</Title>
-                <Artist>Artist</Artist>
-            </StyledSpan>
 
             <span>
                 <hr />

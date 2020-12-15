@@ -62,7 +62,7 @@ function AlbumPage(props)
       for (let i = 0; i < arr.length; i++) {
         if (arr[i].track !== null) {
 
-          let data = {song_name: arr[i].track.name, artist_name: artistamt(arr[i].track.artists), SpotifyURI: arr[i].track.uri, time: msToTime(arr[i].track.duration_ms)};
+          let data = {song_name: arr[i].track.name, artist_name: artists, SpotifyURI: arr[i].track.uri, time: msToTime(arr[i].duration_ms)};
           uris.push(data);
         }
       }
@@ -90,10 +90,6 @@ function AlbumPage(props)
         {images ? <StylAvatar style={{variant: 'square', height: '5em', width: '5em' }} src = {images[0].url} /> : <p>Loading...</p>}
             <h1>{name}</h1>
         </span>
-        <StyledSpan>
-            <Title>Title</Title>
-            <Artist>Artist</Artist>
-        </StyledSpan>
         <span>
             <hr />
         </span>
@@ -167,7 +163,7 @@ const StyledSpan = styled.span`
 const StylAvatar = styled(Avatar)`
   margin-left: 0.5em;
   margin-right: 1em;
-  margin-bottom: -1em;
+  margin-bottom: 0em;
   variant: 'square';
   transform: scale(1);
 `;
