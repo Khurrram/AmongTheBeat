@@ -201,7 +201,9 @@ function PlayNavBar(props) {
       <span>{song.name}</span>
 
       <span>
-        <StyledPrevious onClick={() => playPrevSong()} />
+        <StyledPrevious onClick={() => {
+          songActions.setPlaying(true);
+          playPrevSong()}} />
       </span>
 
       {songState.playing ? (
@@ -225,7 +227,9 @@ function PlayNavBar(props) {
       )}
 
       <span>
-        <StyledNext onClick={() => playNextSong()} />
+        <StyledNext onClick={() => {
+          songActions.setPlaying(true);
+          playNextSong()}} />
       </span>
 
       <ParentSpan>
