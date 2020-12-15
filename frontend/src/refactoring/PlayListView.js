@@ -20,6 +20,8 @@ import {
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import SongDisplay from "./SongDisplay";
 import Modal from "react-modal";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import { Tune } from "@material-ui/icons";
 
 Modal.setAppElement("#root");
@@ -35,6 +37,7 @@ function PlayListView(props) {
 
   const [disableTitle, setdisableTitle] = useState(false);
   const [playlistName, setPlaylistName] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const playlistTitle = useRef(null);
 
@@ -44,8 +47,6 @@ function PlayListView(props) {
   const [currSongIDS, setCurrSongIDS] = useState(
     state.currentPlaylist.songs_ids
   );
-
-  let DEFAULT_VALUE = "DEFAULT";
 
   // THIS IS FOR GETTING INITIAL PLAYLIST TITLE
 
@@ -144,6 +145,16 @@ function PlayListView(props) {
     });
   };
 
+  function handleClick(event) {
+    setAnchorEl(event.currentTarget);
+    // console.log(id);
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+
   return (
     <StyledDiv>
       <span>
@@ -173,6 +184,22 @@ function PlayListView(props) {
           <ModalContent>{sharepath}</ModalContent>
         </Modal>
 
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={() => {
+            actions.deletePlaylists(playlistID);
+            history.push("/home");
+          }}>
+            Confirm
+          </MenuItem>
+          <MenuItem onClick={() => handleClose()}>Cancel</MenuItem>
+        </Menu>
+
         <StyledButton
           variant="contained"
           disableElevation
@@ -181,10 +208,10 @@ function PlayListView(props) {
           Share
         </StyledButton>
         <StyledTrash
-          onClick={() => {
-            actions.deletePlaylists(playlistID);
-            history.push("/home");
-          }}
+          aria-label="more"
+          aria-controls="long-menu"
+          aria-haspopup="true"
+          onClick={(e) => handleClick(e)}
         />
         <h6 id="timestamp">{totalLength}</h6>
         <h6>

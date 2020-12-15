@@ -6,7 +6,7 @@ const session = getSessionCookie();
 export const browse = async() =>
 {
     return axios.get(
-        "https://api.spotify.com/v1/browse/featured-playlists?limit=15",
+        "https://api.spotify.com/v1/browse/featured-playlists?limit=20",
         {
             method: "GET",
             headers:

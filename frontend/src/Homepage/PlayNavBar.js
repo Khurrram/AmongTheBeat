@@ -196,6 +196,11 @@ function PlayNavBar(props) {
         <EmptyDiv>
           <Avatar variant="rounded"  src = {song.album.images[0].url}/>
       <span>{song.name}</span>
+
+      <span>
+        <StyledPrevious onClick={() => playPrevSong()} />
+      </span>
+
       {songState.playing ? (
         <span>
           <StyledPause
@@ -215,6 +220,22 @@ function PlayNavBar(props) {
           />
         </span>
       )}
+
+      <span>
+        <StyledNext onClick={() => playNextSong()} />
+      </span>
+
+      <ParentSpan>
+        <StyledP>{currentTimeStart? handleTimeConvert(timeStartRef.current) : "0:00"}</StyledP>
+        <StyledSlider
+          className = {classes.root2}
+          value = {timeRef.current}
+          onChange = {(e,time) => setCurrentTime(time)}
+          aria-labelledby="continuous-slider"
+          onChangeCommitted = {handleTimeChange}
+        />
+        <StyledP>{currentTimeEnd? handleTimeConvert(currentTimeEnd) : "0:00"}</StyledP>
+      </ParentSpan>
 
       {repeat ? (
         <span>
@@ -256,13 +277,6 @@ function PlayNavBar(props) {
         </span>
       )}
 
-      <span>
-        <StyledPrevious onClick={() => playPrevSong()} />
-      </span>
-      <span>
-        <StyledNext onClick={() => playNextSong()} />
-      </span>
-
         <span>
           <StyledQueue
             onClick={() => {
@@ -273,63 +287,18 @@ function PlayNavBar(props) {
           />
         </span>
 
-        <ParentSpan>
-          <StyledP>{currentTimeStart? handleTimeConvert(timeStartRef.current) : "0:00"}</StyledP>
-          <StyledSlider
-            className = {classes.root2}
-            value = {timeRef.current}
-            onChange = {(e,time) => setCurrentTime(time)}
-            aria-labelledby="continuous-slider"
-            onChangeCommitted = {handleTimeChange}
-          />
-          <StyledP>{currentTimeEnd? handleTimeConvert(currentTimeEnd) : "0:00"}</StyledP>
-        </ParentSpan>
-
-        <ParentSpan>
-          <StyledP>{volume === 0 ? <StyledVolumeMute onClick = {() => unmuteVolume()}/> : volume >= 50 ? <StyledVolumeUp onClick = {() => muteVolume()}/> : <StyledVolumeDown onClick = {() => muteVolume()}/>}</StyledP>
-          
-          <StyledSlider
-            className = {classes.root}
-            value = {volume}
-            onChange = {(e,vol) => setVolume(vol)}
-            aria-labelledby="continuous-slider"
-            onChangeCommitted = {handleVolumeChange}
-          />
-        </ParentSpan>
-
-        {/* <Grid container spacing={1}>
-          <Grid item>
-            {currentTimeStart? handleTimeConvert(timeStartRef.current) : "0:00"}
-          </Grid>
-          <Grid item xs>
-            <Slider
-                className = {classes.root2}
-                value = {timeRef.current}
-                onChange = {(e,time) => setCurrentTime(time)}
-                aria-labelledby="continuous-slider"
-                onChangeCommitted = {handleTimeChange}
-              />
-          </Grid>
-          <Grid item>
-            {currentTimeEnd? handleTimeConvert(currentTimeEnd) : "0:00"}
-          </Grid>
-
-          <Grid item>
-            {volume === 0 ? <VolumeOffIcon onClick = {() => unmuteVolume()}/> : volume >= 50 ? <VolumeUp onClick = {() => muteVolume()}/> : <VolumeDownIcon onClick = {() => muteVolume()}/>}
-          </Grid>
-          <Grid item xs>
-            <StyledSlider
-              className = {classes.root}
-              value = {volume}
-              onChange = {(e,vol) => setVolume(vol)}
-              aria-labelledby="continuous-slider"
-              onChangeCommitted = {handleVolumeChange}
-            />
-          </Grid>
-        </Grid> */}
-
-
+      <ParentSpan>
+        <StyledP>{volume === 0 ? <StyledVolumeMute onClick = {() => unmuteVolume()}/> : volume >= 50 ? <StyledVolumeUp onClick = {() => muteVolume()}/> : <StyledVolumeDown onClick = {() => muteVolume()}/>}</StyledP>
         
+        <StyledSlider
+          className = {classes.root}
+          value = {volume}
+          onChange = {(e,vol) => setVolume(vol)}
+          aria-labelledby="continuous-slider"
+          onChangeCommitted = {handleVolumeChange}
+        />
+      </ParentSpan>
+      
         </EmptyDiv>
       
       :""}
@@ -506,7 +475,6 @@ const StyledP = styled.p`
   color: white;
   margin-top: 1em;
   display: flex;
-  float:left;
   
 `
 
