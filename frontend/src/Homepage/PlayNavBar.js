@@ -67,9 +67,9 @@ function PlayNavBar(props) {
   }
 
   useEffect(() => {
-    songActions.setPlayingCurrentSong(song.uri);
     if(song !== "")
     {
+      songActions.setPlayingCurrentSong(song.uri);
       setFlag(true)
     }
   }, [song]);
