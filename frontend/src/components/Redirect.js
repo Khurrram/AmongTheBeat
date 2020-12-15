@@ -8,7 +8,7 @@ function RedirectPage() {
 
     const code = window.location.href.split('=')[1];
 
-    const redirect_uri = 'http://localhost:3000/redirect';
+    const redirect_uri = "https://among-the-beat-sbu.herokuapp.com/redirect";
     const url = 'https://accounts.spotify.com/api/token';
     const client_id = "6e6168bb4f424095b42f948f1e303b69";
     const client_secret = 'd0083b4ff5b743f5888468fe02c2ba9c';
