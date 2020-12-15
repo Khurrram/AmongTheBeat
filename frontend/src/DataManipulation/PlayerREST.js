@@ -104,13 +104,13 @@ export const finishedSong = () => {
   }
 };
 
-setInterval(function(){
-  axios.post('https://accounts.spotify.com/api/token',querystring.stringify({ grant_type: 'refresh_token', refresh_token: session.refresh_token }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Basic ' + (new Buffer("6e6168bb4f424095b42f948f1e303b69" + ':' + "d0083b4ff5b743f5888468fe02c2ba9c").toString('base64')) }, })
-  .then(res => { 
-      console.log(res);
-  })
-  .catch(error => { console.log(error) });
-}, session.expires_in * 1000);
+// setInterval(function(){
+//   axios.post('https://accounts.spotify.com/api/token',querystring.stringify({ grant_type: 'refresh_token', refresh_token: session.refresh_token }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Basic ' + (new Buffer("6e6168bb4f424095b42f948f1e303b69" + ':' + "d0083b4ff5b743f5888468fe02c2ba9c").toString('base64')) }, })
+//   .then(res => { 
+//       console.log(res);
+//   })
+//   .catch(error => { console.log(error) });
+// }, session.expires_in * 1000);
 
 const playSong = async (uri) => {
   //should set previous song
