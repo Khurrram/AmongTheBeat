@@ -8,6 +8,7 @@ import QueueMusicIcon from "@material-ui/icons/QueueMusic";
 import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled";
 import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled";
 import PlayForWorkIcon from "@material-ui/icons/PlayForWork";
+import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import { Button } from "react-materialize";
 import Modal from "react-modal";
@@ -179,9 +180,9 @@ function SongDisplay(props) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={(e) => removeSong(e, playlist_id, id)}>
+        <StyledMenuItem onClick={(e) => removeSong(e, playlist_id, id)}>
           Confirm
-        </MenuItem>
+        </StyledMenuItem>
         <MenuItem onClick={() => handleClose()}>Cancel</MenuItem>
       </Menu>
       {props.Queue ? (
@@ -195,15 +196,25 @@ function SongDisplay(props) {
         </SongInfo>
       ) : (
         <SongInfo>
-          {songState.playingCurrentSong === uri ? (
-            songState.playing ? (
-              <PauseCircleFilledIcon
-                onClick={() => {
-                  songActions.setPlayingCurrentSong("");
-                  songActions.setPlaying(false);
-                  pauseSong();
-                }}
-              />
+          <FlexDiv>
+            {songState.playingCurrentSong === uri ? (
+              songState.playing ? (
+                <PauseCircleFilledIcon
+                  onClick={() => {
+                    songActions.setPlayingCurrentSong("");
+                    songActions.setPlaying(false);
+                    pauseSong();
+                  }}
+                />
+              ) : (
+                <PlayCircleFilledIcon
+                  onClick={() => {
+                    songActions.setPlayingCurrentSong(uri);
+                    songActions.setPlaying(true);
+                    buttonClicked(playlist, uri);
+                  }}
+                />
+              )
             ) : (
               <PlayCircleFilledIcon
                 onClick={() => {
@@ -212,19 +223,11 @@ function SongDisplay(props) {
                   buttonClicked(playlist, {SpotifyURI: uri, song_name: name, artist_name:artist, time: time});
                 }}
               />
-            )
-          ) : (
-            <PlayCircleFilledIcon
-              onClick={() => {
-                songActions.setPlayingCurrentSong(uri);
-                songActions.setPlaying(true);
-                buttonClicked(playlist, {SpotifyURI: uri, song_name: name, artist_name:artist, time: time});
-              }}
-            />
-          )}
+            )}
           <StyledAvatar variant="rounded">
             <TrackImg src={imgSrc} />
           </StyledAvatar>
+          </FlexDiv>
           <SongName>{name}</SongName>
           <SongArtist>{artist}</SongArtist>
           <SongTime>{time}</SongTime>
@@ -273,6 +276,28 @@ function SongDisplay(props) {
   );
 }
 
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    "&": {
+      backgroundColor: "darkred",
+      color: theme.palette.common.white,
+    },
+    "&:hover": {
+      backgroundColor: "red",
+    },
+  },
+}))(MenuItem);
+
+const FlexDiv = styled.div`
+  justify-content: space-around;
+  align-items: center;
+  display: flex;
+  min-width: 6%;
+  width: 7%;
+  max-width: 9%;
+  margin-right: 0.5rem;
+`;
+
 const StyledAvatar = styled(Avatar)`
   &&& {
     max-height: 36px;
@@ -295,17 +320,25 @@ const Container = styled.div`
   color: white;
   border-radius: 5px;
 
+  background-color: 'rgba(0,0,0,0.5)'
+  opacity: 0.6;
+  transition: 0.3s;
+
   &:hover {
     background-color: #686868;
+    opacity: 1;
   }
 `;
 
 const SongInfo = styled.div`
   display: flex;
-  margin-right: auto;
+  justify-content: space-around;
   align-items: center;
-  margin: 1.5em;
+  margin: 1rem;
+  margin-left: 0.5rem;
+  margin-right: auto;
   width: 100%;
+  min-width: 220px;
   color: white;
 `;
 
@@ -340,7 +373,7 @@ const StyledTrashCan = styled(TrashIcon)`
   color: ${"white"};
 
   &:hover {
-    color: ${"blue"};
+    color: ${"black"};
   }
 }
 `;
@@ -357,21 +390,30 @@ const StyledQueue = styled(QueueMusicIcon)`
 `;
 
 const SongArtist = styled.span`
-  width: 43rem;
+  width: 20rem;
+  min-width: 20rem;
+  max-width: 35rem;
+  margin-right: auto;
 `;
 const SongName = styled.span`
   flex: auto;
+  min-width: 20rem;
+  max-width: 30rem;
+  margin-right: auto;
 `;
 
 const SongAction = styled.div`
   display: flex;
   margin-left: auto;
-  margin-right: 6em;
+  margin-right: 3em;
   justify-content: space-evenly;
 `;
 const SongTime = styled.span`
   float: right;
   padding-right: 2rem;
+  margin-left: auto;
+  min-width: 5rem;
+  max-width: 10rem;
 `;
 
 const customStyles = {
