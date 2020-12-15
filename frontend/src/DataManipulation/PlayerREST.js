@@ -277,21 +277,28 @@ export const playNextSong = () => {
   //play next song, dequeue either playlistqueue or songqueue before calling playSong
   if (repeat) {
     playSong(currentSong);
+    return currentSong;
   } else {
     if (songQueue.isEmpty()) {
         queuedSongs = false;
       if (shuffle) { //shuffle is toggled, play any song from the playlist
-        playSong(currentPlaylist[getRndInteger(0, currentPlaylist.length)].SpotifyURI);
+        let nextSong = currentPlaylist[getRndInteger(0, currentPlaylist.length)].SpotifyURI;
+        playSong(nextSong);
+        return nextSong;
       } else {
         if (currentIndex == currentPlaylist.length - 1) {
           console.log("Nothing left to play in playlist");
         } else {
-          playSong(currentPlaylist[currentIndex+1].SpotifyURI);
+          let nextSong = currentPlaylist[currentIndex+1].SpotifyURI;
+          playSong(nextSong);
+          return nextSong;
           console.log("Playing next song in playlistQueue");
         }
       }
     } else {
-      playSong(songQueue.dequeue().uri);
+      let nextSong = songQueue.dequeue().uri;
+      playSong(nextSong);
+      return nextSong;
       console.log("Playing next song in Song Queue");
     }
   }
@@ -300,14 +307,18 @@ export const playPrevSong = () => {
   //play previous song
   if (repeat) {
     playSong(currentSong);
+    return currentSong;
   } else {
     if (shuffle) {
-      playSong(currentPlaylist[getRndInteger(0, currentPlaylist.length)].SpotifyURI);
+      let prevSong = currentPlaylist[getRndInteger(0, currentPlaylist.length)].SpotifyURI;
+      playSong(prevSong);
     } else {
       if (currentIndex == 0) {
         console.log("No Previous Song");
       } else {
-        playSong(currentPlaylist[currentIndex-1].SpotifyURI);
+        let prevSong = currentPlaylist[currentIndex-1].SpotifyURI;
+        playSong(prevSong);
+        return prevSong;
         console.log("Now playing previous song");
       }
     }
