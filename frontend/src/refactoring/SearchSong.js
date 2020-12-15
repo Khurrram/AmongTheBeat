@@ -54,7 +54,7 @@ function SearchSong(props)
         for (let i = 0; i < arr.length; i++) {
           if (arr[i].track !== null) {
   
-            let data = {song_name: arr[i].name, artist_name: artistamt(arr[i].artists), SpotifyURI: arr[i].uri};
+            let data = {song_name: arr[i].name, artist_name: artistamt(arr[i].artists), SpotifyURI: arr[i].uri, time: msToTime(arr[i].track.duration_ms)};
             uris.push(data);
           }
         }

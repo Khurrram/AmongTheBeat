@@ -388,6 +388,8 @@ const addHistory_wrapper = () => {
   let artistname = currentPlaylist[currentIndex].artist_name;
   let uri = currentSong;
   let time = currentPlaylist[currentIndex].time
+
+  console.log(currentPlaylist[currentIndex]);
   addHistory(accountID,songname,artistname,uri, time);
 }
 
