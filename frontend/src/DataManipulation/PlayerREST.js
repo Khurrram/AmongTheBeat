@@ -1,9 +1,11 @@
 import axios from "axios";
 import { getSessionCookie, setSessionCookie } from "../CookieHandler";
 import {addHistory} from "./AccountREST";
+import querystring from 'querystring';
 import Queue from "queue-fifo";
 import { useState } from "react";
 import { instance } from "./AccountREST";
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from "constants";
 
 const session = getSessionCookie();
 var deviceID = "";
@@ -100,6 +102,14 @@ export const finishedSong = () => {
     playNextSong();
   }
 };
+
+setInterval(function(){
+  axios.post('https://accounts.spotify.com/api/token',querystring.stringify({ grant_type: 'refresh_token', refresh_token: session.refresh_token }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Basic ' + (new Buffer("6e6168bb4f424095b42f948f1e303b69" + ':' + "d0083b4ff5b743f5888468fe02c2ba9c").toString('base64')) }, })
+  .then(res => { 
+      console.log(res);
+  })
+  .catch(error => { console.log(error) });
+}, session.expires_in * 1000);
 
 const playSong = async (uri) => {
   //should set previous song
@@ -340,6 +350,16 @@ export const queueSong = (track) => {
   songQueue.enqueue(track);
   queuedSongs = true;
   console.log("queued next song");
+};
+
+export const dequeueSong = (track) => {
+  //removes songs from the SongQueue
+  for (let i = 0; i < songQueue.size(); i++) {
+    let temp = songQueue.dequeue();
+    if (temp.uri != track) {
+      songQueue.enqueue(temp);
+    }
+  }
 };
 
 export const setSong = (track) => {

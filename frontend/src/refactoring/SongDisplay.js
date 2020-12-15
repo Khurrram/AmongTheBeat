@@ -18,6 +18,7 @@ import { getSessionCookie } from "../CookieHandler";
 import { SongContext } from "./Home";
 import {
   buttonClicked,
+  dequeueSong,
   pauseSong,
   queueSong,
   resumeSong,
@@ -215,6 +216,14 @@ function SongDisplay(props) {
             onClick={(e) => handleClick(e)}
           />
         )}
+        {props.Queue ? (
+          <StyledTrashCan 
+          aria-label="more"
+          aria-controls="long-menu"
+          aria-haspopup="true"
+          onClick={(e) => dequeueSong(uri)}
+          />
+        ) : (null)}
       </SongAction>
     </Container>
   );
