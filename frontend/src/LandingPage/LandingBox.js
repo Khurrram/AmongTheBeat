@@ -8,6 +8,8 @@ import axios from "axios";
 import { getSessionCookie, setSessionCookie } from "../CookieHandler";
 import { AppContext } from "../App";
 
+const url = "https://among-the-beat-sbu.herokuapp.com";
+
 function RegisterBox(props) {
   let history = useHistory();
   const button = props.button;
@@ -162,7 +164,7 @@ function RegisterBox(props) {
     let data = { email, username, password };
 
     axios
-      .post("http://localhost:5000/api/register", data)
+      .post(url + "/api/register", data)
       .then(function (res) {
         let id = res.data;
         if (res.data != -1 + "") {
@@ -341,7 +343,7 @@ function LoginBox(props) {
     console.log("subm " + username);
 
     axios
-      .post("http://localhost:5000/api/login", data)
+      .post(url+"/api/login", data)
       .then(function (res) {
         let id = res.data;
         console.log("res: " + res.data);
@@ -482,7 +484,7 @@ function SpotifyBox(props) {
   const auth = "https://accounts.spotify.com/authorize?";
   const client_id = "6e6168bb4f424095b42f948f1e303b69";
   const response_type = "code";
-  const redirect_uri = "https://among-the-beat-sbu.herokuapp.com/redirect";
+  const redirect_uri = url+"/redirect";
   const scope = [
     "user-read-recently-played",
     "user-top-read",
