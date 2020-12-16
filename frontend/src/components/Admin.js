@@ -1,15 +1,19 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useLayoutEffect } from "react";
 import "./Admin.css";
 import SearchBar from "material-ui-search-bar";
-import {ban,unban,remove, usersList, checkAdmin} from "../DataManipulation/AccountREST"
-import {SessionContext} from "../App"
-import {useHistory } from "react-router-dom";
+import {
+  ban,
+  unban,
+  remove,
+  usersList,
+  checkAdmin,
+} from "../DataManipulation/AccountREST";
+import { SessionContext } from "../App";
+import { useHistory } from "react-router-dom";
 
 import styled from "styled-components";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-pro-sidebar/dist/css/styles.css";
-
-
 
 function Admin() {
   const [currF, setcurrF] = useState("");
@@ -18,17 +22,13 @@ function Admin() {
   const session = useContext(SessionContext);
   let history = useHistory();
 
-  useEffect(() =>
-  {
-    checkAdmin(session.id).then((res) =>
-    {
-      if(res === "Not Admin")
-      {
-        history.push("/home")
+  useLayoutEffect(() => {
+    checkAdmin(session.id).then((res) => {
+      if (res === "Not Admin") {
+        history.push("/home");
       }
-    })
-
-  },[])
+    });
+  }, []);
 
   function getData(command) {
     setcurrF(command);
@@ -38,32 +38,28 @@ function Admin() {
     } else if (command == "Remove") {
       accountType = 2;
     }
-    usersList(accountType).then((res) =>
-    {
+    usersList(accountType).then((res) => {
       setUsers(res);
-    })
+    });
   }
 
   function UI_Handler(command, id) {
     //id used to find the user
     if (command === "Ban") {
-      ban(id).then((res) =>
-      {
+      ban(id).then((res) => {
         alert(res.username + " has been banned.");
         getData("Ban");
-      })
+      });
     } else if (command === "Unban") {
-      unban(id).then((res) =>
-      {
+      unban(id).then((res) => {
         alert(res.username + " has been unbanned.");
         getData("Unban");
-      })
+      });
     } else {
-      remove(id).then((res) =>
-      {
+      remove(id).then((res) => {
         alert(res.username + " has been removed.");
         getData("Remove");
-      })
+      });
     }
   }
 
@@ -84,7 +80,7 @@ function Admin() {
               users.map((user) => {
                 if (user.username.includes(currS)) {
                   return (
-                    <div key = {user._id}>
+                    <div key={user._id}>
                       {user.username}
                       <CButton onClick={() => UI_Handler(currF, user._id)}>
                         {currF}
@@ -126,8 +122,12 @@ const CButton = styled.button`
 const CenterDiv = styled.div`
   height: 100vh;
   width: 100vw;
-  background: linear-gradient(rgb(46, 0, 48), transparent);
-  background-color: rgb(77, 77, 75);
+  background: rgb(49, 22, 101);
+  background: linear-gradient(
+    160deg,
+    rgba(49, 22, 101, 1) 59%,
+    rgba(127, 60, 142, 1) 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,8 +137,6 @@ const CenterPanel = styled.div`
   display: flex;
   height: 50vh;
   justify-content: center;
-  background: linear-gradient(rgb(46, 0, 48), transparent);
-  background-color: rgb(77, 77, 75);
 `;
 const ResultsPanel = styled.div`
   color: white;

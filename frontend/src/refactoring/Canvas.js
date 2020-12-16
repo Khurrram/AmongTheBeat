@@ -280,6 +280,8 @@ function MoodSketch(props) {
   const [liveness, setLiveness] = useState(0.0);
   const [loading, setLoading] = useState(false);
 
+  const { height, width } = useWindowDimensions();
+
   function setup(p5, canvasParentRef) {
     p5.smooth();
     let valenceColor = musicHues[Math.round(p5.map(valence, 0.0, 1.0, 0, 7))];
@@ -380,8 +382,17 @@ function MoodSketch(props) {
       alpha: 0.5,
     });
 
-    p5.createCanvas(900, 500).parent(canvasParentRef);
-    setGradient(p5, 0, 0, 900, 500, backgroundColor1, backgroundColor2, Y_AXIS);
+    p5.createCanvas(width / 2, height / 2).parent(canvasParentRef);
+    setGradient(
+      p5,
+      0,
+      0,
+      width / 2,
+      height / 2,
+      backgroundColor1,
+      backgroundColor2,
+      Y_AXIS
+    );
   }
 
   function draw(p5) {
@@ -400,7 +411,7 @@ function MoodSketch(props) {
     } else if (valence < 0.45) {
       rain(p5, 250);
       fade(p5, cloudColor2);
-    } else if (valence < 0.66) {
+    } else if (valence < 0.67) {
       rain(p5, 100);
       clouds(p5, cloudColor1);
     }
@@ -423,11 +434,13 @@ function MoodSketch(props) {
     }
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setLoading(false);
+    setKey([]);
     props.trackFeatures.forEach(function (p1, p2, p3) {
       setDanceability((prev) => prev + p1.danceability);
       setKey((prev) => [...prev, p1.key]);
+      // setKey(key.append(p1.key));
       setLoudness((prev) => prev + p1.loudness);
       setValence((prev) => prev + p1.valence);
       setTempo((prev) => prev + p1.tempo);
@@ -454,6 +467,31 @@ function MoodSketch(props) {
   }, []);
 
   return <div>{loading && <Sketch setup={setup} draw={draw} />}</div>;
+}
+
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height,
+  };
+}
+
+export function useWindowDimensions() {
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  );
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return windowDimensions;
 }
 
 export default MoodSketch;
