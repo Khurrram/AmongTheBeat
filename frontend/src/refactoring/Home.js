@@ -73,12 +73,12 @@ function Home() {
     rerender,
   } = usePlaylists(session.id);
 
-  // let history = useHistory();
-  // if (getSessionCookie().accessToken === undefined) {
-  //   console.log("cookies arent working: " + getSessionCookie());
-  //   history.push("/");
-  //   return <Redirect to="/"></Redirect>;
-  // }
+  let history = useHistory();
+  if (getSessionCookie().accessToken === undefined) {
+    console.log("cookies arent working: " + getSessionCookie());
+    history.push("/");
+    return <Redirect to="/"></Redirect>;
+  }
 
   const songContextValue = {
     songState: { playingCurrentSong, playing },
