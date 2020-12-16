@@ -102,7 +102,7 @@ function Home() {
               {settingTransition.map(
                 ({ item, props }) =>
                   item && (
-                    <animated.div style={props} key = {props}>
+                    <animated.div style={props} key={props}>
                       <SettingsView url={url} toggleSetting={setSettings} />
                     </animated.div>
                   )
@@ -157,6 +157,7 @@ function Home() {
 
 const MiddleContent = styled.div`
   order: 1;
+  max-height: 60%;
 `;
 
 const StyledImg = styled.img`
@@ -193,11 +194,12 @@ const Navbar = styled.div`
 
 const Footer = styled.div`
   display: flex;
-  align-items: center;
+  // align-items: center;
   order: 2;
   margin-top: auto;
   padding-left: 1em;
-  height: 7%;
+  // height: 7%;
+  min-height: 80px;
   background-color: rgba(0, 0, 0, 0.6);
 
   & span {

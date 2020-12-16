@@ -148,7 +148,11 @@ const Title = styled.h6`
 
 const StyledSearch = styled(SearchBar)`
   margin-left: auto;
+  margin-right: 2rem;
   max-height: 2rem;
+  max-width: 500px;
+  width: 400px;
+  min-width: 300px;
 `;
 
 const StyledButton = styled(Button)`
@@ -156,7 +160,8 @@ const StyledButton = styled(Button)`
 `;
 
 const SongDiv = styled.div`
-  min-height: 65vh;
+  min-height: 30vh;
+  height: 100%;
   max-height: 65vh;
   overflow-y: auto;
   display: flex;

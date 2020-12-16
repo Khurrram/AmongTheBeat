@@ -391,15 +391,22 @@ const StyledQueue = styled(QueueMusicIcon)`
 
 const SongArtist = styled.span`
   width: 20rem;
-  min-width: 20rem;
-  max-width: 35rem;
+  min-width: 15rem;
+  max-width: 20rem;
   margin-right: auto;
+  white-space: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
 `;
 const SongName = styled.span`
   flex: auto;
-  min-width: 20rem;
-  max-width: 30rem;
+  min-width: 15rem;
+  width: 20rem;
+  max-width: 20rem;
   margin-right: auto;
+  white-space: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
 `;
 
 const SongAction = styled.div`
