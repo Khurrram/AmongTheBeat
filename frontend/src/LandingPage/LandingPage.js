@@ -10,7 +10,7 @@ import { getSessionCookie } from "../CookieHandler";
 function LandingPage() {
   const session = useContext(SessionContext);
   let history = useHistory();
-  if (getSessionCookie() === undefined) {
+  if (getSessionCookie().accessToken !== undefined) {
     history.push("/home");
     return <Redirect to="/home"></Redirect>;
   }

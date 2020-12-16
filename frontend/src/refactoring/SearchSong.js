@@ -9,6 +9,7 @@ const SongDiv = styled.div`
   min-height: 65vh;
   max-height: 65vh;
   overflow-y: auto;
+  width: 100%;
 `;
 
 function SearchSong(props)

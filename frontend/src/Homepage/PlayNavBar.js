@@ -19,7 +19,8 @@ import VolumeDownIcon from "@material-ui/icons/VolumeDown";
 import VolumeOffIcon from "@material-ui/icons/VolumeOff";
 import Grid from "@material-ui/core/Grid";
 import { useHistory } from "react-router-dom";
-
+import axios from "axios";
+import { getSessionCookie } from "../CookieHandler";
 import {
   setSongFunction,
   playNextSong,
@@ -43,6 +44,7 @@ Modal.setAppElement("#root");
 function PlayNavBar(props) {
   let history = useHistory();
   const classes = useStyles();
+  const session = getSessionCookie();
   const [song, setSong] = useState("");
   const { songState, songActions } = useContext(SongContext);
   const [repeat, setRepeat] = useState(false);
@@ -55,7 +57,7 @@ function PlayNavBar(props) {
   const [currentTimeStart, setCurrentTimeStart] = useState();
   const [currentTimeEnd, setCurrentTimeEnd] = useState();
   const [flag, setFlag] = useState(false);
-
+  const [imgSRC, setImgSRC] = useState("")
   const [delay, setDelay] = useState(1000);
   const [isRunning, setIsRunning] = useState(true);
 
@@ -70,7 +72,18 @@ function PlayNavBar(props) {
 
   useEffect(() => {
     if (song !== "") {
+      console.log(song);
       songActions.setPlayingCurrentSong(song.uri);
+
+      let uri = song.SpotifyURI
+      axios.get("https://api.spotify.com/v1/tracks/" + uri.split(":")[2], {
+        headers: {
+          Authorization: "Bearer " + session.accessToken,
+        }
+      }).then((res) =>
+      {
+        setImgSRC(res.data.album.images[0].url)
+      }).catch((err) => console.log(err));
       setFlag(true);
     }
   }, [song]);
@@ -156,8 +169,8 @@ function PlayNavBar(props) {
     <NavBarInfo>
       {flag ? (
         <EmptyDiv>
-          <Avatar variant="rounded" src={song.album.images[0].url} />
-          <SongNameSpan>{song.name}</SongNameSpan>
+          <Avatar variant="rounded" src={imgSRC} />
+          <SongNameSpan>{song.song_name}</SongNameSpan>
 
           <FlexSpan>
             <StyledPrevious

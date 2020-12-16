@@ -67,9 +67,9 @@ window.onSpotifyWebPlaybackSDKReady = () => {
       }, 1000);
     }
 
-    if (state) {
-      setSong(state.track_window.current_track);
-    }
+    // if (state) {
+    //   setSong(state.track_window.current_track);
+    // }
 
     if (
       state.paused &&
@@ -128,11 +128,42 @@ setInterval(function () {
     )
     .then((res) => {
       console.log(res);
+      setSessionCookie({ id: session.id, username: session.username, accessToken: res.data.access_token, refresh_token: session.refresh_token, expires_in: res.data.expires_in});
     })
     .catch((error) => {
       console.log(error);
     });
-}, 3600 * 1000);
+}, 600000);
+
+export const refreshToken = () => {
+  axios
+    .post(
+      "https://accounts.spotify.com/api/token",
+      querystring.stringify({
+        grant_type: "refresh_token",
+        refresh_token: session.refresh_token,
+      }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization:
+            "Basic " +
+            new Buffer(
+              "6e6168bb4f424095b42f948f1e303b69" +
+                ":" +
+                "d0083b4ff5b743f5888468fe02c2ba9c"
+            ).toString("base64"),
+        },
+      }
+    )
+    .then((res) => {
+      setSessionCookie({ id: session.id, username: session.username, accessToken: res.data.access_token, refresh_token: session.refresh_token, expires_in: res.data.expires_in})
+      console.log(res);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 
 const playSong = async (track) => {
   //should set previous song
@@ -142,7 +173,7 @@ const playSong = async (track) => {
   }
 
   currentPos = 0;
-
+  setSong(track);
   addHistory_wrapper();
 
   fetch(
@@ -158,6 +189,7 @@ const playSong = async (track) => {
   )
     .then((ev) => {
       changeVolume(currentVolume);
+      setSong(track)
     })
     .catch((error) => {
       console.log(error);
