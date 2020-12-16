@@ -445,6 +445,7 @@ app.post("/api/song/getplaylists", (req, res) => {
   let song_name = req.body.song_name;
   let artist_name = req.body.artist_name;
   let uri = req.body.uri;
+  let time = req.body.time;
   let id = new mongoose.Types.ObjectId();
   let songHold;
 
@@ -462,7 +463,8 @@ app.post("/api/song/getplaylists", (req, res) => {
               _id: id,
               song_name: song_name,
               artist_name: artist_name,
-              SpotifyURI : uri
+              SpotifyURI : uri,
+              time: time
             });
             let data = {playlists : playlists, song: id};
             res.send(data);
@@ -607,6 +609,7 @@ app.post("/api/user/addHistory", (req, res) =>
   let artistname = req.body.artist_name;
   let uri = req.body.uri;
   let time = req.body.time;
+  console.log(time);
   let id = new mongoose.Types.ObjectId();
 
   userModel.findOneAndUpdate(

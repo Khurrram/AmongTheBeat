@@ -211,7 +211,7 @@ function SongDisplay(props) {
                   onClick={() => {
                     songActions.setPlayingCurrentSong(uri);
                     songActions.setPlaying(true);
-                    buttonClicked(playlist, uri);
+                    buttonClicked(playlist, {SpotifyURI: uri, song_name: name, artist_name:artist, time: time});
                   }}
                 />
               )
