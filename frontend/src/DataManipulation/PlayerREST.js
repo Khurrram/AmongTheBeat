@@ -67,9 +67,9 @@ window.onSpotifyWebPlaybackSDKReady = () => {
       }, 1000);
     }
 
-    if (state) {
-      setSong(state.track_window.current_track);
-    }
+    // if (state) {
+    //   setSong(state.track_window.current_track);
+    // }
 
     if (
       state.paused &&
@@ -189,6 +189,7 @@ const playSong = async (track) => {
   )
     .then((ev) => {
       changeVolume(currentVolume);
+      setSong(track)
     })
     .catch((error) => {
       console.log(error);
