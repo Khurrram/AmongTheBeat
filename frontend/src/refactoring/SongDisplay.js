@@ -142,6 +142,14 @@ function SongDisplay(props) {
     });
   };
 
+  const dequeue = (track) => {
+    console.log("dequeueing:" + track.SpotifyURI);
+    dequeueSong(track);
+    if (props.rerenderQueue !== undefined) {
+      props.setrerenderQueue(props.rerenderQueue + 1);
+    }
+  }
+
   return (
     <Container>
       <Modal
@@ -179,8 +187,12 @@ function SongDisplay(props) {
       </Menu>
       {props.Queue ? (
         <SongInfo>
+          <StyledAvatar variant="rounded">
+            <TrackImg src={imgSrc} />
+          </StyledAvatar>
           <SongName>{name}</SongName>
-          {/* <SongArtist>{artist}</SongArtist> */}
+          <SongArtist>{artist}</SongArtist>
+          <SongTime>{time}</SongTime> 
         </SongInfo>
       ) : (
         <SongInfo>
@@ -208,13 +220,13 @@ function SongDisplay(props) {
                 onClick={() => {
                   songActions.setPlayingCurrentSong(uri);
                   songActions.setPlaying(true);
-                  buttonClicked(playlist, uri);
+                  buttonClicked(playlist, {SpotifyURI: uri, song_name: name, artist_name:artist, time: time});
                 }}
               />
             )}
-            <StyledAvatar variant="rounded">
-              <TrackImg src={imgSrc} />
-            </StyledAvatar>
+          <StyledAvatar variant="rounded">
+            <TrackImg src={imgSrc} />
+          </StyledAvatar>
           </FlexDiv>
           <SongName>{name}</SongName>
           <SongArtist>{artist}</SongArtist>
@@ -222,25 +234,33 @@ function SongDisplay(props) {
         </SongInfo>
       )}
 
+    {props.Queue ? (
+      <SongAction>
+                <StyledTrashCan
+                aria-label="more"
+                aria-controls="long-menu"
+                aria-haspopup="true"
+                onClick={(e) => dequeue({SpotifyURI: uri, song_name: name, artist_name:artist, time: time})}
+              />
+      </SongAction>
+    ) : (
       <SongAction>
         {liked ? (
           <LikedHeart onClick={() => unlikeSong()} />
         ) : (
           <UnlikedHeart onClick={() => likeSong()} />
         )}
-        {props.Queue ? null : (
           <StyledQueue
             onClick={() =>
               queueSong({
-                uri: uri,
+                SpotifyURI: uri,
                 song_name: name,
                 artist_name: artist,
                 time: time,
               })
             }
           />
-        )}
-        {props.Browse || props.Queue ? (
+        {props.Browse ? (
           <StyledPlaylistAdd onClick={() => toggleModal()} />
         ) : (
           <StyledTrashCan
@@ -250,15 +270,8 @@ function SongDisplay(props) {
             onClick={(e) => handleClick(e)}
           />
         )}
-        {props.Queue ? (
-          <StyledTrashCan
-            aria-label="more"
-            aria-controls="long-menu"
-            aria-haspopup="true"
-            onClick={(e) => dequeueSong(uri)}
-          />
-        ) : null}
       </SongAction>
+        )}
     </Container>
   );
 }

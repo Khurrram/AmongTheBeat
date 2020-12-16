@@ -17,6 +17,7 @@ import VolumeUp from '@material-ui/icons/VolumeUp';
 import VolumeDownIcon from '@material-ui/icons/VolumeDown';
 import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 import Grid from '@material-ui/core/Grid';
+import {useHistory} from 'react-router-dom';
 
 import {
   setSongFunction,
@@ -39,6 +40,7 @@ import { makeStyles } from "@material-ui/core";
 Modal.setAppElement("#root");
 
 function PlayNavBar(props) {
+  let history = useHistory();
   const classes = useStyles()
   const [song, setSong] = useState("");
   const { songState, songActions } = useContext(SongContext);
@@ -165,36 +167,6 @@ function PlayNavBar(props) {
   return (
     <NavBarInfo>
 
-      <Modal
-        isOpen={modal}
-        onRequestClose={toggleModal}
-        contentLabel="Test"
-        style={customStyles}
-      >
-        <ModalHeader>Queue View</ModalHeader>
-            <ModalContent>
-            <SongDiv>
-            {
-              queue? 
-                queue.map((song) => 
-                {
-                    return(
-                        <SongDisplay
-                            name = {song.song_name}
-                            artist = {song.artist_name}
-                            uri = {song.uri}
-                            time = {song.time}
-                            Queue = {true}
-                            playlist = {queue}
-                        />
-                    );
-                })
-                :<p>Loading...</p>
-            }
-        </SongDiv>
-            </ModalContent>
-        </Modal>
-
       {flag? 
         <EmptyDiv>
           <Avatar variant="rounded"  src = {song.album.images[0].url}/>
@@ -287,9 +259,8 @@ function PlayNavBar(props) {
         <span>
           <StyledQueue
             onClick={() => {
-              setQueue(getQueue());
+              history.push('/home/queue');
               toggleModal();
-
             }}
           />
         </span>
