@@ -10,10 +10,10 @@ import { getSessionCookie } from "../CookieHandler";
 function LandingPage() {
   const session = useContext(SessionContext);
   let history = useHistory();
-  if (getSessionCookie().accessToken !== undefined) {
-    history.push("/home");
-    return <Redirect to="/home"></Redirect>;
-  }
+  // if (getSessionCookie().accessToken !== undefined) {
+  //   history.push("/home");
+  //   return <Redirect to="/home"></Redirect>;
+  // }
   return (
     <Row className="full-height">
       <Col s={9} m={9} l={9}>
