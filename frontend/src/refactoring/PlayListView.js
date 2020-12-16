@@ -30,13 +30,8 @@ function PlayListView(props) {
   const { state, actions } = useContext(HomeContext);
   const { playlistID } = useParams();
   const history = useHistory();
-<<<<<<< HEAD
   let {url} = useRouteMatch();
   let sharepath = "https://among-the-beat-sbu.herokuapp.com/home/share/" + url.substr(15);
-=======
-  let { url } = useRouteMatch();
-  let sharepath = "http://localhost:3000/home/share/" + url.substr(15);
->>>>>>> master
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
