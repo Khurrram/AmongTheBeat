@@ -21,6 +21,8 @@ import { PlaylistAdd } from "@material-ui/icons";
 import SettingsView from "../Homepage/SettingView";
 import useScript from "../DataManipulation/useScript";
 import Axios from "axios";
+import {refreshToken} from "../DataManipulation/PlayerREST";
+import {useHistory, Redirect} from 'react-router-dom';
 
 import { useTransition, animated } from "react-spring";
 
@@ -54,6 +56,10 @@ function Home() {
       .catch((err) => console.log(err));
   }, [session.accessToken]);
 
+  useEffect(() => {
+    refreshToken();
+  }, []);
+
   let {
     playlists,
     currentPlaylist,
@@ -67,6 +73,13 @@ function Home() {
     rerender,
   } = usePlaylists(session.id);
 
+  let history = useHistory();
+  if (getSessionCookie().accessToken === undefined) {
+    console.log("cookies arent working: " + getSessionCookie());
+    history.push("/");
+    return <Redirect to="/"></Redirect>;
+  }
+  
   const songContextValue = {
     songState: { playingCurrentSong, playing },
     songActions: { setPlayingCurrentSong, setPlaying },
