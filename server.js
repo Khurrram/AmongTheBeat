@@ -5,6 +5,7 @@ const userModel = require("./models/userModel.js");
 const playlistModel = require("./models/playlistModel.js");
 const songModel = require("./models/songModel.js");
 const app = express();
+const bcrypt = require('bcrypt');
 
 app.use(express.json());
 app.use(cors());
@@ -29,12 +30,14 @@ app.post("/api/register", (req, res) => {
     function (err, user) {
       if (user == null) {
         let id = new mongoose.Types.ObjectId();
-        userModel.create({
-          _id: id,
-          accountType: 0,
-          username: req.body.username,
-          email: req.body.email,
-          password: req.body.password,
+        bcrypt.hash(req.body.password, 10, (err, hash) => {
+          userModel.create({
+            _id: id,
+            accountType: 0,
+            username: req.body.username,
+            email: req.body.email,
+            password: hash,
+          });
         });
         res.send(id + "");
       } else {
@@ -45,18 +48,24 @@ app.post("/api/register", (req, res) => {
 });
 
 
-app.post("/api/login", (req, res) => {
+app.post("/api/login", (req, response) => {
   userModel.findOne(
-    { username: req.body.username, password: req.body.password },
+    { username: req.body.username},
     function (err, user) {
       if (user != null) {
-        if (user.accountType == -1) {
-          res.send("banned");
-        } else {
-          res.send(user._id + "");
-        }
+        bcrypt.compare(req.body.password, user.password, function(err, res) {
+          if (res) {
+            if (user.accountType == -1) {
+              response.send("banned");
+            } else {
+              response.send(user._id + "");
+            }
+          } else {
+            response.send("notFound");
+          }
+        })
       } else {
-        res.send("notFound");
+        response.send("notFound");
       }
     }
   );
@@ -129,20 +138,34 @@ app.post("/api/user/remove", (req, res) => {
 
 //POST for checking and changing password
 
-app.post("/api/user/changepass", (req, res) => {
+app.post("/api/user/changepass", (req, response) => {
   let id = req.body.id;
   let oldpass = req.body.oldpass;
   let updatedpass = req.body.updatedpass;
-  userModel.findOneAndUpdate(
-    { _id: id, password: oldpass },
-    { password: updatedpass },
+  userModel.findOne(
+    { _id: id },
     function (err, user) {
-      if (err) {
-        console.log(err);
-        res.send("invalid pass");
-      } else {
-        res.send("Password updated");
-      }
+      bcrypt.compare(req.body.oldpass, user.password, function(err, res) {
+        if (res) {
+          bcrypt.hash(req.body.updatedpass, 10, (err, hash) => {
+            userModel.findOneAndUpdate({ _id: id}, {password: hash}, function(err, res) {
+              if (err) {
+                console.log("Error in changepass " + err);
+              }
+              response.send("Password updated");
+            });
+          });
+        } else {
+          response.send("invalid pass");
+        }
+      })
+      // if (err) {
+      //   console.log(err);
+      //   res.send("invalid pass");
+      // } else {
+      //   res.send("Password updated");
+      // }
+      
     }
   );
 });

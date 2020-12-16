@@ -29,11 +29,6 @@ function Queue()
                 <h1>Queue View</h1>
             </span>
 
-            <StyledSpan>
-                <Title>Title</Title>
-                <Artist>Artist</Artist>
-            </StyledSpan>
-
             <span>
                 <hr />
             </span>

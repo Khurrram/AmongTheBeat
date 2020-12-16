@@ -324,7 +324,6 @@ export const playNextSong = () => {
           let nextSong = currentPlaylist[currentIndex+1];
           playSong(nextSong);
           return nextSong.SpotifyURI;
-          console.log("Playing next song in playlistQueue");
         }
       }
     } else {
@@ -341,6 +340,9 @@ export const playNextSong = () => {
 
 export const playPrevSong = () => {
   //play previous song
+  if (songQueue.isEmpty()) {
+    queuedSongs = false;
+  }
   if (repeat) {
     playSong(currentSong);
     return currentSong.SpotifyURI;
