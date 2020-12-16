@@ -63,24 +63,6 @@ export const getUsername = async (accountID) => {
     });
 };
 
-export const browse = async( accessToken) =>
-{
-  return instance
-    .post("/api/browse", {curraccessToken: accessToken})
-}
-
-export const searchTracks = async (search, accessToken) => {
-  return instance
-    .post("/api/searchTracks", 
-    {
-      search: search,
-      curraccessToken: accessToken
-    }).then((res) => {
-      return res.data
-    }).catch((err) => console.log("searchTracks ERR"));
-
-}
-
 export const getLikedSongs = async(accountID) =>
  {
    return instance
@@ -135,19 +117,6 @@ export const removeLikedSong = async(accountID, uri) =>
     }).catch((err) => console.log("removeLikedSong ERR"))
 }
 
-export const openAlbum = async(playlistID, accessToken) =>
-{
-  return instance
-      .post("/api/openalbum", 
-      {
-        id: playlistID,
-        curraccessToken: accessToken
-      }).then((res) =>
-      {
-        return res.data
-      }).catch((err) => console.log("openAlbum ERR"));
-}
-
 export const getHistory = async(accountID) =>
 {
   return instance
@@ -157,19 +126,6 @@ export const getHistory = async(accountID) =>
     {
       return res.data
     }).catch((err) => console.log("getHistory ERR"));
-}
-
-export const getAudioFeatures = async(accessToken, tracks) =>
-{
-  return instance
-    .post("/api/user/audiofeatures",
-    {
-      accessToken: accessToken,
-      tracks: tracks
-    }).then((res) =>
-    {
-      return res.data
-    }).catch((err) => console.log("getAudioFeatures ERR"));
 }
 
 export const ban = async(ID) =>

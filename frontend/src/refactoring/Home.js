@@ -12,6 +12,7 @@ import SearchUsers from "./SearchUsers";
 import SearchUsersPage from "./SearchUsersPage";
 import AlbumPage from "./AlbumPage";
 import LikePage from "./LikedSongs";
+import Queue from "./Queue";
 import { getSessionCookie } from "../CookieHandler";
 import Avatar from "@material-ui/core/Avatar";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -20,6 +21,9 @@ import { PlaylistAdd } from "@material-ui/icons";
 import SettingsView from "../Homepage/SettingView";
 import useScript from "../DataManipulation/useScript";
 import Axios from "axios";
+import { refreshToken } from "../DataManipulation/PlayerREST";
+import { useHistory, Redirect } from "react-router-dom";
+
 import { useTransition, animated } from "react-spring";
 
 export const HomeContext = React.createContext();
@@ -52,6 +56,10 @@ function Home() {
       .catch((err) => console.log(err));
   }, [session.accessToken]);
 
+  useEffect(() => {
+    refreshToken();
+  }, []);
+
   let {
     playlists,
     currentPlaylist,
@@ -64,6 +72,13 @@ function Home() {
     getValidPlaylists,
     rerender,
   } = usePlaylists(session.id);
+
+  let history = useHistory();
+  if (getSessionCookie().accessToken === undefined) {
+    console.log("cookies arent working: " + getSessionCookie());
+    history.push("/");
+    return <Redirect to="/"></Redirect>;
+  }
 
   const songContextValue = {
     songState: { playingCurrentSong, playing },
@@ -89,7 +104,6 @@ function Home() {
         <HomeContainer>
           <SideBar playlists={playlists} />
           <ContentWindow>
-            {/* <SpotifyPlayerContainer /> */}
             <Navbar>
               <StyledAvatar>
                 <StyledImg src={url} />
@@ -97,11 +111,11 @@ function Home() {
 
               <StyledSettingIcon onClick={() => setSettings(true)} />
             </Navbar>
-            <ContentWindow>
+            <MiddleContent>
               {settingTransition.map(
-                ({ item, key, props }) =>
+                ({ item, props }) =>
                   item && (
-                    <animated.div style={props}>
+                    <animated.div style={props} key={props}>
                       <SettingsView url={url} toggleSetting={setSettings} />
                     </animated.div>
                   )
@@ -122,6 +136,10 @@ function Home() {
                   <LikePage />
                 </Route>
 
+                <Route exact path={`${path}/queue`}>
+                  <Queue />
+                </Route>
+
                 <Route
                   exact
                   path={`${path}/playlist/:playlistID`}
@@ -139,7 +157,7 @@ function Home() {
                   <SearchUsersPage />
                 </Route>
               </Switch>
-            </ContentWindow>
+            </MiddleContent>
             <Footer>
               <PlayNavBar></PlayNavBar>
             </Footer>
@@ -149,6 +167,13 @@ function Home() {
     </HomeContext.Provider>
   );
 }
+
+const MiddleContent = styled.div`
+  order: 1;
+  min-height: 70%;
+  height: 75%;
+  max-height: 90%;
+`;
 
 const StyledImg = styled.img`
   width: 48px;
@@ -184,11 +209,13 @@ const Navbar = styled.div`
 
 const Footer = styled.div`
   display: flex;
-  align-items: center;
+  align-content: flex-start;
   order: 2;
-  margin-top: auto;
   padding-left: 1em;
-  height: 7%;
+  min-height: 80px;
+  height: 80px;
+  max-height: 80px;
+  margin-top: auto;
   background-color: rgba(0, 0, 0, 0.6);
 
   & span {
@@ -204,6 +231,11 @@ const Footer = styled.div`
 
 const StyledSettingIcon = styled(SettingsIcon)`
   color: white;
+  margin-right: 1rem;
+
+  &:hover {
+    color: grey;
+  }
 `;
 
 const StyledAvatar = styled(Avatar)`

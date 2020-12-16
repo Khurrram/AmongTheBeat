@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import styled from "styled-components";
 import { SessionContext } from "../App";
-import { getHistory, getAudioFeatures } from "../DataManipulation/AccountREST";
+import { getHistory } from "../DataManipulation/AccountREST";
+import { getAudioFeatures } from "../DataManipulation/BrowseREST";
 import moodboard from "../data/MoodBoard.json";
 import Sketch from "react-p5";
 import randomColor from "randomcolor";
+import { useTransition } from "react-spring";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-pro-sidebar/dist/css/styles.css";
 import MoodSketch from "./Canvas";
+import { Button } from "react-bootstrap";
 
 function HomeDashView(props) {
   const session = useContext(SessionContext);
@@ -16,6 +19,13 @@ function HomeDashView(props) {
   const [mood, setMood] = useState();
   const [quote, setQuote] = useState("");
   const [audioFeature, setAudioFeature] = useState();
+  const [moodVisible, setMoodVisible] = useState(false);
+
+  const FadeTransition = useTransition(moodVisible, null, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+  });
 
   const moodRef = useRef(mood);
   const quoteRef = useRef(quote);
@@ -144,7 +154,7 @@ function HomeDashView(props) {
         let songIDS = getSongIDS(res);
 
         //get the audio features of the songs
-        getAudioFeatures(session.accessToken, songIDS).then((res) => {
+        getAudioFeatures(songIDS).then((res) => {
           //res contains audio features
           moodRef.current = getMood(res);
           setAudioFeature(res.audio_features);
@@ -158,17 +168,12 @@ function HomeDashView(props) {
   return (
     <StyledDiv>
       <h1>Dashboard</h1>
-      <MarginLeftDiv>
-        {/* {mood && <h3>Mood: {mood}</h3>}
-        {
-          quote && <div>{quote}</div>
-          //Might also go here if there is nothing in the history array; maybe add like a screen thats says "You currently have no played songs"
-          //"Listen to some songs to see some data!" //or something like that
-        } */}
+      <FlexDiv>
         {mood && quote ? (
           <div>
             <h3>Mood: {mood}</h3>
-            <MarginLeftDiv>{quote}</MarginLeftDiv>
+            <h6>{quote}</h6>
+            {audioFeature && <MoodSketch trackFeatures={audioFeature} />}
           </div>
         ) : (
           <div>
@@ -178,11 +183,58 @@ function HomeDashView(props) {
             </h4>
           </div>
         )}
-        {audioFeature && <MoodSketch trackFeatures={audioFeature} />}
-      </MarginLeftDiv>
+        {/* {!moodVisible ? (
+          <FlexHDiv>
+            <DivButton>TEST</DivButton>
+          </FlexHDiv>
+        ) : mood && quote ? (
+          <div>
+            <h3>Mood: {mood}</h3>
+            <h6>{quote}</h6>
+          </div>
+        ) : (
+          <div>
+            <h4 className="red">
+              You do not have any recorded Songs. Listen to some songs to see
+              your calculated data.
+            </h4>
+          </div>
+        )}
+        // audioFeature && <MoodSketch trackFeatures={audioFeature} /> */}
+      </FlexDiv>
     </StyledDiv>
   );
 }
+
+const FlexDiv = styled.div`
+  display: flex;
+  // align-items: center;
+  // justity-content: center;
+  flex-direction: column;
+`;
+
+const FlexHDiv = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const DivButton = styled.div`
+  font-size: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 10px;
+  background: rgb(26, 139, 150);
+  background: linear-gradient(
+    60deg,
+    rgba(26, 139, 150, 1) 6%,
+    rgba(26, 150, 126, 1) 31%,
+    rgba(173, 50, 196, 1) 58%,
+    rgba(98, 56, 137, 1) 78%,
+    rgba(162, 32, 49, 1) 97%
+  );
+`;
 
 const StyledDiv = styled.div`
   padding: 1.5rem 1.5rem 1.5rem 1.5rem;
@@ -246,17 +298,6 @@ const SongDiv = styled.div`
   min-height: 65vh;
   max-height: 65vh;
   overflow-y: auto;
-`;
-
-const Button = styled.button`
-  padding: 0.5em;
-  color: white;
-  border: none;
-  margin: 0.5em;
-  width: 5%;
-  font-size: 30px;
-  font-family: "Roboto", sans-serif;
-  background-color: Transparent;
 `;
 
 export default HomeDashView;

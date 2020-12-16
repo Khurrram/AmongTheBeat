@@ -6,6 +6,7 @@ const playlistModel = require("./models/playlistModel.js");
 const songModel = require("./models/songModel.js");
 const app = express();
 const path = require('path')
+const bcrypt = require('bcrypt');
 
 app.use(express.json());
 app.use(cors());
@@ -16,8 +17,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/frontend/build/index.html'))
 })
 
-const SpotifyWebApi = require('spotify-web-api-node');
-const spotifyApi = new SpotifyWebApi();
 
 const db = require("./config/keys.js").mongoURI;
 
@@ -32,53 +31,20 @@ mongoose.set('useFindAndModify', false);
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
 
-
-app.post("/api/browse", (req, res) => {
-
-  spotifyApi.setAccessToken(req.body.curraccessToken)
-  spotifyApi.getFeaturedPlaylists({limit:15})
-    .then(function(data) {
-        res.send(data.body);
-      }, function(err) {
-        console.log("Something went wrong!", err);
-      });
-});
-
-app.post("/api/openalbum", (req, res) =>
-{
-  spotifyApi.setAccessToken(req.body.curraccessToken)
-  spotifyApi.getPlaylist(req.body.id)
-    .then(function(data)
-    {
-      res.send(data.body)
-    }), function(err){console.log("Something went wrong!, ", err)}
-})
-
-app.post("/api/searchTracks",  (req,res) =>
-{
-  spotifyApi.setAccessToken(req.body.curraccessToken)
-  const search = "track:" + req.body.search;
-  spotifyApi.searchTracks(search)
-    .then(function(data)
-    {
-      res.send(data.body)
-    }),function(err){console.log("Something went wrong!, ", err)}
-
-})
-
-
 app.post("/api/register", (req, res) => {
   userModel.findOne(
     { $or: [{ username: req.body.username }, { email: req.body.email }] },
     function (err, user) {
       if (user == null) {
         let id = new mongoose.Types.ObjectId();
-        userModel.create({
-          _id: id,
-          accountType: 0,
-          username: req.body.username,
-          email: req.body.email,
-          password: req.body.password,
+        bcrypt.hash(req.body.password, 10, (err, hash) => {
+          userModel.create({
+            _id: id,
+            accountType: 0,
+            username: req.body.username,
+            email: req.body.email,
+            password: hash,
+          });
         });
         res.send(id + "");
       } else {
@@ -89,18 +55,24 @@ app.post("/api/register", (req, res) => {
 });
 
 
-app.post("/api/login", (req, res) => {
+app.post("/api/login", (req, response) => {
   userModel.findOne(
-    { username: req.body.username, password: req.body.password },
+    { username: req.body.username},
     function (err, user) {
       if (user != null) {
-        if (user.accountType == -1) {
-          res.send("banned");
-        } else {
-          res.send(user._id + "");
-        }
+        bcrypt.compare(req.body.password, user.password, function(err, res) {
+          if (res) {
+            if (user.accountType == -1) {
+              response.send("banned");
+            } else {
+              response.send(user._id + "");
+            }
+          } else {
+            response.send("notFound");
+          }
+        })
       } else {
-        res.send("notFound");
+        response.send("notFound");
       }
     }
   );
@@ -173,20 +145,34 @@ app.post("/api/user/remove", (req, res) => {
 
 //POST for checking and changing password
 
-app.post("/api/user/changepass", (req, res) => {
+app.post("/api/user/changepass", (req, response) => {
   let id = req.body.id;
   let oldpass = req.body.oldpass;
   let updatedpass = req.body.updatedpass;
-  userModel.findOneAndUpdate(
-    { _id: id, password: oldpass },
-    { password: updatedpass },
+  userModel.findOne(
+    { _id: id },
     function (err, user) {
-      if (err) {
-        console.log(err);
-        res.send("invalid pass");
-      } else {
-        res.send("Password updated");
-      }
+      bcrypt.compare(req.body.oldpass, user.password, function(err, res) {
+        if (res) {
+          bcrypt.hash(req.body.updatedpass, 10, (err, hash) => {
+            userModel.findOneAndUpdate({ _id: id}, {password: hash}, function(err, res) {
+              if (err) {
+                console.log("Error in changepass " + err);
+              }
+              response.send("Password updated");
+            });
+          });
+        } else {
+          response.send("invalid pass");
+        }
+      })
+      // if (err) {
+      //   console.log(err);
+      //   res.send("invalid pass");
+      // } else {
+      //   res.send("Password updated");
+      // }
+      
     }
   );
 });
@@ -256,6 +242,7 @@ app.post("/api/user/addlikedsong", (req, res) =>
   let songname = req.body.song_name;
   let artistname = req.body.artist_name;
   let uri = req.body.uri;
+  let time = req.body.time
   let id = new mongoose.Types.ObjectId();
 
   userModel.findOneAndUpdate(
@@ -273,7 +260,8 @@ app.post("/api/user/addlikedsong", (req, res) =>
             _id: id,
             song_name: songname,
             artist_name: artistname,
-            SpotifyURI : uri
+            SpotifyURI : uri,
+            time: time
           })
           res.send("Success")
         }
@@ -317,19 +305,6 @@ app.post("/api/user/gethistory", (req,res) =>
       }
     }
     )
-})
-
-app.post("/api/user/audiofeatures", (req,res) =>
-{
-  spotifyApi.setAccessToken(req.body.accessToken);
-  spotifyApi.getAudioFeaturesForTracks(req.body.tracks)
-    .then(function(data)
-    {
-      res.send(data.body)
-    },function(err)
-    {
-      console.log(err);
-    });
 })
 
 //POST for creating new playlist
@@ -500,6 +475,7 @@ app.post("/api/song/getplaylists", (req, res) => {
   let song_name = req.body.song_name;
   let artist_name = req.body.artist_name;
   let uri = req.body.uri;
+  let time = req.body.time;
   let id = new mongoose.Types.ObjectId();
   let songHold;
 
@@ -517,7 +493,8 @@ app.post("/api/song/getplaylists", (req, res) => {
               _id: id,
               song_name: song_name,
               artist_name: artist_name,
-              SpotifyURI : uri
+              SpotifyURI : uri,
+              time: time
             });
             let data = {playlists : playlists, song: id};
             res.send(data);
@@ -661,6 +638,8 @@ app.post("/api/user/addHistory", (req, res) =>
   let songname = req.body.song_name;
   let artistname = req.body.artist_name;
   let uri = req.body.uri;
+  let time = req.body.time;
+  console.log(time);
   let id = new mongoose.Types.ObjectId();
 
   userModel.findOneAndUpdate(
@@ -689,7 +668,8 @@ app.post("/api/user/addHistory", (req, res) =>
             _id: id,
             song_name: songname,
             artist_name: artistname,
-            SpotifyURI : uri
+            SpotifyURI : uri,
+            time: time
           })
           res.send("Success")
         }

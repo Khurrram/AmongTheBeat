@@ -63,11 +63,6 @@ function SearchUsers(props)
                 <h1>Browse</h1>
             </span>
 
-            <StyledSpan>
-                <Title>Playlist Name</Title>
-                <Artist>Owner</Artist>
-            </StyledSpan>
-
             <span>
                 <hr />
             </span>

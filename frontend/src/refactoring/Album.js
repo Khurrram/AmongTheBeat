@@ -6,53 +6,79 @@ import { getSessionCookie } from "../CookieHandler";
 import { HomeContext } from "./Home";
 import { Route, useRouteMatch, Link, useHistory } from "react-router-dom";
 
-function Album(props)
-{
-    const { state, actions } = useContext(HomeContext);
-    const {name, playlistid, images, description} = props;
-    let { path, url } = useRouteMatch();
-    let history = useHistory();
+function Album(props) {
+  const { state, actions } = useContext(HomeContext);
+  const { name, playlistid, images, description } = props;
+  let { path, url } = useRouteMatch();
+  let history = useHistory();
 
-    const getSong = () =>
-    {
+  const getSong = () => {
+    history.push({
+      pathname: `${url}/album`,
+      state: {
+        playlistid: playlistid,
+      },
+    });
+  };
 
-        history.push({
-          pathname:`${url}/album`,
-          state: {
-            playlistid:  playlistid
-          }
-        });
-
-    } 
-
-    return(
-        <Container onClick = {() => getSong()}>
-        <StyledAvatar variant="rounded" src = {images}/>
-            <SongInfo>
-                <SongName>{name}</SongName>
-                <SongArtist>{description}</SongArtist>
-            </SongInfo>
-        </Container>
-    );
-    
+  return (
+    <Container onClick={() => getSong()}>
+      <AlbumImg src={images} />
+      <h6>{name}</h6>
+      {/* <SongInfo>
+        <SongName>{name}</SongName>
+        <SongArtist>{description}</SongArtist>
+      </SongInfo> */}
+    </Container>
+  );
 }
 
 const Container = styled.div`
-  display: flex;
-  height: 3em;
-  align-items: center;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-  color: white;
+  padding: 0.2rem;
+  margin: 0.5rem;
+  max-width: 190px;
+  min-width 190px;
+  width: 190px;
+  height: 240px;
+  max-height: 240px;
+  min-height: 240px;
   border-radius: 5px;
+  display:flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: 'rgba(0,0,0,0.5)'
+  opacity: 0.6;
+  transition: 0.3s;
 
   &:hover {
-    background-color: #686868;
+    background-color: #727272;
+    opacity: 1;
+  }
+
+  & h6 {
+    color: white;
   }
 `;
 
 const StyledAvatar = styled(Avatar)`
-  margin-left: 0.5em;
+  &&& {
+    z-index: 10;
+    min-width: 128px;
+    min-height: 128px;
+
+    max-height: 256px;
+    max-width: 256px;
+  }
+`;
+
+const AlbumImg = styled.img`
+  min-width: 128px;
+  min-height: 128px;
+
+  max-height: 256px;
+  max-width: 168px;
+  border-radius: 5px;
 `;
 const SongInfo = styled.div`
   display: flex;

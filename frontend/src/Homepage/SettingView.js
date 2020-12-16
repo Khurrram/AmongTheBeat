@@ -29,12 +29,15 @@ function SettingView(props) {
       alert("New Password does not match for both textfields.");
     } else {
       let data = { id: session.id, oldpass: oldp, updatedpass: newp };
-      alert("Matches");
-
       axios
         .post("http://localhost:5000/api/user/changepass", data)
         .then(function (res) {
           console.log(res.data);
+          if (res.data == "invalid pass") {
+            alert("invalid pass");
+          } else {
+            alert("password changed");
+          }
           console.log("Password changed");
         })
         .catch((err) => console.log(err.data));
@@ -175,12 +178,15 @@ const AccountButtonDiv = styled(AccountDiv)`
 `;
 
 const SidebarDiv = styled.div`
-  position: absolute;
-  right: 0px;
-  margin: auto;
-  background-color: rgb(0, 0, 0, 0.7);
-  border-radius: 15px 0px 0px 15px;
-  backdrop-filter: blur(10px);
+  &&&& {
+    position: absolute;
+    right: 0px;
+    margin: auto;
+    z-index: 1000000;
+    background-color: rgb(0, 0, 0, 0.7);
+    border-radius: 15px 0px 0px 15px;
+    backdrop-filter: blur(10px);
+  }
 `;
 
 const StyledBackIcon = styled(ArrowForwardIcon)`

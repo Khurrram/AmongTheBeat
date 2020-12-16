@@ -20,7 +20,9 @@ import {
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import SongDisplay from "./SongDisplay";
 import Modal from "react-modal";
-import MergeTypeIcon from '@material-ui/icons/MergeType';
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import { Tune } from "@material-ui/icons";
 
 Modal.setAppElement("#root");
 
@@ -28,29 +30,32 @@ function PlayListView(props) {
   const { state, actions } = useContext(HomeContext);
   const { playlistID } = useParams();
   const history = useHistory();
+<<<<<<< HEAD
   let {url} = useRouteMatch();
   let sharepath = "https://among-the-beat-sbu.herokuapp.com/home/share/" + url.substr(15);
+=======
+  let { url } = useRouteMatch();
+  let sharepath = "http://localhost:3000/home/share/" + url.substr(15);
+>>>>>>> master
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const [disableTitle, setdisableTitle] = useState(false);
   const [playlistName, setPlaylistName] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const playlistTitle = useRef(null);
-  
-  const [totalLength, setTotalLength] = useState("0")
+
+  const [totalLength, setTotalLength] = useState("0");
 
   const [currSongs, setCurrSongs] = useState();
   const [currSongIDS, setCurrSongIDS] = useState(
-
     state.currentPlaylist.songs_ids
   );
 
-  let DEFAULT_VALUE = "DEFAULT";
-
   // THIS IS FOR GETTING INITIAL PLAYLIST TITLE
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (state.currentPlaylist.playlist_name === undefined) {
       history.push("/home");
     }
@@ -65,46 +70,41 @@ function PlayListView(props) {
     };
     fetchSongs();
   }, [state.playlists]);
-  
-  useEffect(() =>
-  {
-    return(() =>
-    {
+
+  useEffect(() => {
+    return () => {
       setModalIsOpen(false);
       setdisableTitle(false);
       setTotalLength("0");
       setCurrSongs(null);
       setCurrSongIDS(null);
-    })
-
-  },[])
+    };
+  }, []);
 
   function toggleModal() {
     setModalIsOpen(!modalIsOpen);
   }
 
-  const getTrackLength = (arr) =>
-  {
-    let totalsecs = 0
-    for(var i = 0; i < arr.length; i++)
-    {
-      let x = arr[i]
-      let y = x.time.split(":")
-      let secs = (+y[0]) * 60 + (+y[1]);
+  const getTrackLength = (arr) => {
+    let totalsecs = 0;
+    for (var i = 0; i < arr.length; i++) {
+      let x = arr[i];
+      let y = x.time.split(":");
+      let secs = +y[0] * 60 + +y[1];
       totalsecs += secs;
     }
-    totalsecs *= 1000
+    totalsecs *= 1000;
 
     var seconds = Math.floor((totalsecs / 1000) % 60),
       minutes = Math.floor((totalsecs / (1000 * 60)) % 60),
       hours = Math.floor((totalsecs / (1000 * 60 * 60)) % 24);
-  
-    hours = (hours < 10) ? "0" + hours : hours;
-    minutes = (minutes < 10) ? "0" + minutes : minutes;
-    seconds = (seconds < 10) ? "0" + seconds : seconds;
 
-    return hours + ":"  + minutes + ":" + seconds;
-  }
+    hours = hours < 10 ? "0" + hours : hours;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+    return hours + ":" + minutes + ":" + seconds;
+  };
 
   const dClick = () => {
     setdisableTitle(false);
@@ -150,6 +150,15 @@ function PlayListView(props) {
     });
   };
 
+  function handleClick(event) {
+    setAnchorEl(event.currentTarget);
+    // console.log(id);
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <StyledDiv>
       <span>
@@ -170,40 +179,58 @@ function PlayListView(props) {
         </div>
 
         <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={toggleModal}
-        contentLabel="Test"
-        style={customStyles}
-      >
-        <ModalHeader>Copy This Link To Share!</ModalHeader>
-            <ModalContent>
-              {sharepath}
-            </ModalContent>
+          isOpen={modalIsOpen}
+          onRequestClose={toggleModal}
+          contentLabel="Test"
+          style={customStyles}
+        >
+          <ModalHeader>Copy This Link To Share!</ModalHeader>
+          <ModalContent>{sharepath}</ModalContent>
         </Modal>
 
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem
+            onClick={() => {
+              actions.deletePlaylists(playlistID);
+              history.push("/home");
+            }}
+          >
+            Confirm
+          </MenuItem>
+          <MenuItem onClick={() => handleClose()}>Cancel</MenuItem>
+        </Menu>
 
-        <StyledButton variant="contained" disableElevation onClick={() => toggleModal()}>
+        <StyledButton
+          variant="contained"
+          disableElevation
+          onClick={() => toggleModal()}
+        >
           Share
         </StyledButton>
         <StyledTrash
-          onClick={() => {
-            actions.deletePlaylists(playlistID);
-            history.push("/home");
-          }}
+          aria-label="more"
+          aria-controls="long-menu"
+          aria-haspopup="true"
+          onClick={(e) => handleClick(e)}
         />
         <h6 id="timestamp">{totalLength}</h6>
         <h6>
-          {currSongs  ? currSongs.length + " ": ""}
-          {currSongs  ? (currSongs.length === 1 ? "Song" : "Songs"): ""}
+          {state.currentPlaylist.songs_ids &&
+            state.currentPlaylist.songs_ids.length + " "}
+          {state.currentPlaylist.songs_ids &&
+            (state.currentPlaylist.songs_ids.length === 1 ? "Song" : "Songs")}
         </h6>
       </span>
-      <StyledSpan>
-        <Title>Title</Title>
-        <Artist>Artist</Artist>
-      </StyledSpan>
       <span>
         <hr />
       </span>
+
       <SongDiv>
         {currSongs ? (
           <DragDropContext onDragEnd={(res) => handleOnDragEnd(res)}>
@@ -215,8 +242,10 @@ function PlayListView(props) {
                   ref={provided.innerRef}
                 >
                   {currSongs.map(
-                    ({ song_name, artist_name, _id, SpotifyURI, time }, index) => {
-
+                    (
+                      { song_name, artist_name, _id, SpotifyURI, time },
+                      index
+                    ) => {
                       return (
                         <Draggable key={_id} draggableId={_id} index={index}>
                           {(provided) => (
@@ -231,7 +260,7 @@ function PlayListView(props) {
                                 id={_id}
                                 playlist_id={playlistID}
                                 uri={SpotifyURI}
-                                time = {time}
+                                time={time}
                                 playlist={currSongs}
                                 type="Playlists"
                               />
@@ -287,8 +316,9 @@ const StyledDiv = styled.div`
 `;
 
 const SongDiv = styled.div`
-  min-height: 65vh;
+  min-height: 200px;
   max-height: 65vh;
+  height: 90%;
   overflow-y: auto;
 `;
 

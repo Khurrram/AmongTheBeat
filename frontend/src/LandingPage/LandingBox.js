@@ -175,7 +175,7 @@ function RegisterBox(props) {
           setInvalid(true);
         }
       })
-      .catch((err) => console.log(err.data));
+      .catch((err) => console.log(err));
   }
 
   return (

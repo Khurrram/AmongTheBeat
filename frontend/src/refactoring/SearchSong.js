@@ -3,12 +3,13 @@ import axios from "axios";
 import styled from "styled-components";
 import { getSessionCookie } from "../CookieHandler";
 import SongDisplay from "./SongDisplay";
-import {searchTracks} from "../DataManipulation/AccountREST"
+import {searchTracks} from "../DataManipulation/BrowseREST"
 
 const SongDiv = styled.div`
   min-height: 65vh;
   max-height: 65vh;
   overflow-y: auto;
+  width: 100%;
 `;
 
 function SearchSong(props)
@@ -54,7 +55,7 @@ function SearchSong(props)
         for (let i = 0; i < arr.length; i++) {
           if (arr[i].track !== null) {
   
-            let data = {song_name: arr[i].name, artist_name: artistamt(arr[i].artists), SpotifyURI: arr[i].uri};
+            let data = {song_name: arr[i].name, artist_name: artistamt(arr[i].artists), SpotifyURI: arr[i].uri, time: msToTime(arr[i].duration_ms)};
             uris.push(data);
           }
         }

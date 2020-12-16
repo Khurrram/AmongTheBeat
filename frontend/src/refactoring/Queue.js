@@ -2,38 +2,31 @@ import React, {useState, useEffect, useContext, useRef} from 'react';
 import styled from "styled-components";
 import { getSessionCookie } from "../CookieHandler"
 import SongDisplay from "./SongDisplay";
-import {getLikedSongs} from "../DataManipulation/AccountREST"
+import {getQueue, QueueRerender} from "../DataManipulation/PlayerREST"
 import { Link, useHistory, useLocation, useParams} from "react-router-dom";
 import {SessionContext} from "../App"
 import { TrainRounded } from '@material-ui/icons';
 
-function LikedSongs()
+function Queue()
 {
     const session = useContext(SessionContext);
     const [songs, setSongs] = useState();
     const [rerender, setRerender] = useState(0);
 
-    useEffect(() =>
-    {
-      getLikedSongs(session.id).then((res) =>
-      {
-        setSongs(res);
-      })
-      
-    },[rerender])
+    QueueRerender(setRerender, rerender);
 
     useEffect(() =>
     {
-      return( () => 
-      {
-        setSongs(null);
-      })
-    },[])
+        let songsQueue = getQueue();
+        setSongs(songsQueue);
+        console.log("Queue rerendered");
+      
+    },[rerender])
 
     return(
         <StyledDiv>
             <span>
-                <h1>Favorite Songs</h1>
+                <h1>Queue View</h1>
             </span>
 
             <span>
@@ -47,16 +40,14 @@ function LikedSongs()
               {
                   return(
                       <SongDisplay
-                          name = {song.song_name}
-                          artist = {song.artist_name}
-                          uri = {song.SpotifyURI}
-                          id = {song._id}
-                          time = {song.time}
-                          Browse = {true}
-                          rerender = {rerender}
-                          setrerender = {setRerender}
-                          key = {song._id}
-                          playlist = {songs}
+                      name = {song.song_name}
+                      artist = {song.artist_name}
+                      uri = {song.SpotifyURI}
+                      time = {song.time}
+                      Queue = {true}
+                      playlist = {songs}
+                      setrerenderQueue = {setRerender}
+                      rerenderQueue = {rerender}
                       />
                   );
               })
@@ -122,4 +113,4 @@ const SongDiv = styled.div`
   overflow-y: auto;
 `;
 
-export default LikedSongs
+export default Queue
