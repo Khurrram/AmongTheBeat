@@ -36,12 +36,12 @@ function Album(props) {
 const Container = styled.div`
   padding: 0.2rem;
   margin: 0.5rem;
-  max-width: 198px;
-  min-width 198px;
-  width: 198px;
-  height: 256px;
-  max-height: 256px;
-  min-height: 256px;
+  max-width: 190px;
+  min-width 190px;
+  width: 190px;
+  height: 240px;
+  max-height: 240px;
+  min-height: 240px;
   border-radius: 5px;
   display:flex;
   align-items: center;
