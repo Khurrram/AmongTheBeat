@@ -29,12 +29,15 @@ function SettingView(props) {
       alert("New Password does not match for both textfields.");
     } else {
       let data = { id: session.id, oldpass: oldp, updatedpass: newp };
-      alert("Matches");
-
       axios
         .post("http://localhost:5000/api/user/changepass", data)
         .then(function (res) {
           console.log(res.data);
+          if (res.data == "invalid pass") {
+            alert("invalid pass");
+          } else {
+            alert("password changed");
+          }
           console.log("Password changed");
         })
         .catch((err) => console.log(err.data));
