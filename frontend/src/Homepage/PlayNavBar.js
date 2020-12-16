@@ -73,7 +73,7 @@ function PlayNavBar(props) {
   useEffect(() => {
     if (song !== "") {
       console.log(song);
-      songActions.setPlayingCurrentSong(song.uri);
+      songActions.setPlayingCurrentSong(song.SpotifyURI);
 
       let uri = song.SpotifyURI
       axios.get("https://api.spotify.com/v1/tracks/" + uri.split(":")[2], {
