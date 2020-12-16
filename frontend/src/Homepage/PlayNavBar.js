@@ -70,7 +70,8 @@ function PlayNavBar(props) {
 
   useEffect(() => {
     if (song !== "") {
-      songActions.setPlayingCurrentSong(song.uri);
+      songActions.setPlayingCurrentSong(song.SpotifyURI);
+      console.log("state changed playnavbar");
       setFlag(true);
     }
   }, [song]);
@@ -156,8 +157,8 @@ function PlayNavBar(props) {
     <NavBarInfo>
       {flag ? (
         <EmptyDiv>
-          <Avatar variant="rounded" src={song.album.images[0].url} />
-          <SongNameSpan>{song.name}</SongNameSpan>
+          {/* <Avatar variant="rounded" src={song.album.images[0].url} /> */}
+          <SongNameSpan>{song.song_name}</SongNameSpan>
 
           <FlexSpan>
             <StyledPrevious

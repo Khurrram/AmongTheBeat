@@ -67,9 +67,9 @@ window.onSpotifyWebPlaybackSDKReady = () => {
       }, 1000);
     }
 
-    if (state) {
-      setSong(state.track_window.current_track);
-    }
+    // if (state) {
+    //   setSong(state.track_window.current_track);
+    // }
 
     if (
       state.paused &&
@@ -173,7 +173,7 @@ const playSong = async (track) => {
   }
 
   currentPos = 0;
-
+  setSong(track);
   addHistory_wrapper();
 
   fetch(
