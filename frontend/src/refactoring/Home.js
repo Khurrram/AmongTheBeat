@@ -21,8 +21,8 @@ import { PlaylistAdd } from "@material-ui/icons";
 import SettingsView from "../Homepage/SettingView";
 import useScript from "../DataManipulation/useScript";
 import Axios from "axios";
-import {refreshToken} from "../DataManipulation/PlayerREST";
-import {useHistory, Redirect} from 'react-router-dom';
+import { refreshToken } from "../DataManipulation/PlayerREST";
+import { useHistory, Redirect } from "react-router-dom";
 
 import { useTransition, animated } from "react-spring";
 
@@ -79,7 +79,7 @@ function Home() {
     history.push("/");
     return <Redirect to="/"></Redirect>;
   }
-  
+
   const songContextValue = {
     songState: { playingCurrentSong, playing },
     songActions: { setPlayingCurrentSong, setPlaying },
@@ -231,6 +231,11 @@ const Footer = styled.div`
 
 const StyledSettingIcon = styled(SettingsIcon)`
   color: white;
+  margin-right: 1rem;
+
+  &:hover {
+    color: grey;
+  }
 `;
 
 const StyledAvatar = styled(Avatar)`
