@@ -53,6 +53,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   // Playback status updates
   player.addListener("player_state_changed", (state) => {
     if (
+      state &&
       state.paused &&
       state.position === 0 &&
       state.restrictions.disallow_resuming_reasons && // finished?
@@ -72,6 +73,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     // }
 
     if (
+      state &&
       state.paused &&
       state.restrictions.disallow_pausing_reasons &&
       state.restrictions.disallow_pausing_reasons[0] === "already_paused"

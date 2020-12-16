@@ -506,7 +506,7 @@ function MoodSketch(props) {
       keymode = "major";
     }
     if (valence < 0.5) {
-      valancestring = "postive";
+      valancestring = "positive";
     } else {
       valancestring = "negative";
     }
@@ -561,7 +561,7 @@ function MoodSketch(props) {
           </span>
           <span>
             It is currently <BoldP>{daynighttime}</BoldP> because you've been
-            listening to music in <BoldP>{keymode}</BoldP> scale
+            listening to music in the <BoldP>{keymode}</BoldP> scale
           </span>
           <span>
             There is currently <BoldP>{valancesetting}</BoldP> because you've
@@ -573,13 +573,13 @@ function MoodSketch(props) {
           </span>
           <span>
             You have <BoldP> {mountainpairs} </BoldP> of mountains since the
-            music you've been listening to are <BoldP>{mountaindance}</BoldP>{" "}
+            music you've been listening to is <BoldP>{mountaindance}</BoldP>{" "}
             danceable
           </span>
           <span>
-            The mountain colors are similar to
+            The mountains are
             <BoldP>{musicLums[key] + " " + musicKHues[key]}</BoldP> because your
-            music are played in the key <BoldP>{keyNames[key]}</BoldP>
+            recent music is played in the <BoldP>{keyNames[key]}</BoldP> key
           </span>
           <span>
             There are <BoldP>{birdspresent}</BoldP> because you've been
