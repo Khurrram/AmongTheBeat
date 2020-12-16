@@ -342,7 +342,7 @@ export const playNextSong = () => {
 export const playPrevSong = () => {
   //play previous song
   if (repeat) {
-    playSong(currentSong.SpotifyURI);
+    playSong(currentSong);
     return currentSong.SpotifyURI;
   } else {
     if (shuffle) {
@@ -385,12 +385,17 @@ export const queueSong = (track) => {
 
 export const dequeueSong = (track) => {
   //removes songs from the SongQueue
+  let tempBuffer = []
   console.log("dequeueing song: " + track.SpotifyURI);
-  for (let i = 0; i < songQueue.size(); i++) {
+  while(!songQueue.isEmpty()) {
     let temp = songQueue.dequeue();
     if (temp.SpotifyURI != track.SpotifyURI) {
-      songQueue.enqueue(temp);
+      tempBuffer.push(temp);
     }
+  }
+
+  for (let i = 0; i < tempBuffer.length; i++) {
+    songQueue.enqueue(tempBuffer[i]);
   }
 };
 
