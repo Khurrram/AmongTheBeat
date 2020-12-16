@@ -157,7 +157,9 @@ function Home() {
 
 const MiddleContent = styled.div`
   order: 1;
-  max-height: 60%;
+  min-height: 70%;
+  height: 75%;
+  max-height: 90%;
 `;
 
 const StyledImg = styled.img`
@@ -194,12 +196,13 @@ const Navbar = styled.div`
 
 const Footer = styled.div`
   display: flex;
-  // align-items: center;
+  align-content: flex-start;
   order: 2;
-  margin-top: auto;
   padding-left: 1em;
-  // height: 7%;
   min-height: 80px;
+  height: 80px;
+  max-height: 80px;
+  margin-top: auto;
   background-color: rgba(0, 0, 0, 0.6);
 
   & span {

@@ -154,7 +154,6 @@ function PlayListView(props) {
     setAnchorEl(null);
   };
 
-
   return (
     <StyledDiv>
       <span>
@@ -191,10 +190,12 @@ function PlayListView(props) {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={() => {
-            actions.deletePlaylists(playlistID);
-            history.push("/home");
-          }}>
+          <MenuItem
+            onClick={() => {
+              actions.deletePlaylists(playlistID);
+              history.push("/home");
+            }}
+          >
             Confirm
           </MenuItem>
           <MenuItem onClick={() => handleClose()}>Cancel</MenuItem>
@@ -310,8 +311,9 @@ const StyledDiv = styled.div`
 `;
 
 const SongDiv = styled.div`
-  min-height: 65vh;
+  min-height: 200px;
   max-height: 65vh;
+  height: 90%;
   overflow-y: auto;
 `;
 

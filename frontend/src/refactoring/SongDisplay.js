@@ -148,7 +148,7 @@ function SongDisplay(props) {
     if (props.rerenderQueue !== undefined) {
       props.setrerenderQueue(props.rerenderQueue + 1);
     }
-  }
+  };
 
   return (
     <Container>
@@ -187,12 +187,10 @@ function SongDisplay(props) {
       </Menu>
       {props.Queue ? (
         <SongInfo>
-          <StyledAvatar variant="rounded">
-            <TrackImg src={imgSrc} />
-          </StyledAvatar>
+          <TrackImg src={imgSrc} />
           <SongName>{name}</SongName>
           <SongArtist>{artist}</SongArtist>
-          <SongTime>{time}</SongTime> 
+          <SongTime>{time}</SongTime>
         </SongInfo>
       ) : (
         <SongInfo>
@@ -211,7 +209,12 @@ function SongDisplay(props) {
                   onClick={() => {
                     songActions.setPlayingCurrentSong(uri);
                     songActions.setPlaying(true);
-                    buttonClicked(playlist, {SpotifyURI: uri, song_name: name, artist_name:artist, time: time});
+                    buttonClicked(playlist, {
+                      SpotifyURI: uri,
+                      song_name: name,
+                      artist_name: artist,
+                      time: time,
+                    });
                   }}
                 />
               )
@@ -220,13 +223,18 @@ function SongDisplay(props) {
                 onClick={() => {
                   songActions.setPlayingCurrentSong(uri);
                   songActions.setPlaying(true);
-                  buttonClicked(playlist, {SpotifyURI: uri, song_name: name, artist_name:artist, time: time});
+                  buttonClicked(playlist, {
+                    SpotifyURI: uri,
+                    song_name: name,
+                    artist_name: artist,
+                    time: time,
+                  });
                 }}
               />
             )}
-          <StyledAvatar variant="rounded">
-            <TrackImg src={imgSrc} />
-          </StyledAvatar>
+            <StyledAvatar variant="rounded">
+              <TrackImg src={imgSrc} />
+            </StyledAvatar>
           </FlexDiv>
           <SongName>{name}</SongName>
           <SongArtist>{artist}</SongArtist>
@@ -234,22 +242,29 @@ function SongDisplay(props) {
         </SongInfo>
       )}
 
-    {props.Queue ? (
-      <SongAction>
-                <StyledTrashCan
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={(e) => dequeue({SpotifyURI: uri, song_name: name, artist_name:artist, time: time})}
-              />
-      </SongAction>
-    ) : (
-      <SongAction>
-        {liked ? (
-          <LikedHeart onClick={() => unlikeSong()} />
-        ) : (
-          <UnlikedHeart onClick={() => likeSong()} />
-        )}
+      {props.Queue ? (
+        <SongAction>
+          <StyledTrashCan
+            aria-label="more"
+            aria-controls="long-menu"
+            aria-haspopup="true"
+            onClick={(e) =>
+              dequeue({
+                SpotifyURI: uri,
+                song_name: name,
+                artist_name: artist,
+                time: time,
+              })
+            }
+          />
+        </SongAction>
+      ) : (
+        <SongAction>
+          {liked ? (
+            <LikedHeart onClick={() => unlikeSong()} />
+          ) : (
+            <UnlikedHeart onClick={() => likeSong()} />
+          )}
           <StyledQueue
             onClick={() =>
               queueSong({
@@ -260,18 +275,18 @@ function SongDisplay(props) {
               })
             }
           />
-        {props.Browse ? (
-          <StyledPlaylistAdd onClick={() => toggleModal()} />
-        ) : (
-          <StyledTrashCan
-            aria-label="more"
-            aria-controls="long-menu"
-            aria-haspopup="true"
-            onClick={(e) => handleClick(e)}
-          />
-        )}
-      </SongAction>
-        )}
+          {props.Browse ? (
+            <StyledPlaylistAdd onClick={() => toggleModal()} />
+          ) : (
+            <StyledTrashCan
+              aria-label="more"
+              aria-controls="long-menu"
+              aria-haspopup="true"
+              onClick={(e) => handleClick(e)}
+            />
+          )}
+        </SongAction>
+      )}
     </Container>
   );
 }
@@ -307,8 +322,12 @@ const StyledAvatar = styled(Avatar)`
   }
 `;
 const TrackImg = styled.img`
-  width: 48px;
-  max-midth: 48px;
+  min-width: 38px;
+  width: 38px;
+  max-width: 38px;
+  border-radius: 5px;
+  object-fit: fill;
+  // z-index: -100;
 `;
 
 const Container = styled.div`

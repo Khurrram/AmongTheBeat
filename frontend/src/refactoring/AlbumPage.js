@@ -167,8 +167,9 @@ const StylAvatar = styled(Avatar)`
 `;
 
 const SongDiv = styled.div`
-  min-height: 35vh;
-  max-height: 65vh;
+  min-height: 300px;
+  max-height: 60%;
+  height: 55vh;
   overflow-y: auto;
 `;
 

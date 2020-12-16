@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import Avatar from "@material-ui/core/Avatar";
+import { withStyles } from "@material-ui/core/styles";
 import PlayIcon from "@material-ui/icons/PlayArrow";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import PauseIcon from "@material-ui/icons/Pause";
@@ -8,16 +9,16 @@ import RepeatIcon from "@material-ui/icons/Repeat";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import RepeatOneIcon from "@material-ui/icons/RepeatOne";
-import ShuffleIcon from '@material-ui/icons/Shuffle';
+import ShuffleIcon from "@material-ui/icons/Shuffle";
 import SongDisplay from "../refactoring/SongDisplay";
 import Modal from "react-modal";
-import QueueIcon from '@material-ui/icons/Queue';
-import Slider from '@material-ui/core/Slider';
-import VolumeUp from '@material-ui/icons/VolumeUp';
-import VolumeDownIcon from '@material-ui/icons/VolumeDown';
-import VolumeOffIcon from '@material-ui/icons/VolumeOff';
-import Grid from '@material-ui/core/Grid';
-import {useHistory} from 'react-router-dom';
+import QueueIcon from "@material-ui/icons/Queue";
+import Slider from "@material-ui/core/Slider";
+import VolumeUp from "@material-ui/icons/VolumeUp";
+import VolumeDownIcon from "@material-ui/icons/VolumeDown";
+import VolumeOffIcon from "@material-ui/icons/VolumeOff";
+import Grid from "@material-ui/core/Grid";
+import { useHistory } from "react-router-dom";
 
 import {
   setSongFunction,
@@ -32,7 +33,7 @@ import {
   getQueue,
   changeVolume,
   playbackInfo,
-  setTime
+  setTime,
 } from "../DataManipulation/PlayerREST";
 import { SongContext } from "../refactoring/Home";
 import { makeStyles } from "@material-ui/core";
@@ -41,7 +42,7 @@ Modal.setAppElement("#root");
 
 function PlayNavBar(props) {
   let history = useHistory();
-  const classes = useStyles()
+  const classes = useStyles();
   const [song, setSong] = useState("");
   const { songState, songActions } = useContext(SongContext);
   const [repeat, setRepeat] = useState(false);
@@ -61,7 +62,6 @@ function PlayNavBar(props) {
   const timeRef = useRef(currentTime);
   const timeStartRef = useRef(currentTimeStart);
 
-
   setSongFunction(setSong);
 
   function toggleModal() {
@@ -69,433 +69,464 @@ function PlayNavBar(props) {
   }
 
   useEffect(() => {
-    if(song !== "")
-    {
+    if (song !== "") {
       songActions.setPlayingCurrentSong(song.uri);
-      setFlag(true)
+      setFlag(true);
     }
   }, [song]);
 
-  const changeTime = () =>
-  {
-    if(song !== "")
-    {
-      playbackInfo().then((res) =>
-      {
-        if(res !== undefined && res !== null && res !== "")
-        {
+  const changeTime = () => {
+    if (song !== "") {
+      playbackInfo().then((res) => {
+        if (res !== undefined && res !== null && res !== "") {
           let progress_s = res.progress_ms / 1000;
-          let duration_s = res.item.duration_ms/ 1000;
+          let duration_s = res.item.duration_ms / 1000;
 
-          let bartime = Math.round((progress_s* 100)/ duration_s)
+          let bartime = Math.round((progress_s * 100) / duration_s);
 
-          timeRef.current = bartime
-          timeStartRef.current = res.progress_ms
-        
-          setCurrentTime(timeRef.current)
+          timeRef.current = bartime;
+          timeStartRef.current = res.progress_ms;
+
+          setCurrentTime(timeRef.current);
           setCurrentTimeStart(timeStartRef.current);
           setCurrentTimeEnd(res.item.duration_ms);
         }
-      })
+      });
     }
-  }
+  };
 
-  const handleTimeConvert = (ms) =>
-  {
+  const handleTimeConvert = (ms) => {
     var seconds = Math.floor((ms / 1000) % 60),
-    minutes = Math.floor((ms / (1000 * 60)) % 60),
-
-    minutes = (minutes < 10) ? "0" + minutes : minutes;
-    seconds = (seconds < 10) ? "0" + seconds : seconds;
+      minutes = Math.floor((ms / (1000 * 60)) % 60),
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
 
     return minutes + ":" + seconds;
-  }
+  };
 
-  useInterval(() =>
-  {
-    changeTime();
-  }, isRunning ? delay : null)
+  useInterval(
+    () => {
+      changeTime();
+    },
+    isRunning ? delay : null
+  );
 
-  useEffect(() =>
-  {
-    return(() =>
-    {
-      setCurrentTime(0)
+  useEffect(() => {
+    return () => {
+      setCurrentTime(0);
       setCurrentTimeStart(null);
       setCurrentTimeEnd(null);
-    })
-  },[])
+    };
+  }, []);
 
-  const handleVolumeChange = (event, newvolume) =>
-  {
+  const handleVolumeChange = (event, newvolume) => {
     setVolume(newvolume);
     changeVolume(newvolume);
-  }
+  };
 
-  const muteVolume = () =>
-  {
+  const muteVolume = () => {
     setVolume(0);
     setPreviousVolume(volume);
-    changeVolume(0)
-  }
+    changeVolume(0);
+  };
 
-  const unmuteVolume = () =>
-  {
+  const unmuteVolume = () => {
     setVolume(previousVolume);
     changeVolume(previousVolume);
-  }
+  };
 
-  const handleTimeChange = (event, newtime) =>
-  {
+  const handleTimeChange = (event, newtime) => {
     event.preventDefault();
     setIsRunning(false);
 
-    let bartime = (newtime * (currentTimeEnd))/ 100
+    let bartime = (newtime * currentTimeEnd) / 100;
 
     timeRef.current = newtime;
-    timeStartRef.current = bartime
+    timeStartRef.current = bartime;
 
-    setTime(Math.round(timeStartRef.current)).then((res) =>
-    {
-      setCurrentTime(timeRef.current)
-      setCurrentTimeStart(timeStartRef.current)
+    setTime(Math.round(timeStartRef.current)).then((res) => {
+      setCurrentTime(timeRef.current);
+      setCurrentTimeStart(timeStartRef.current);
 
       setIsRunning(true);
-    })
-  }
+    });
+  };
 
   return (
     <NavBarInfo>
-
-      {flag? 
+      {flag ? (
         <EmptyDiv>
-          <Avatar variant="rounded"  src = {song.album.images[0].url}/>
-      <span>{song.name}</span>
+          <Avatar variant="rounded" src={song.album.images[0].url} />
+          <SongNameSpan>{song.name}</SongNameSpan>
 
-      <span>
-        <StyledPrevious onClick={() => {
-          songActions.setPlaying(true);
-          playPrevSong()}} />
-      </span>
+          <FlexSpan>
+            <StyledPrevious
+              onClick={() => {
+                songActions.setPlaying(true);
+                playPrevSong();
+              }}
+            />
 
-      {songState.playing ? (
-        <span>
-          <StyledPause
-            onClick={() => {
-              songActions.setPlaying(false);
-              pauseSong();
-            }}
-          />
-        </span>
-      ) : (
-        <span>
-          <StyledPlay
-            onClick={() => {
-              songActions.setPlaying(true);
-              resumeSong();
-            }}
-          />
-        </span>
-      )}
+            {songState.playing ? (
+              <StyledPause
+                onClick={() => {
+                  songActions.setPlaying(false);
+                  pauseSong();
+                }}
+              />
+            ) : (
+              <StyledPlay
+                onClick={() => {
+                  songActions.setPlaying(true);
+                  resumeSong();
+                }}
+              />
+            )}
 
-      <span>
-        <StyledNext onClick={() => {
-          songActions.setPlaying(true);
-          playNextSong()}} />
-      </span>
+            <StyledNext
+              onClick={() => {
+                songActions.setPlaying(true);
+                playNextSong();
+              }}
+            />
+          </FlexSpan>
 
-      <ParentSpan>
-        <StyledP>{currentTimeStart? handleTimeConvert(timeStartRef.current) : "0:00"}</StyledP>
-        <StyledSlider
-          className = {classes.root2}
-          value = {timeRef.current}
-          onChange = {(e,time) => setCurrentTime(time)}
-          aria-labelledby="continuous-slider"
-          onChangeCommitted = {handleTimeChange}
-        />
-        <StyledP>{currentTimeEnd? handleTimeConvert(currentTimeEnd) : "0:00"}</StyledP>
-      </ParentSpan>
+          <FlexSpanTrackSlider>
+            <StyledP>
+              {currentTimeStart
+                ? handleTimeConvert(timeStartRef.current)
+                : "0:00"}
+            </StyledP>
+            <TrackSlider
+              className={classes.root2}
+              value={timeRef.current}
+              onChange={(e, time) => setCurrentTime(time)}
+              aria-labelledby="continuous-slider"
+              onChangeCommitted={handleTimeChange}
+            />
+            <StyledEndP>
+              {currentTimeEnd ? handleTimeConvert(currentTimeEnd) : "0:00"}
+            </StyledEndP>
+          </FlexSpanTrackSlider>
 
-      {repeat ? (
-        <span>
-          <DisableRepeatIcon
-            onClick={() => {
-              setRepeat(false);
-              noRepeatSong();
-            }}
-          />
-        </span>
-      ) : (
-        <span>
-          <EnableRepeatIcon
-            onClick={() => {
-              setRepeat(true);
-              repeatSong();
-            }}
-          />
-        </span>
-      )}
+          <FlexSpan>
+            {repeat ? (
+              <DisableRepeatIcon
+                onClick={() => {
+                  setRepeat(false);
+                  noRepeatSong();
+                }}
+              />
+            ) : (
+              <EnableRepeatIcon
+                onClick={() => {
+                  setRepeat(true);
+                  repeatSong();
+                }}
+              />
+            )}
 
-      {shuffle ? (
-        <span>
-          <DisableShuffleIcon
-            onClick={() => {
-              setShuffle(false);
-              noShuffleSong();
-            }}
-          />
-        </span>
-      ) : (
-        <span>
-          <EnableShuffleIcon
-            onClick={() => {
-              setShuffle(true);
-              shuffleSong();
-            }}
-          />
-        </span>
-      )}
+            {shuffle ? (
+              <DisableShuffleIcon
+                onClick={() => {
+                  setShuffle(false);
+                  noShuffleSong();
+                }}
+              />
+            ) : (
+              <EnableShuffleIcon
+                onClick={() => {
+                  setShuffle(true);
+                  shuffleSong();
+                }}
+              />
+            )}
 
-        <span>
-          <StyledQueue
-            onClick={() => {
-              history.push('/home/queue');
-              toggleModal();
-            }}
-          />
-        </span>
+            <StyledQueue
+              onClick={() => {
+                history.push("/home/queue");
+                toggleModal();
+              }}
+            />
+          </FlexSpan>
+          <FlexSpanVolumeSlider>
+            <StyledP>
+              {volume === 0 ? (
+                <StyledVolumeMute onClick={() => unmuteVolume()} />
+              ) : volume >= 50 ? (
+                <StyledVolumeUp onClick={() => muteVolume()} />
+              ) : (
+                <StyledVolumeDown onClick={() => muteVolume()} />
+              )}
+            </StyledP>
 
-      <ParentSpan>
-        <StyledP>{volume === 0 ? <StyledVolumeMute onClick = {() => unmuteVolume()}/> : volume >= 50 ? <StyledVolumeUp onClick = {() => muteVolume()}/> : <StyledVolumeDown onClick = {() => muteVolume()}/>}</StyledP>
-        
-        <StyledSlider
-          className = {classes.root}
-          value = {volume}
-          onChange = {(e,vol) => setVolume(vol)}
-          aria-labelledby="continuous-slider"
-          onChangeCommitted = {handleVolumeChange}
-        />
-      </ParentSpan>
-
+            <VolumeSlider
+              className={classes.root}
+              value={volume}
+              onChange={(e, vol) => setVolume(vol)}
+              aria-labelledby="continuous-slider"
+              onChangeCommitted={handleVolumeChange}
+            />
+          </FlexSpanVolumeSlider>
         </EmptyDiv>
-      
-      :""}
-    
-
+      ) : (
+        ""
+      )}
     </NavBarInfo>
   );
 }
 
-function useInterval(callback, delay)
-{
+function useInterval(callback, delay) {
   const savedCallback = useRef();
 
-  useEffect(() =>
-  {
-    savedCallback.current = callback
+  useEffect(() => {
+    savedCallback.current = callback;
   }, [callback]);
 
-
-  useEffect(() =>
-  {
+  useEffect(() => {
     function tick() {
       savedCallback.current();
     }
 
-    if(delay !== null) 
-    {
-      let id = setInterval(tick,delay);
-      return () => clearInterval(id)
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
     }
-  }, [delay])
+  }, [delay]);
 }
 
-const NavBarInfo = styled.div`
+const FlexSpan = styled.span`
+  display: flex;
+  justify-content: space-around;
+  &&& {
+    margin-left: 1.5rem;
+  }
+  width: 8rem;
+`;
+
+const FlexSpanTrackSlider = styled.span`
   display: flex;
   align-items: center;
+  justify-content: space-around;
+  min-width: 300px;
+  width: 25vw;
+  max-width: 600px;
+
+  &&& {
+    margin-left: 1.5rem;
+  }
+`;
+
+const FlexSpanVolumeSlider = styled.span`
+  display: flex;
+  align-items: center;
+
+  min-width: 100px;
+  width: 200px;
+  max-width: 200px;
+
+  &&& {
+    margin-left: auto;
+  }
+`;
+
+const SongNameSpan = styled.span`
+  white-space: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
+  width: 180px;
+  min-width: 180px;
+  max-width: 220px;
+
+  &&& {
+    margin-left: 1rem;
+  }
+`;
+const NavBarInfo = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  z-index: 100;
+  width: 100%;
+
+  & span {
+    margin-left: 0;
+  }
+
+  & p {
+    margin: 0;
+  }
 `;
 
 const EnableShuffleIcon = styled(ShuffleIcon)`
 
-  color: ${"white"}; 
+  color: ${"grey"}; 
 
   &:hover {
-    color: ${"green"};
+    color: ${"white"};
   }
   }
-`
+`;
 
 const DisableShuffleIcon = styled(ShuffleIcon)`
 
-  color: ${"green"}; 
+  color: ${"white"}; 
+
+  &:hover {
+    color: ${"grey"};
+  }
+  }
+`;
+const EnableRepeatIcon = styled(RepeatIcon)`
+
+  color: ${"grey"}; 
 
   &:hover {
     color: ${"white"};
   }
   }
-`
-const EnableRepeatIcon = styled(RepeatIcon)`
-
-  color: ${"white"}; 
-
-  &:hover {
-    color: ${"green"};
-  }
-  }
-`
+`;
 
 const DisableRepeatIcon = styled(RepeatIcon)`
 
-  color: ${"green"}; 
+  color: ${"white"}; 
 
   &:hover {
-    color: ${"white"};
+    color: ${"grey"};
   }
   }
-`
+`;
 
 const StyledPlay = styled(PlayIcon)`
-
+  margin-left: 1rem;
   color: ${"white"}; 
 
   &:hover {
-    color: ${"blue"};
+    color: ${"grey"};
   }
   }
-`
+`;
 
 const StyledPause = styled(PauseIcon)`
-
+  margin-left: 1rem;
   color: ${"white"}; 
 
   &:hover {
-    color: ${"blue"};
+    color: ${"grey"};
   }
   }
-`
+`;
 
 const StyledPrevious = styled(SkipPreviousIcon)`
-
-  color: ${"white"}; 
+  margin-left: 1rem;
+  color: white; 
 
   &:hover {
-    color: ${"blue"};
+    color: gray;
   }
   }
-`
+`;
 
 const StyledNext = styled(SkipNextIcon)`
-
+  margin-left: 1rem;
   color: ${"white"}; 
 
   &:hover {
-    color: ${"blue"};
+    color: ${"grey"};
   }
   }
-`
+`;
 
 const StyledQueue = styled(QueueIcon)`
 
   color: ${"white"}; 
 
   &:hover {
-    color: ${"blue"};
+    color: ${"grey"};
   }
   }
-`
-const StyledSlider = styled(Slider)`
-  
-  display: flex;
-  float:left;
-  margin-top: 1em;
-  margin-right: 2em;
-
-`
+`;
 const StyledVolumeUp = styled(VolumeUp)`
-
-  display: flex;
-  float:left;
-  margin-left: 2em;
   color: ${"white"}; 
 
   &:hover {
-    color: ${"blue"};
+    color: ${"grey"};
   }
   }
   
-`
+`;
 const StyledVolumeDown = styled(VolumeDownIcon)`
-  display: flex;
-  float:left;
-  margin-left: 2em;
   color: ${"white"}; 
 
   &:hover {
-    color: ${"blue"};
+    color: ${"grey"};
   }
   }
   
-`
+`;
 const StyledVolumeMute = styled(VolumeOffIcon)`
-  display: flex;
-  float:left;
-  margin-left: 2em;
-  color: ${"white"}; 
+  color: grey;
 
   &:hover {
-    color: ${"blue"};
+    color: white;
   }
+`;
+const StyledEndP = styled.p`
+  color: white;
+  font-size: 14px;
+  &&& {
+    margin-left: 0.2rem;
   }
-  
-`
+`;
 
 const StyledP = styled.p`
   color: white;
-  margin-top: 1em;
-  display: flex;
-  
-`
+  font-size: 14px;
+  &&& {
+    margin-left: 1rem;
+    margin-right: 0.2rem;
+  }
+`;
 
 const ParentSpan = styled.span`
   display: flex;
   align-items: flex-start;
-  
-`
+  width: 300px;
+`;
 const EmptyDiv = styled.div`
-  margin-block-start: 0em;
-  margin-block-end: 0em;
-  margin-bottom: 0rem;
+  // margin-block-start: 0em;
+  // margin-block-end: 0em;
+  // margin-bottom: 0rem;
   display: flex;
+  width: 100%;
   align-items: center;
-`
+`;
 
-const customStyles = {
-  overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.75)",
+const VolumeSlider = withStyles((theme) => ({
+  root: {
+    width: 100,
+    maxWidth: "100px",
   },
-  content: {
-    top: "35%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    width: "60%",
-    transform: "translate(-40%, -10%)",
-    background:
-      "linear-gradient(160deg, rgba(49,22,101,1) 59%, rgba(127,60,142,1) 100%)",
-    color: "white",
+  Slider: {
+    width: 100,
+    maxWidth: "100px",
   },
-};
+}))(Slider);
+
+const TrackSlider = withStyles((theme) => ({
+  Slider: {
+    minWidth: "200px",
+  },
+}))(Slider);
 
 const useStyles = makeStyles({
-  root : {
-    width: 200
+  root: {
+    width: 200,
   },
   root2: {
-    width: 600
-  }
-
-})
+    width: 600,
+  },
+});
 
 const ModalHeader = styled.div`
   font-size: 24px;
@@ -518,6 +549,5 @@ const SongDiv = styled.div`
   max-height: 35vh;
   overflow-y: auto;
 `;
-
 
 export default PlayNavBar;
