@@ -173,7 +173,7 @@ const playSong = async (track) => {
   }
 
   currentPos = 0;
-
+  setSong(track);
   addHistory_wrapper();
 
   fetch(
